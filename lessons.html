@@ -1,96 +1,99 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>AceBlocks | Lua Coding for Kids</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  body {margin:0;font-family:'Baloo 2',cursive;background:#0f172a;color:white;}
-  header{background:#1e293b;padding:15px;text-align:center;}
-  header h1{margin:0;color:#38bdf8;}
-  #main{display:flex;height:calc(100vh - 70px);}
-  #blocks-panel{width:300px;background:#1e293b;padding:10px;overflow-y:auto;}
-  .category{margin-bottom:20px;}
-  .category h3{color:#38bdf8;border-bottom:1px solid #38bdf8;padding-bottom:5px;}
-  .block{background:#334155;color:white;padding:10px;margin:5px 0;border-radius:8px;cursor:pointer;text-align:center;}
-  #workspace{flex:1;background:#111827;padding:20px;overflow-y:auto;position:relative;}
-  .workspace-block{background:#38bdf8;color:#0f172a;padding:10px;margin:5px 0;border-radius:8px;cursor:grab;}
-  #lesson-objective-container{background:#1e293b;padding:15px;border-radius:10px;margin-bottom:10px;}
-  #lesson-objective{font-size:1.2rem;margin:0;}
-  #lesson-message{color:#34d399;margin-top:5px;font-weight:700;}
-  #progress-bar{width:100%;background:#334155;border-radius:10px;margin:10px 0;height:20px;}
-  #progress-fill{height:100%;width:0%;background:#38bdf8;border-radius:10px;}
-  #certificate{display:none;background:#fbbf24;color:#0f172a;padding:20px;text-align:center;border-radius:10px;margin-top:20px;font-weight:700;}
-  button{padding:10px 20px;margin:5px;background:#38bdf8;color:#0f172a;border:none;border-radius:8px;cursor:pointer;font-weight:700;}
-  button:hover{background:white;}
+body {margin:0;font-family:'Baloo 2',cursive;background:#0f172a;color:white;}
+header{background:#1e293b;padding:15px;text-align:center;}
+header h1{margin:0;color:#38bdf8;}
+#main{display:flex;height:calc(100vh - 70px);}
+#blocks-panel{width:300px;background:#1e293b;padding:10px;overflow-y:auto;}
+.category{margin-bottom:20px;}
+.category h3{color:#38bdf8;border-bottom:1px solid #38bdf8;padding-bottom:5px;}
+.block{background:#334155;color:white;padding:10px;margin:5px 0;border-radius:8px;cursor:pointer;text-align:center;user-select:none;}
+#workspace{flex:1;background:#111827;padding:20px;overflow-y:auto;position:relative;}
+.workspace-block{background:#38bdf8;color:#0f172a;padding:10px;margin:5px 0;border-radius:8px;cursor:grab;}
+.workspace-block.dragging{opacity:0.5;}
+#lesson-objective-container{background:#1e293b;padding:15px;border-radius:10px;margin-bottom:10px;}
+#lesson-objective{font-size:1.2rem;margin:0;}
+#lesson-message{color:#34d399;margin-top:5px;font-weight:700;}
+#progress-bar{width:100%;background:#334155;border-radius:10px;margin:10px 0;height:20px;}
+#progress-fill{height:100%;width:0%;background:#38bdf8;border-radius:10px;}
+#certificate{display:none;background:#fbbf24;color:#0f172a;padding:20px;text-align:center;border-radius:10px;margin-top:20px;font-weight:700;}
+button{padding:10px 20px;margin:5px;background:#38bdf8;color:#0f172a;border:none;border-radius:8px;cursor:pointer;font-weight:700;}
+button:hover{background:white;}
 </style>
 </head>
 <body>
 
 <header>
-  <h1>AceBlocks</h1>
-  <p>Learn Lua Coding for Roblox in a Fun Way!</p>
+<h1>AceBlocks</h1>
+<p>Learn Lua Coding for Roblox in a Fun Way!</p>
 </header>
 
 <div id="main">
-  <div id="blocks-panel">
-    <div class="category">
-      <h3>Movement</h3>
-      <div class="block" data-type="move">Move Forward</div>
-      <div class="block" data-type="jump">Jump</div>
-      <div class="block" data-type="walkspeed">Set WalkSpeed</div>
-    </div>
-    <div class="category">
-      <h3>Events</h3>
-      <div class="block" data-type="whenClicked">When Clicked</div>
-      <div class="block" data-type="onTouch">On Touch</div>
-      <div class="block" data-type="onStart">On Start</div>
-    </div>
-    <div class="category">
-      <h3>Loops & Logic</h3>
-      <div class="block" data-type="repeat">Repeat</div>
-      <div class="block" data-type="if">If Condition</div>
-    </div>
-    <div class="category">
-      <h3>Output</h3>
-      <div class="block" data-type="print">Print Text</div>
-    </div>
+<div id="blocks-panel">
+  <div class="category">
+    <h3>Movement</h3>
+    <div class="block" data-type="move">Move Forward</div>
+    <div class="block" data-type="jump">Jump</div>
+    <div class="block" data-type="walkspeed">Set WalkSpeed</div>
   </div>
-
-  <div id="workspace">
-    <div id="lesson-objective-container">
-      <p id="lesson-objective"></p>
-      <div id="lesson-message"></div>
-    </div>
-    <div id="progress-bar"><div id="progress-fill"></div></div>
-    <h2 id="lesson-title"></h2>
-    <div id="workspace-blocks"></div>
-    <button id="run-btn">Run Lua Code</button>
-    <button id="export-btn">Export Lua Code</button>
-    <div id="certificate">🎉 Congratulations! You completed all lessons and earned your Lua Certificate!</div>
+  <div class="category">
+    <h3>Events</h3>
+    <div class="block" data-type="whenClicked">When Clicked</div>
+    <div class="block" data-type="onTouch">On Touch</div>
+    <div class="block" data-type="onStart">On Start</div>
+  </div>
+  <div class="category">
+    <h3>Loops & Logic</h3>
+    <div class="block" data-type="repeat">Repeat</div>
+    <div class="block" data-type="if">If Condition</div>
+  </div>
+  <div class="category">
+    <h3>Output</h3>
+    <div class="block" data-type="print">Print Text</div>
   </div>
 </div>
 
+<div id="workspace">
+<div id="lesson-objective-container">
+  <p id="lesson-objective"></p>
+  <div id="lesson-message"></div>
+</div>
+<div id="progress-bar"><div id="progress-fill"></div></div>
+<h2 id="lesson-title"></h2>
+<div id="workspace-blocks"></div>
+<button id="run-btn">Run Lua Code</button>
+<button id="export-btn">Export Lua Code</button>
+<div id="certificate">🎉 Congratulations! You completed all lessons and earned your Lua Certificate!</div>
+</div>
+</div>
+
 <script>
+// --- Lessons with objectives and expected block sequence for checking ---
 const lessons=[
-  {title:"Lesson 1: Move Forward",objective:"Make your character move forward.",completed:false},
-  {title:"Lesson 2: Jumping",objective:"Make your character jump.",completed:false},
-  {title:"Lesson 3: WalkSpeed",objective:"Change your character's WalkSpeed.",completed:false},
-  {title:"Lesson 4: When Clicked",objective:"Do something when clicked.",completed:false},
-  {title:"Lesson 5: On Touch",objective:"Do something when touched.",completed:false},
-  {title:"Lesson 6: On Start",objective:"Run code when the game starts.",completed:false},
-  {title:"Lesson 7: Repeat Loops",objective:"Repeat actions multiple times.",completed:false},
-  {title:"Lesson 8: If Condition",objective:"Use an if statement to make decisions.",completed:false},
-  {title:"Lesson 9: Print Text",objective:"Print messages to the console.",completed:false},
-  {title:"Lesson 10: Combine Movement & Events",objective:"Move your character when clicked or touched.",completed:false},
-  {title:"Lesson 11: Advanced Loop",objective:"Combine loops with events.",completed:false},
-  {title:"Lesson 12: Mini Project",objective:"Create a small interactive script using everything you learned.",completed:false},
+  {title:"Lesson 1: Move Forward",objective:"Drag a Move Forward block",solution:["move"]},
+  {title:"Lesson 2: Jumping",objective:"Drag a Jump block",solution:["jump"]},
+  {title:"Lesson 3: WalkSpeed",objective:"Set WalkSpeed with a block",solution:["walkspeed"]},
+  {title:"Lesson 4: When Clicked",objective:"Use a When Clicked event block",solution:["whenClicked"]},
+  {title:"Lesson 5: On Touch",objective:"Use an On Touch block",solution:["onTouch"]},
+  {title:"Lesson 6: On Start",objective:"Use an On Start block",solution:["onStart"]},
+  {title:"Lesson 7: Repeat Loop",objective:"Use a Repeat block",solution:["repeat"]},
+  {title:"Lesson 8: If Condition",objective:"Use an If Condition block",solution:["if"]},
+  {title:"Lesson 9: Print Text",objective:"Use a Print Text block",solution:["print"]},
+  {title:"Lesson 10: Move with Event",objective:"Combine Move Forward and When Clicked",solution:["whenClicked","move"]},
+  {title:"Lesson 11: Jump with Event",objective:"Combine Jump and On Touch",solution:["onTouch","jump"]},
+  {title:"Lesson 12: Mini Project",objective:"Use at least 3 different blocks",solution:["move","jump","print"]},
 ];
 
 let currentLessonIndex=0;
 const workspaceBlocks=document.getElementById("workspace-blocks");
 
+// --- UI Helpers ---
 function showMessage(msg,color="#34d399"){
   const messageEl=document.getElementById("lesson-message");
   messageEl.style.color=color;
@@ -103,31 +106,36 @@ function updateProgress(){
   fill.style.width=percent+"%";
 }
 
-function completeLesson(){
-  lessons[currentLessonIndex].completed=true;
-  showMessage("✅ Lesson completed! Great job!");
-  updateProgress();
-  if(currentLessonIndex+1<lessons.length){
-    currentLessonIndex++;
-    setTimeout(()=>loadLesson(currentLessonIndex),1200);
-  } else {
-    showMessage("🎉 All lessons completed! Certificate unlocked!","#fbbf24");
-    document.getElementById("certificate").style.display="block";
-  }
-}
-
 function loadLesson(index){
   const lesson=lessons[index];
   document.getElementById("lesson-title").innerText=lesson.title;
   document.getElementById("lesson-objective").innerText="Objective: "+lesson.objective;
-  showMessage("Let's try this lesson! Drag the right blocks to your workspace.");
-  workspaceBlocks.innerHTML=""; // reset workspace
+  showMessage("Drag the correct blocks to complete the lesson.");
+  workspaceBlocks.innerHTML="";
 }
 
-loadLesson(currentLessonIndex);
+function checkSolution(){
+  const blocksArray=Array.from(workspaceBlocks.children).map(b=>b.dataset.type);
+  const solution=lessons[currentLessonIndex].solution;
+  if(solution.every((val,i)=>blocksArray[i]===val)){
+    lessons[currentLessonIndex].completed=true;
+    updateProgress();
+    showMessage("✅ Correct! Lesson Completed.");
+    currentLessonIndex++;
+    if(currentLessonIndex<lessons.length){
+      setTimeout(()=>loadLesson(currentLessonIndex),1200);
+    } else {
+      showMessage("🎉 All lessons completed! Certificate unlocked!","#fbbf24");
+      document.getElementById("certificate").style.display="block";
+    }
+  } else {
+    showMessage("❌ Not correct yet. Try again!", "#f87171");
+  }
+}
 
-// Drag and drop logic
+// --- Drag & Drop ---
 document.querySelectorAll(".block").forEach(block=>{
+  block.setAttribute("draggable","true");
   block.addEventListener("dragstart",e=>{
     e.dataTransfer.setData("type",block.dataset.type);
   });
@@ -141,13 +149,36 @@ workspaceBlocks.addEventListener("drop",e=>{
   el.className="workspace-block";
   el.textContent=type+" block";
   el.setAttribute("data-type",type);
+  el.setAttribute("draggable","true");
   workspaceBlocks.appendChild(el);
 });
 
-// Run & Export Lua (simplified)
-document.getElementById("run-btn").addEventListener("click",()=>{
-  showMessage("✅ Code simulated! Check Roblox Lua output below (export to see actual code).");
+// Reorder workspace blocks
+workspaceBlocks.addEventListener("dragstart",e=>{
+  if(!e.target.classList.contains("workspace-block")) return;
+  e.target.classList.add("dragging");
 });
+workspaceBlocks.addEventListener("dragend",e=>{
+  if(!e.target.classList.contains("workspace-block")) return;
+  e.target.classList.remove("dragging");
+});
+workspaceBlocks.addEventListener("dragover",e=>{
+  e.preventDefault();
+  const dragging=document.querySelector(".dragging");
+  const after=Array.from(workspaceBlocks.children)
+      .filter(b=>b!==dragging)
+      .reduce((closest,child)=>{
+        const box=child.getBoundingClientRect();
+        const offset=e.clientY-box.top-box.height/2;
+        if(offset<0 && offset>closest.offset) return {offset:offset,element:child};
+        else return closest;
+      },{offset:Number.NEGATIVE_INFINITY}).element;
+  if(after==null) workspaceBlocks.appendChild(dragging);
+  else workspaceBlocks.insertBefore(dragging,after);
+});
+
+// --- Buttons ---
+document.getElementById("run-btn").addEventListener("click",checkSolution);
 
 document.getElementById("export-btn").addEventListener("click",()=>{
   let code="";
@@ -171,8 +202,8 @@ document.getElementById("export-btn").addEventListener("click",()=>{
   showMessage("✅ Lua code exported!");
 });
 
-// Simulate lesson completion on Run
-document.getElementById("run-btn").addEventListener("click",completeLesson);
+// --- Initialize ---
+loadLesson(currentLessonIndex);
 </script>
 
 </body>
