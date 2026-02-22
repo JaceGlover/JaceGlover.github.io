@@ -1,178 +1,263 @@
-// =======================
-// BLOCK LIBRARY
-// =======================
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>AceBlocks Lua Lessons</title>
 
-const blockLibrary = {
-  WalkSpeed: { label:"Set WalkSpeed", code:"player.WalkSpeed = 20" },
-  JumpPower: { label:"Set JumpPower", code:"player.JumpPower = 60" },
-  PlayerAdded: { label:"On Player Join", code:"game.Players.PlayerAdded:Connect(function(player)\nend)" },
-  ScreenGui: { label:"Create GUI", code:"local gui = Instance.new('ScreenGui')" },
-  TextLabel: { label:"Add TextLabel", code:"local label = Instance.new('TextLabel')" },
-  Variable: { label:"Create Variable", code:"local myVar = 10" }
-};
+<style>
+body{
+  font-family: 'Comic Sans MS', sans-serif;
+  background: linear-gradient(135deg,#4facfe,#00f2fe);
+  margin:0;
+  text-align:center;
+}
 
-// =======================
-// LESSONS
-// =======================
+h1{
+  background:white;
+  padding:15px;
+  margin:0;
+}
+
+#lessonBox{
+  background:white;
+  margin:20px auto;
+  padding:20px;
+  width:90%;
+  max-width:900px;
+  border-radius:20px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+#blocks, #workspace{
+  min-height:120px;
+  padding:10px;
+  border-radius:15px;
+  margin:10px;
+}
+
+#blocks{
+  background:#f0f0f0;
+}
+
+#workspace{
+  background:#fff8dc;
+  border:3px dashed #999;
+}
+
+.block{
+  display:inline-block;
+  background:#ffcc00;
+  padding:8px 12px;
+  margin:5px;
+  border-radius:10px;
+  cursor:grab;
+  user-select:none;
+  font-weight:bold;
+}
+
+.block:active{
+  cursor:grabbing;
+}
+
+button{
+  padding:10px 20px;
+  margin:10px;
+  border:none;
+  border-radius:10px;
+  background:#28a745;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#218838;
+}
+
+#deleteBtn{
+  background:#dc3545;
+}
+
+#deleteBtn:hover{
+  background:#c82333;
+}
+
+#output{
+  background:#222;
+  color:#0f0;
+  padding:10px;
+  border-radius:10px;
+  min-height:40px;
+  margin-top:10px;
+}
+</style>
+</head>
+<body>
+
+<h1>AceBlocks Lua Course (NZ Curriculum Level 3-4)</h1>
+
+<div id="lessonBox">
+  <h2 id="lessonTitle"></h2>
+  <p id="objective"></p>
+
+  <div id="blocks"></div>
+
+  <h3>Workspace</h3>
+  <div id="workspace"></div>
+
+  <button onclick="runCode()">Run Code</button>
+  <button id="deleteBtn" onclick="clearWorkspace()">Delete Blocks</button>
+
+  <div id="output"></div>
+</div>
+
+<script>
+let currentLesson = 0;
 
 const lessons = [
 {
-  objective:"Make the player faster.",
-  availableBlocks:["WalkSpeed"],
-  requiredBlocks:["WalkSpeed"]
+ title:"Lesson 1: Print Text",
+ objective:"Objective: Print 'Hello World'",
+ blocks:["print('Hello World')"],
+ answer:"print('Hello World')"
 },
 {
-  objective:"Make the player faster and jump higher.",
-  availableBlocks:["WalkSpeed","JumpPower"],
-  requiredBlocks:["WalkSpeed","JumpPower"]
+ title:"Lesson 2: Variables",
+ objective:"Objective: Create variable x = 5 and print it",
+ blocks:["x = 5","print(x)"],
+ answer:"x = 5 print(x)"
 },
 {
-  objective:"Create a GUI and add text.",
-  availableBlocks:["ScreenGui","TextLabel"],
-  requiredBlocks:["ScreenGui","TextLabel"]
+ title:"Lesson 3: Math",
+ objective:"Objective: Create y = 10 + 5 and print y",
+ blocks:["y = 10 + 5","print(y)"],
+ answer:"y = 10 + 5 print(y)"
+},
+{
+ title:"Lesson 4: If Statements",
+ objective:"Objective: If x equals 5 print 'Correct'",
+ blocks:["x = 5","if x == 5 then","print('Correct')","end"],
+ answer:"x = 5 if x == 5 then print('Correct') end"
+},
+{
+ title:"Lesson 5: Greater Than",
+ objective:"Objective: If x > 3 print 'Big'",
+ blocks:["x = 5","if x > 3 then","print('Big')","end"],
+ answer:"x = 5 if x > 3 then print('Big') end"
+},
+{
+ title:"Lesson 6: Functions",
+ objective:"Objective: Make function greet that prints 'Hi'",
+ blocks:["function greet()","print('Hi')","end","greet()"],
+ answer:"function greet() print('Hi') end greet()"
+},
+{
+ title:"Lesson 7: Loops",
+ objective:"Objective: Loop 1 to 3 and print i",
+ blocks:["for i = 1,3 do","print(i)","end"],
+ answer:"for i = 1,3 do print(i) end"
+},
+{
+ title:"Lesson 8: Tables",
+ objective:"Objective: Create table t = {1,2,3} and print t[1]",
+ blocks:["t = {1,2,3}","print(t[1])"],
+ answer:"t = {1,2,3} print(t[1])"
+},
+{
+ title:"Lesson 9: While Loop",
+ objective:"Objective: While x < 3 increase x",
+ blocks:["x = 1","while x < 3 do","x = x + 1","end"],
+ answer:"x = 1 while x < 3 do x = x + 1 end"
+},
+{
+ title:"Lesson 10: Nested Logic",
+ objective:"Objective: If x == 2 print 'Two'",
+ blocks:["x = 2","if x == 2 then","print('Two')","end"],
+ answer:"x = 2 if x == 2 then print('Two') end"
+},
+{
+ title:"Lesson 11: Multiple Prints",
+ objective:"Objective: Print 'A' and 'B'",
+ blocks:["print('A')","print('B')"],
+ answer:"print('A') print('B')"
+},
+{
+ title:"Lesson 12: Final Challenge",
+ objective:"Objective: Create function add that prints 2+3",
+ blocks:["function add()","print(2+3)","end","add()"],
+ answer:"function add() print(2+3) end add()"
 }
 ];
 
-let currentLesson = 0;
-
-const panel = document.getElementById("panel");
-const objective = document.getElementById("objective");
-const blocksArea = document.getElementById("blocksArea");
-const output = document.getElementById("output");
-
-// =======================
-// LOAD LESSON
-// =======================
-
-function loadLesson() {
-  panel.innerHTML = "";
-  blocksArea.innerHTML = "";
-  output.textContent = "";
-
-  const lesson = lessons[currentLesson];
-  objective.textContent = "Lesson " + (currentLesson+1) + ": " + lesson.objective;
-
-  lesson.availableBlocks.forEach(key => {
-    const block = document.createElement("div");
-    block.className = "block";
-    block.textContent = blockLibrary[key].label;
-    block.draggable = true;
-    block.dataset.key = key;
-
-    block.addEventListener("dragstart", e=>{
-      e.dataTransfer.setData("panel-block", key);
-    });
-
-    panel.appendChild(block);
-  });
+function loadLesson(){
+ document.getElementById("workspace").innerHTML="";
+ document.getElementById("output").innerHTML="";
+ 
+ let lesson = lessons[currentLesson];
+ document.getElementById("lessonTitle").innerText = lesson.title;
+ document.getElementById("objective").innerText = lesson.objective;
+ 
+ let blockArea = document.getElementById("blocks");
+ blockArea.innerHTML="";
+ 
+ lesson.blocks.forEach(text=>{
+   let div=document.createElement("div");
+   div.className="block";
+   div.innerText=text;
+   div.draggable=true;
+   div.addEventListener("dragstart",dragStart);
+   blockArea.appendChild(div);
+ });
 }
 
-// =======================
-// DRAG FROM PANEL
-// =======================
-
-blocksArea.addEventListener("dragover", e => {
-  e.preventDefault();
-});
-
-blocksArea.addEventListener("drop", e => {
-  e.preventDefault();
-
-  const key = e.dataTransfer.getData("panel-block");
-  if(!key) return;
-
-  createWorkspaceBlock(key);
-});
-
-// =======================
-// CREATE WORKSPACE BLOCK
-// =======================
-
-function createWorkspaceBlock(key){
-  const newBlock = document.createElement("div");
-  newBlock.className = "workspace-block";
-  newBlock.draggable = true;
-  newBlock.dataset.key = key;
-
-  newBlock.innerHTML = `
-    <span>${blockLibrary[key].code}</span>
-    <button class="delete">×</button>
-  `;
-
-  newBlock.querySelector(".delete").onclick = ()=>newBlock.remove();
-
-  // DRAG REORDER
-  newBlock.addEventListener("dragstart", ()=>{
-    newBlock.classList.add("dragging");
-  });
-
-  newBlock.addEventListener("dragend", ()=>{
-    newBlock.classList.remove("dragging");
-  });
-
-  blocksArea.appendChild(newBlock);
+function dragStart(e){
+ e.dataTransfer.setData("text",e.target.innerText);
 }
 
-// =======================
-// REORDER LOGIC
-// =======================
-
-blocksArea.addEventListener("dragover", e=>{
-  e.preventDefault();
-  const dragging = document.querySelector(".dragging");
-  if(!dragging) return;
-
-  const afterElement = getDragAfterElement(blocksArea, e.clientY);
-  if(afterElement == null){
-    blocksArea.appendChild(dragging);
-  } else {
-    blocksArea.insertBefore(dragging, afterElement);
-  }
+document.getElementById("workspace").addEventListener("dragover",e=>{
+ e.preventDefault();
 });
 
-function getDragAfterElement(container, y) {
-  const elements = [...container.querySelectorAll(".workspace-block:not(.dragging)")];
+document.getElementById("workspace").addEventListener("drop",e=>{
+ e.preventDefault();
+ let text=e.dataTransfer.getData("text");
+ let div=document.createElement("div");
+ div.className="block";
+ div.innerText=text;
+ div.draggable=true;
+ div.addEventListener("dragstart",dragStart);
+ document.getElementById("workspace").appendChild(div);
+});
 
-  return elements.reduce((closest, child)=>{
-    const box = child.getBoundingClientRect();
-    const offset = y - box.top - box.height / 2;
-    if(offset < 0 && offset > closest.offset){
-      return { offset: offset, element: child };
-    } else {
-      return closest;
-    }
-  }, { offset: Number.NEGATIVE_INFINITY }).element;
+function clearWorkspace(){
+ document.getElementById("workspace").innerHTML="";
+ document.getElementById("output").innerHTML="";
 }
-
-// =======================
-// RUN CHECK
-// =======================
 
 function runCode(){
-  const placed = [...blocksArea.querySelectorAll(".workspace-block")]
-    .map(b => b.dataset.key);
-
-  const required = lessons[currentLesson].requiredBlocks;
-
-  const success = required.every(r => placed.includes(r));
-
-  if(success){
-    output.textContent = "✅ Lesson Complete!";
-  } else {
-    output.textContent = "❌ Missing required blocks.";
-  }
-}
-
-function nextLesson(){
-  if(currentLesson < lessons.length-1){
-    currentLesson++;
-    loadLesson();
-  } else {
-    objective.textContent = "🎉 Course Complete!";
-    panel.innerHTML = "";
-    blocksArea.innerHTML = "";
-    output.textContent = "You finished!";
-  }
+ let workspace=document.getElementById("workspace");
+ let blocks=workspace.querySelectorAll(".block");
+ let code="";
+ blocks.forEach(b=>code+=b.innerText+" ");
+ code=code.trim();
+ 
+ if(code===lessons[currentLesson].answer){
+   document.getElementById("output").innerHTML="✅ Correct! Moving to next lesson...";
+   setTimeout(()=>{
+     currentLesson++;
+     if(currentLesson>=lessons.length){
+       document.getElementById("lessonBox").innerHTML="<h2>🎉 You Finished The Course!</h2>";
+     } else {
+       loadLesson();
+     }
+   },1500);
+ } else {
+   document.getElementById("output").innerHTML="❌ Not quite right. Try again!";
+ }
 }
 
 loadLesson();
+</script>
+
+</body>
+</html>
