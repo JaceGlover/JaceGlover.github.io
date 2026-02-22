@@ -1,89 +1,35 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>AceBlocks Curriculum Edition</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-body { margin:0; font-family:Arial; background:#0f172a; color:white; }
-header { background:#111827; padding:15px; text-align:center; }
-.container { display:flex; height:calc(100vh - 70px); }
-#panel { width:260px; background:#1e293b; padding:15px; border-right:3px solid #38bdf8; }
-.block { background:linear-gradient(145deg,#334155,#1e293b); padding:10px; margin:8px 0; border-radius:10px; cursor:grab; font-weight:bold; }
-.block:hover { background:linear-gradient(145deg,#475569,#334155); }
-#workspace { flex:1; padding:20px; overflow:auto; }
-.workspace-block { background:#1e293b; padding:10px; margin:8px 0; border-radius:10px; display:flex; justify-content:space-between; align-items:center; }
-.delete { background:red; border:none; color:white; border-radius:50%; width:20px; height:20px; cursor:pointer; }
-#objective { background:#1e293b; padding:10px; border-radius:8px; margin-bottom:15px; font-weight:bold; }
-button { background:#38bdf8; border:none; padding:10px 15px; margin-top:10px; border-radius:6px; cursor:pointer; }
-button:hover { background:#60a5fa; }
-#output { margin-top:10px; font-weight:bold; }
-</style>
-</head>
-<body>
+// =======================
+// BLOCK LIBRARY
+// =======================
 
-<header>
-<h1>AceBlocks | NZ Curriculum Lua Course</h1>
-</header>
-
-<div class="container">
-<div id="panel"></div>
-
-<div id="workspace">
-<div id="objective"></div>
-<div id="blocksArea"></div>
-</div>
-</div>
-
-<div style="text-align:center;padding:15px;">
-<button onclick="runCode()">Run</button>
-<button onclick="nextLesson()">Next Lesson</button>
-<div id="output"></div>
-</div>
-
-<script>
-
-// MASTER BLOCK LIBRARY
 const blockLibrary = {
-  WalkSpeed: { label:"Set WalkSpeed", code:"player.WalkSpeed = VALUE" },
-  JumpPower: { label:"Set JumpPower", code:"player.JumpPower = VALUE" },
+  WalkSpeed: { label:"Set WalkSpeed", code:"player.WalkSpeed = 20" },
+  JumpPower: { label:"Set JumpPower", code:"player.JumpPower = 60" },
   PlayerAdded: { label:"On Player Join", code:"game.Players.PlayerAdded:Connect(function(player)\nend)" },
-  ScreenGui: { label:"Create GUI", code:"local gui = Instance.new('ScreenGui', player.PlayerGui)" },
-  TextLabel: { label:"Add TextLabel", code:"local textLabel = Instance.new('TextLabel', gui)" },
-  Variable: { label:"Create Variable", code:"local VAR = VALUE" }
+  ScreenGui: { label:"Create GUI", code:"local gui = Instance.new('ScreenGui')" },
+  TextLabel: { label:"Add TextLabel", code:"local label = Instance.new('TextLabel')" },
+  Variable: { label:"Create Variable", code:"local myVar = 10" }
 };
 
-// LESSON STRUCTURE (NZ progression)
+// =======================
+// LESSONS
+// =======================
+
 const lessons = [
 {
-  objective:"Make the player move faster.",
+  objective:"Make the player faster.",
   availableBlocks:["WalkSpeed"],
   requiredBlocks:["WalkSpeed"]
 },
 {
-  objective:"Make the player move faster AND jump higher.",
+  objective:"Make the player faster and jump higher.",
   availableBlocks:["WalkSpeed","JumpPower"],
   requiredBlocks:["WalkSpeed","JumpPower"]
 },
 {
-  objective:"Create a GUI for the player.",
-  availableBlocks:["ScreenGui"],
-  requiredBlocks:["ScreenGui"]
-},
-{
-  objective:"Create a GUI and add a TextLabel.",
+  objective:"Create a GUI and add text.",
   availableBlocks:["ScreenGui","TextLabel"],
   requiredBlocks:["ScreenGui","TextLabel"]
-},
-{
-  objective:"Create a variable and use WalkSpeed.",
-  availableBlocks:["Variable","WalkSpeed"],
-  requiredBlocks:["Variable","WalkSpeed"]
-},
-{
-  objective:"Welcome the player when they join.",
-  availableBlocks:["PlayerAdded"],
-  requiredBlocks:["PlayerAdded"]
 }
 ];
 
@@ -94,6 +40,10 @@ const objective = document.getElementById("objective");
 const blocksArea = document.getElementById("blocksArea");
 const output = document.getElementById("output");
 
+// =======================
+// LOAD LESSON
+// =======================
+
 function loadLesson() {
   panel.innerHTML = "";
   blocksArea.innerHTML = "";
@@ -103,69 +53,126 @@ function loadLesson() {
   objective.textContent = "Lesson " + (currentLesson+1) + ": " + lesson.objective;
 
   lesson.availableBlocks.forEach(key => {
-    const blockData = blockLibrary[key];
     const block = document.createElement("div");
     block.className = "block";
-    block.textContent = blockData.label;
+    block.textContent = blockLibrary[key].label;
     block.draggable = true;
     block.dataset.key = key;
 
     block.addEventListener("dragstart", e=>{
-      e.dataTransfer.setData("text/plain", key);
+      e.dataTransfer.setData("panel-block", key);
     });
 
     panel.appendChild(block);
   });
 }
 
-blocksArea.addEventListener("dragover", e=>e.preventDefault());
+// =======================
+// DRAG FROM PANEL
+// =======================
 
-blocksArea.addEventListener("drop", e=>{
+blocksArea.addEventListener("dragover", e => {
   e.preventDefault();
-  const key = e.dataTransfer.getData("text/plain");
-  const blockData = blockLibrary[key];
+});
 
+blocksArea.addEventListener("drop", e => {
+  e.preventDefault();
+
+  const key = e.dataTransfer.getData("panel-block");
+  if(!key) return;
+
+  createWorkspaceBlock(key);
+});
+
+// =======================
+// CREATE WORKSPACE BLOCK
+// =======================
+
+function createWorkspaceBlock(key){
   const newBlock = document.createElement("div");
   newBlock.className = "workspace-block";
+  newBlock.draggable = true;
   newBlock.dataset.key = key;
+
   newBlock.innerHTML = `
-    <span>${blockData.code.replace("VALUE","10").replace("VAR","myVar")}</span>
+    <span>${blockLibrary[key].code}</span>
     <button class="delete">×</button>
   `;
 
   newBlock.querySelector(".delete").onclick = ()=>newBlock.remove();
+
+  // DRAG REORDER
+  newBlock.addEventListener("dragstart", ()=>{
+    newBlock.classList.add("dragging");
+  });
+
+  newBlock.addEventListener("dragend", ()=>{
+    newBlock.classList.remove("dragging");
+  });
+
   blocksArea.appendChild(newBlock);
+}
+
+// =======================
+// REORDER LOGIC
+// =======================
+
+blocksArea.addEventListener("dragover", e=>{
+  e.preventDefault();
+  const dragging = document.querySelector(".dragging");
+  if(!dragging) return;
+
+  const afterElement = getDragAfterElement(blocksArea, e.clientY);
+  if(afterElement == null){
+    blocksArea.appendChild(dragging);
+  } else {
+    blocksArea.insertBefore(dragging, afterElement);
+  }
 });
 
-function runCode() {
-  const placedBlocks = [...blocksArea.querySelectorAll(".workspace-block")]
+function getDragAfterElement(container, y) {
+  const elements = [...container.querySelectorAll(".workspace-block:not(.dragging)")];
+
+  return elements.reduce((closest, child)=>{
+    const box = child.getBoundingClientRect();
+    const offset = y - box.top - box.height / 2;
+    if(offset < 0 && offset > closest.offset){
+      return { offset: offset, element: child };
+    } else {
+      return closest;
+    }
+  }, { offset: Number.NEGATIVE_INFINITY }).element;
+}
+
+// =======================
+// RUN CHECK
+// =======================
+
+function runCode(){
+  const placed = [...blocksArea.querySelectorAll(".workspace-block")]
     .map(b => b.dataset.key);
 
   const required = lessons[currentLesson].requiredBlocks;
 
-  const success = required.every(req => placedBlocks.includes(req));
+  const success = required.every(r => placed.includes(r));
 
   if(success){
     output.textContent = "✅ Lesson Complete!";
   } else {
-    output.textContent = "❌ You are missing required blocks.";
+    output.textContent = "❌ Missing required blocks.";
   }
 }
 
-function nextLesson() {
+function nextLesson(){
   if(currentLesson < lessons.length-1){
     currentLesson++;
     loadLesson();
   } else {
-    objective.textContent = "🎉 Course Completed!";
+    objective.textContent = "🎉 Course Complete!";
     panel.innerHTML = "";
     blocksArea.innerHTML = "";
-    output.textContent = "You finished all lessons!";
+    output.textContent = "You finished!";
   }
 }
 
 loadLesson();
-
-</script>
-</body>
-</html>
