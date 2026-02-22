@@ -1,198 +1,171 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>AceBlocks Ultimate | Roblox Lua Lessons</title>
+<title>AceBlocks Curriculum Edition</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 <style>
-body { margin:0; font-family:'Montserrat',sans-serif; background:#0f172a; color:white; }
-header { padding:20px; background:#111827; text-align:center; }
-header h1 { margin:0; font-size:2rem; color:#38bdf8; }
-.container { display:flex; height:calc(100vh - 80px); }
-#block-panel { width:280px; background:#1e293b; padding:15px; overflow-y:auto; border-right:3px solid #38bdf8; border-radius:0 10px 10px 0; }
-#block-panel h2 { font-size:1.2rem; margin-top:0; color:#60a5fa; border-bottom:1px solid #475569; padding-bottom:4px; }
-.block-category { margin-bottom:25px; }
-.block { background: linear-gradient(145deg,#334155,#1e293b); padding:12px; margin:8px 0; border-radius:10px; cursor:grab; user-select:none; font-weight:600; box-shadow:0 3px 6px rgba(0,0,0,0.3); transition:0.2s; }
-.block:hover { background: linear-gradient(145deg,#475569,#334155); }
-#workspace { flex:1; background:#0f172a; padding:20px; overflow-y:auto; position:relative; border-left:3px solid #38bdf8; }
-.workspace-block { background: linear-gradient(145deg,#1e293b,#334155); padding:10px; margin:8px 0; border-radius:10px; cursor:grab; display:flex; justify-content:space-between; align-items:center; transition:0.2s; position:relative; }
-.workspace-block.dragging { opacity:0.5; }
-input.value-input { width:50px; margin-left:5px; border-radius:4px; border:none; padding:2px 4px; background:#f1f5f9; }
-#objective { padding:12px; background:#1e293b; border-radius:8px; margin-bottom:12px; font-weight:bold; font-size:1.1rem; }
-#character { width:40px; height:40px; background:#38bdf8; border-radius:50%; position:absolute; bottom:20px; left:50%; transition:0.3s all ease; }
-button { background:#38bdf8; color:#0f172a; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; margin-top:10px; transition:0.2s; font-weight:600; }
+body { margin:0; font-family:Arial; background:#0f172a; color:white; }
+header { background:#111827; padding:15px; text-align:center; }
+.container { display:flex; height:calc(100vh - 70px); }
+#panel { width:260px; background:#1e293b; padding:15px; border-right:3px solid #38bdf8; }
+.block { background:linear-gradient(145deg,#334155,#1e293b); padding:10px; margin:8px 0; border-radius:10px; cursor:grab; font-weight:bold; }
+.block:hover { background:linear-gradient(145deg,#475569,#334155); }
+#workspace { flex:1; padding:20px; overflow:auto; }
+.workspace-block { background:#1e293b; padding:10px; margin:8px 0; border-radius:10px; display:flex; justify-content:space-between; align-items:center; }
+.delete { background:red; border:none; color:white; border-radius:50%; width:20px; height:20px; cursor:pointer; }
+#objective { background:#1e293b; padding:10px; border-radius:8px; margin-bottom:15px; font-weight:bold; }
+button { background:#38bdf8; border:none; padding:10px 15px; margin-top:10px; border-radius:6px; cursor:pointer; }
 button:hover { background:#60a5fa; }
-#output { margin-top:12px; font-weight:bold; }
-.certificate { display:none; padding:20px; background:#111827; color:#38bdf8; border-radius:10px; text-align:center; font-size:1.3rem; margin-top:10px; }
-.delete-btn { background:red; color:white; border:none; border-radius:50%; width:20px; height:20px; font-size:14px; font-weight:bold; cursor:pointer; display:flex; align-items:center; justify-content:center; margin-left:8px; }
+#output { margin-top:10px; font-weight:bold; }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>AceBlocks Ultimate | Roblox Lua Lessons</h1>
+<h1>AceBlocks | NZ Curriculum Lua Course</h1>
 </header>
 
 <div class="container">
-  <div id="block-panel">
-    <h2>Movement</h2>
-    <div class="block" data-code="player.WalkSpeed = VALUE">Set WalkSpeed</div>
-    <div class="block" data-code="player.JumpPower = VALUE">Set JumpPower</div>
+<div id="panel"></div>
 
-    <h2>Events</h2>
-    <div class="block" data-code="game.Players.PlayerAdded:Connect(function(player)\n  -- code here\nend)">On Player Join</div>
-    <div class="block" data-code="workspace.Touched:Connect(function(hit)\n  -- code here\nend)">On Touch</div>
-    <div class="block" data-code="game.Players.PlayerRemoving:Connect(function(player)\n  -- code here\nend)">On Player Leave</div>
-
-    <h2>UI</h2>
-    <div class="block" data-code="local gui = Instance.new('ScreenGui', player.PlayerGui)">Create GUI</div>
-    <div class="block" data-code="local textLabel = Instance.new('TextLabel', gui)">Add TextLabel</div>
-    <div class="block" data-code="textLabel.Text = 'VALUE'">Set Label Text</div>
-
-    <h2>Loops & Logic</h2>
-    <div class="block" data-code="for i = 1, VALUE do\n  -- code here\nend">For Loop</div>
-    <div class="block" data-code="if CONDITION then\n  -- code here\nend">If Statement</div>
-    <div class="block" data-code="while CONDITION do\n  -- code here\nend">While Loop</div>
-
-    <h2>Variables</h2>
-    <div class="block" data-code="local VAR = VALUE">Create Variable</div>
-    <div class="block" data-code="VAR = VALUE">Change Variable</div>
-  </div>
-
-  <div id="workspace">
-    <div id="objective">Objective: Complete Lesson 1: Make your player move faster than normal</div>
-    <div id="character"></div>
-  </div>
+<div id="workspace">
+<div id="objective"></div>
+<div id="blocksArea"></div>
+</div>
 </div>
 
-<div style="text-align:center;padding:10px;">
-  <button id="runCode">Run Code</button>
-  <button id="nextLesson">Next Lesson</button>
-  <div id="output"></div>
-  <div class="certificate" id="certificate">🎉 Congratulations! You completed all lessons! 🎓</div>
+<div style="text-align:center;padding:15px;">
+<button onclick="runCode()">Run</button>
+<button onclick="nextLesson()">Next Lesson</button>
+<div id="output"></div>
 </div>
 
 <script>
-// --- Lesson System ---
+
+// MASTER BLOCK LIBRARY
+const blockLibrary = {
+  WalkSpeed: { label:"Set WalkSpeed", code:"player.WalkSpeed = VALUE" },
+  JumpPower: { label:"Set JumpPower", code:"player.JumpPower = VALUE" },
+  PlayerAdded: { label:"On Player Join", code:"game.Players.PlayerAdded:Connect(function(player)\nend)" },
+  ScreenGui: { label:"Create GUI", code:"local gui = Instance.new('ScreenGui', player.PlayerGui)" },
+  TextLabel: { label:"Add TextLabel", code:"local textLabel = Instance.new('TextLabel', gui)" },
+  Variable: { label:"Create Variable", code:"local VAR = VALUE" }
+};
+
+// LESSON STRUCTURE (NZ progression)
 const lessons = [
-  {objective:"Make your player move faster than normal", check:"WalkSpeed"},
-  {objective:"Make your player jump higher and move faster", check:"JumpPower"},
-  {objective:"Display a welcome message when a player joins", check:"PlayerAdded"},
-  {objective:"Detect when the player touches an object and print 'hit'", check:"Touched"},
-  {objective:"Create a GUI for the player with at least one element", check:"ScreenGui"},
-  {objective:"Add a TextLabel to the GUI and set text", check:"TextLabel"},
-  {objective:"Use a variable to change WalkSpeed dynamically", check:"VAR"},
-  {objective:"Use a variable to change JumpPower dynamically", check:"VAR"},
-  {objective:"Connect multiple events and print feedback", check:"Connect"},
-  {objective:"Create a stamina bar GUI that updates", check:"TextLabel"},
-  {objective:"Print player's name when they join", check:"PlayerAdded"},
-  {objective:"Combine movement, GUI, and events into a mini game", check:"WalkSpeed"}
+{
+  objective:"Make the player move faster.",
+  availableBlocks:["WalkSpeed"],
+  requiredBlocks:["WalkSpeed"]
+},
+{
+  objective:"Make the player move faster AND jump higher.",
+  availableBlocks:["WalkSpeed","JumpPower"],
+  requiredBlocks:["WalkSpeed","JumpPower"]
+},
+{
+  objective:"Create a GUI for the player.",
+  availableBlocks:["ScreenGui"],
+  requiredBlocks:["ScreenGui"]
+},
+{
+  objective:"Create a GUI and add a TextLabel.",
+  availableBlocks:["ScreenGui","TextLabel"],
+  requiredBlocks:["ScreenGui","TextLabel"]
+},
+{
+  objective:"Create a variable and use WalkSpeed.",
+  availableBlocks:["Variable","WalkSpeed"],
+  requiredBlocks:["Variable","WalkSpeed"]
+},
+{
+  objective:"Welcome the player when they join.",
+  availableBlocks:["PlayerAdded"],
+  requiredBlocks:["PlayerAdded"]
+}
 ];
+
 let currentLesson = 0;
 
-const objectiveDiv = document.getElementById("objective");
-const workspace = document.getElementById("workspace");
-const character = document.getElementById("character");
+const panel = document.getElementById("panel");
+const objective = document.getElementById("objective");
+const blocksArea = document.getElementById("blocksArea");
 const output = document.getElementById("output");
 
-// --- Update Lesson ---
-function updateLesson() {
-  if(currentLesson < lessons.length){
-    objectiveDiv.textContent = "Objective: " + lessons[currentLesson].objective;
-    workspace.querySelectorAll(".workspace-block").forEach(b => b.remove());
-    output.textContent = "";
+function loadLesson() {
+  panel.innerHTML = "";
+  blocksArea.innerHTML = "";
+  output.textContent = "";
+
+  const lesson = lessons[currentLesson];
+  objective.textContent = "Lesson " + (currentLesson+1) + ": " + lesson.objective;
+
+  lesson.availableBlocks.forEach(key => {
+    const blockData = blockLibrary[key];
+    const block = document.createElement("div");
+    block.className = "block";
+    block.textContent = blockData.label;
+    block.draggable = true;
+    block.dataset.key = key;
+
+    block.addEventListener("dragstart", e=>{
+      e.dataTransfer.setData("text/plain", key);
+    });
+
+    panel.appendChild(block);
+  });
+}
+
+blocksArea.addEventListener("dragover", e=>e.preventDefault());
+
+blocksArea.addEventListener("drop", e=>{
+  e.preventDefault();
+  const key = e.dataTransfer.getData("text/plain");
+  const blockData = blockLibrary[key];
+
+  const newBlock = document.createElement("div");
+  newBlock.className = "workspace-block";
+  newBlock.dataset.key = key;
+  newBlock.innerHTML = `
+    <span>${blockData.code.replace("VALUE","10").replace("VAR","myVar")}</span>
+    <button class="delete">×</button>
+  `;
+
+  newBlock.querySelector(".delete").onclick = ()=>newBlock.remove();
+  blocksArea.appendChild(newBlock);
+});
+
+function runCode() {
+  const placedBlocks = [...blocksArea.querySelectorAll(".workspace-block")]
+    .map(b => b.dataset.key);
+
+  const required = lessons[currentLesson].requiredBlocks;
+
+  const success = required.every(req => placedBlocks.includes(req));
+
+  if(success){
+    output.textContent = "✅ Lesson Complete!";
   } else {
-    document.getElementById("certificate").style.display = "block";
-    objectiveDiv.textContent = "All lessons completed!";
+    output.textContent = "❌ You are missing required blocks.";
   }
 }
 
-// --- Drag & Drop Blocks ---
-document.querySelectorAll("#block-panel .block").forEach(block=>{
-  block.setAttribute("draggable","true");
-  block.addEventListener("dragstart", e=>{
-    e.dataTransfer.setData("text/plain", block.dataset.code);
-  });
-});
-
-workspace.addEventListener("dragover", e=>e.preventDefault());
-workspace.addEventListener("drop", e=>{
-  e.preventDefault();
-  const code = e.dataTransfer.getData("text/plain");
-  const newBlock = document.createElement("div");
-  newBlock.className = "workspace-block";
-  newBlock.setAttribute("draggable","true");
-  newBlock.dataset.code = code;
-  newBlock.innerHTML = `<span>${code.replace("VALUE","<input type='number' class='value-input' value='10'>").replace("VAR","<input type='text' class='value-input' value='myVar'>").replace("CONDITION","<input type='text' class='value-input' value='true'>")}</span>`;
-  const delBtn = document.createElement("button");
-  delBtn.textContent = "×";
-  delBtn.className = "delete-btn";
-  delBtn.addEventListener("click", ()=>newBlock.remove());
-  newBlock.appendChild(delBtn);
-  workspace.appendChild(newBlock);
-  setupDragReorder();
-});
-
-// --- Drag Reorder ---
-function setupDragReorder() {
-  let draggedBlock = null;
-  const blocks = workspace.querySelectorAll(".workspace-block");
-  blocks.forEach(block=>{
-    block.addEventListener("dragstart", e=>{
-      draggedBlock = block;
-      block.classList.add("dragging");
-    });
-    block.addEventListener("dragend", e=>{
-      draggedBlock=null;
-      block.classList.remove("dragging");
-    });
-  });
-  workspace.addEventListener("dragover", e=>{
-    e.preventDefault();
-    const afterElement = getDragAfterElement(workspace,e.clientY);
-    if(draggedBlock){
-      if(afterElement==null) workspace.appendChild(draggedBlock);
-      else workspace.insertBefore(draggedBlock,afterElement);
-    }
-  });
-}
-function getDragAfterElement(container, y){
-  const draggableElements = [...container.querySelectorAll(".workspace-block:not(.dragging)")];
-  return draggableElements.reduce((closest,child)=>{
-    const box = child.getBoundingClientRect();
-    const offset = y - box.top - box.height/2;
-    if(offset<0 && offset>closest.offset) return {offset:offset, element:child};
-    else return closest;
-  },{offset:Number.NEGATIVE_INFINITY}).element;
+function nextLesson() {
+  if(currentLesson < lessons.length-1){
+    currentLesson++;
+    loadLesson();
+  } else {
+    objective.textContent = "🎉 Course Completed!";
+    panel.innerHTML = "";
+    blocksArea.innerHTML = "";
+    output.textContent = "You finished all lessons!";
+  }
 }
 
-// --- Run Code & Validate ---
-document.getElementById("runCode").addEventListener("click", ()=>{
-  const blocks = workspace.querySelectorAll(".workspace-block");
-  const codeStrings = [...blocks].map(b=>{
-    const input = b.querySelector("input");
-    let code = b.dataset.code;
-    if(input) code = code.replace("VALUE",input.value).replace("VAR",input.value).replace("CONDITION",input.value);
-    return code;
-  });
-  const combined = codeStrings.join("\n");
-  if(combined.includes(lessons[currentLesson].check)){
-    output.textContent = "✅ Objective Completed!";
-    if(combined.includes("WalkSpeed")) character.style.left="70%";
-    if(combined.includes("JumpPower")) character.style.bottom="60px";
-    if(combined.includes("JumpPower") && combined.includes("WalkSpeed")) character.style.background="#facc15";
-  } else output.textContent = "❌ Try Again!";
-});
+loadLesson();
 
-// --- Next Lesson ---
-document.getElementById("nextLesson").addEventListener("click", ()=>{
-  currentLesson++;
-  updateLesson();
-});
-
-updateLesson();
-setupDragReorder();
 </script>
 </body>
 </html>
