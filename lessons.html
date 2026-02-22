@@ -1,48 +1,30 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>AceBlocks | Learn Roblox Lua</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 <style>
-body {
-  margin: 0;
-  font-family: 'Montserrat', sans-serif;
-  background: #0f172a;
-  color: white;
-}
-header {
-  padding: 20px;
-  background: #111827;
-  text-align: center;
-}
-header h1 { margin: 0; font-size: 2rem; }
-.container {
-  display: flex;
-  height: calc(100vh - 80px);
-}
-#block-panel {
-  width: 240px;
-  background: #1e293b;
-  padding: 10px;
-  overflow-y: auto;
-}
-#block-panel h2 { font-size: 1.2rem; margin-top: 0; color: #38bdf8; }
-.block-category { margin-bottom: 20px; }
-.block { background: #334155; padding: 10px; margin: 5px 0; border-radius: 6px; cursor: grab; }
-.block:hover { background: #475569; }
-#workspace {
-  flex: 1;
-  background: #0f172a;
-  padding: 20px;
-  overflow-y: auto;
-  border-left: 2px solid #38bdf8;
-}
-.workspace-block { background: #1e293b; padding: 10px; margin: 5px 0; border-radius: 6px; cursor: grab; }
-.workspace-block.dragging { opacity: 0.5; }
-button { background: #38bdf8; color: #0f172a; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; margin-top: 10px; }
-button:hover { background: #60a5fa; }
-#objective { padding: 10px; background: #1e293b; border-radius: 6px; margin-bottom: 10px; }
+body { margin:0; font-family:'Montserrat',sans-serif; background:#0f172a; color:white; }
+header { padding:20px; background:#111827; text-align:center; }
+header h1 { margin:0; font-size:2rem; color:#38bdf8; }
+.container { display:flex; height:calc(100vh - 80px); }
+#block-panel { width:240px; background:#1e293b; padding:10px; overflow-y:auto; }
+#block-panel h2 { font-size:1.2rem; margin-top:0; color:#60a5fa; border-bottom:1px solid #475569; padding-bottom:4px; }
+.block-category { margin-bottom:20px; }
+.block { background:#334155; padding:10px; margin:5px 0; border-radius:6px; cursor:grab; }
+.block:hover { background:#475569; }
+#workspace { flex:1; background:#0f172a; padding:20px; overflow-y:auto; border-left:2px solid #38bdf8; position:relative; }
+.workspace-block { background:#1e293b; padding:10px; margin:5px 0; border-radius:6px; cursor:grab; display:flex; justify-content:space-between; align-items:center; }
+.workspace-block.dragging { opacity:0.5; }
+input.value-input { width:50px; margin-left:5px; border-radius:4px; border:none; padding:2px 4px; }
+#objective { padding:10px; background:#1e293b; border-radius:6px; margin-bottom:10px; }
+#character { width:40px; height:40px; background:#38bdf8; border-radius:50%; position:absolute; bottom:20px; left:50%; transition:0.3s all ease; }
+button { background:#38bdf8; color:#0f172a; border:none; padding:10px 20px; border-radius:6px; cursor:pointer; margin-top:10px; }
+button:hover { background:#60a5fa; }
+#output { margin-top:10px; }
+.certificate { display:none; padding:20px; background:#111827; color:#38bdf8; border-radius:8px; text-align:center; font-size:1.2rem; margin-top:10px; }
 </style>
 </head>
 <body>
@@ -62,10 +44,14 @@ button:hover { background: #60a5fa; }
     <h2>UI</h2>
     <div class="block" data-code="local gui = Instance.new('ScreenGui', player.PlayerGui)">Create GUI</div>
     <div class="block" data-code="local textLabel = Instance.new('TextLabel', gui)">Add TextLabel</div>
+    <h2>Loops & Logic</h2>
+    <div class="block" data-code="for i = 1, VALUE do\n  -- code here\nend">For Loop</div>
+    <div class="block" data-code="if CONDITION then\n  -- code here\nend">If Statement</div>
   </div>
+
   <div id="workspace">
     <div id="objective">Objective: Complete Lesson 1: Make your player move faster</div>
-    <!-- Workspace blocks will appear here -->
+    <div id="character"></div>
   </div>
 </div>
 
@@ -73,58 +59,61 @@ button:hover { background: #60a5fa; }
   <button id="runCode">Run Code</button>
   <button id="nextLesson">Next Lesson</button>
   <div id="output"></div>
+  <div class="certificate" id="certificate">🎉 Congratulations! You completed all lessons! 🎓</div>
 </div>
 
 <script>
-// Basic lesson objectives
+// Lessons aligned with NZ curriculum basics
 const lessons = [
-  "Lesson 1: Make your player move faster",
-  "Lesson 2: Make your player jump higher",
-  "Lesson 3: Show a welcome message when a player joins",
-  "Lesson 4: Detect when the player touches an object",
-  "Lesson 5: Create a GUI for the player",
-  "Lesson 6: Add a TextLabel to GUI",
-  "Lesson 7: Change WalkSpeed with a variable",
-  "Lesson 8: Change JumpPower with a variable",
-  "Lesson 9: Connect multiple events",
-  "Lesson 10: Make a stamina bar GUI",
-  "Lesson 11: Print player's name on join",
-  "Lesson 12: Combine movement + GUI + events"
+  {objective:"Make your player move faster", check:"WalkSpeed"},
+  {objective:"Make your player jump higher", check:"JumpPower"},
+  {objective:"Show a welcome message when a player joins", check:"PlayerAdded"},
+  {objective:"Detect when the player touches an object", check:"Touched"},
+  {objective:"Create a GUI for the player", check:"ScreenGui"},
+  {objective:"Add a TextLabel to GUI", check:"TextLabel"},
+  {objective:"Change WalkSpeed with a variable", check:"WalkSpeed"},
+  {objective:"Change JumpPower with a variable", check:"JumpPower"},
+  {objective:"Connect multiple events", check:"Connect"},
+  {objective:"Make a stamina bar GUI", check:"TextLabel"},
+  {objective:"Print player's name on join", check:"PlayerAdded"},
+  {objective:"Combine movement + GUI + events", check:"WalkSpeed"}
 ];
 let currentLesson = 0;
 
-const objective = document.getElementById("objective");
+const objectiveDiv = document.getElementById("objective");
+const workspace = document.getElementById("workspace");
+const character = document.getElementById("character");
+
 function nextLessonFunc() {
-  if(currentLesson < lessons.length - 1) {
+  if(currentLesson < lessons.length - 1){
     currentLesson++;
-    objective.textContent = "Objective: " + lessons[currentLesson];
-    workspace.innerHTML = "";
+    objectiveDiv.textContent = "Objective: " + lessons[currentLesson].objective;
+    workspace.querySelectorAll(".workspace-block").forEach(b => b.remove());
+    document.getElementById("output").textContent = "";
     updateWorkspaceDrag();
   } else {
-    alert("All lessons completed!");
+    document.getElementById("certificate").style.display = "block";
   }
 }
 
-// Drag & drop from panel to workspace
-const blocks = document.querySelectorAll("#block-panel .block");
-const workspace = document.getElementById("workspace");
-blocks.forEach(block => {
+// Drag & drop panel blocks
+document.querySelectorAll("#block-panel .block").forEach(block=>{
   block.setAttribute("draggable","true");
-  block.addEventListener("dragstart", e => {
+  block.addEventListener("dragstart", e=>{
     e.dataTransfer.setData("text/plain", block.dataset.code);
   });
 });
 
-// Drop blocks into workspace
-workspace.addEventListener("dragover", e => e.preventDefault());
-workspace.addEventListener("drop", e => {
+// Drop into workspace
+workspace.addEventListener("dragover", e=>e.preventDefault());
+workspace.addEventListener("drop", e=>{
   e.preventDefault();
   const code = e.dataTransfer.getData("text/plain");
   const newBlock = document.createElement("div");
   newBlock.className = "workspace-block";
   newBlock.setAttribute("draggable","true");
   newBlock.dataset.code = code;
-  newBlock.textContent = code.split("\n")[0];
+  newBlock.innerHTML = code.replace("VALUE","<input type='number' class='value-input' value='10'>");
   workspace.appendChild(newBlock);
   updateWorkspaceDrag();
 });
@@ -133,44 +122,48 @@ workspace.addEventListener("drop", e => {
 function updateWorkspaceDrag() {
   let draggedBlock = null;
   const wBlocks = workspace.querySelectorAll(".workspace-block");
-  wBlocks.forEach(block => {
-    block.addEventListener("dragstart", e => { draggedBlock = block; block.classList.add("dragging"); });
-    block.addEventListener("dragend", e => { draggedBlock = null; block.classList.remove("dragging"); });
+  wBlocks.forEach(block=>{
+    block.addEventListener("dragstart", e=>{ draggedBlock = block; block.classList.add("dragging"); });
+    block.addEventListener("dragend", e=>{ draggedBlock=null; block.classList.remove("dragging"); });
   });
-  workspace.addEventListener("dragover", e => {
+  workspace.addEventListener("dragover", e=>{
     e.preventDefault();
-    const afterElement = getDragAfterElement(workspace, e.clientY);
+    const afterElement = getDragAfterElement(workspace,e.clientY);
     if(draggedBlock){
-      if(afterElement == null) workspace.appendChild(draggedBlock);
-      else workspace.insertBefore(draggedBlock, afterElement);
+      if(afterElement==null) workspace.appendChild(draggedBlock);
+      else workspace.insertBefore(draggedBlock,afterElement);
     }
   });
 }
 function getDragAfterElement(container, y){
   const draggableElements = [...container.querySelectorAll(".workspace-block:not(.dragging)")];
-  return draggableElements.reduce((closest, child)=>{
+  return draggableElements.reduce((closest,child)=>{
     const box = child.getBoundingClientRect();
     const offset = y - box.top - box.height/2;
-    if(offset < 0 && offset > closest.offset) return { offset: offset, element: child };
+    if(offset<0 && offset>closest.offset) return {offset:offset, element:child};
     else return closest;
-  }, { offset: Number.NEGATIVE_INFINITY }).element;
+  },{offset:Number.NEGATIVE_INFINITY}).element;
 }
 
-// Simple code check system
+// Run code & check lesson
 document.getElementById("runCode").addEventListener("click", ()=>{
+  let success=false;
   const wBlocks = workspace.querySelectorAll(".workspace-block");
-  const code = [...wBlocks].map(b=>b.dataset.code).join("\n");
-  let success = false;
-  switch(currentLesson){
-    case 0: success = code.includes("WalkSpeed"); break;
-    case 1: success = code.includes("JumpPower"); break;
-    case 2: success = code.includes("PlayerAdded"); break;
-    case 3: success = code.includes("Touched"); break;
-    case 4: success = code.includes("ScreenGui"); break;
-    case 5: success = code.includes("TextLabel"); break;
-    default: success = true;
+  const codes = [...wBlocks].map(b=>{
+    const input = b.querySelector("input");
+    if(input) return b.dataset.code.replace("VALUE",input.value);
+    else return b.dataset.code;
+  });
+  const combined = codes.join("\n");
+  success = combined.includes(lessons[currentLesson].check);
+  if(success){
+    document.getElementById("output").textContent="✅ Objective Completed!";
+    // Simple character animation example
+    if(combined.includes("WalkSpeed")) character.style.left = "70%";
+    if(combined.includes("JumpPower")) character.style.bottom = "50px";
+  } else {
+    document.getElementById("output").textContent="❌ Try Again!";
   }
-  document.getElementById("output").textContent = success ? "✅ Objective Completed!" : "❌ Try Again!";
 });
 
 // Next lesson
