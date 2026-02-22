@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>AceBlocks | Learn Roblox Lua</title>
+<title>AceBlocks Ultimate | Roblox Lua Lessons</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -10,27 +10,27 @@ body { margin:0; font-family:'Montserrat',sans-serif; background:#0f172a; color:
 header { padding:20px; background:#111827; text-align:center; }
 header h1 { margin:0; font-size:2rem; color:#38bdf8; }
 .container { display:flex; height:calc(100vh - 80px); }
-#block-panel { width:240px; background:#1e293b; padding:10px; overflow-y:auto; }
+#block-panel { width:260px; background:#1e293b; padding:10px; overflow-y:auto; border-right:2px solid #38bdf8; }
 #block-panel h2 { font-size:1.2rem; margin-top:0; color:#60a5fa; border-bottom:1px solid #475569; padding-bottom:4px; }
 .block-category { margin-bottom:20px; }
-.block { background:#334155; padding:10px; margin:5px 0; border-radius:6px; cursor:grab; }
+.block { background:#334155; padding:10px; margin:5px 0; border-radius:6px; cursor:grab; user-select:none; transition:0.2s; }
 .block:hover { background:#475569; }
-#workspace { flex:1; background:#0f172a; padding:20px; overflow-y:auto; border-left:2px solid #38bdf8; position:relative; }
-.workspace-block { background:#1e293b; padding:10px; margin:5px 0; border-radius:6px; cursor:grab; display:flex; justify-content:space-between; align-items:center; }
+#workspace { flex:1; background:#0f172a; padding:20px; overflow-y:auto; position:relative; }
+.workspace-block { background:#1e293b; padding:10px; margin:5px 0; border-radius:6px; cursor:grab; display:flex; justify-content:space-between; align-items:center; transition:0.2s; }
 .workspace-block.dragging { opacity:0.5; }
 input.value-input { width:50px; margin-left:5px; border-radius:4px; border:none; padding:2px 4px; }
-#objective { padding:10px; background:#1e293b; border-radius:6px; margin-bottom:10px; }
+#objective { padding:10px; background:#1e293b; border-radius:6px; margin-bottom:10px; font-weight:bold; }
 #character { width:40px; height:40px; background:#38bdf8; border-radius:50%; position:absolute; bottom:20px; left:50%; transition:0.3s all ease; }
-button { background:#38bdf8; color:#0f172a; border:none; padding:10px 20px; border-radius:6px; cursor:pointer; margin-top:10px; }
+button { background:#38bdf8; color:#0f172a; border:none; padding:10px 20px; border-radius:6px; cursor:pointer; margin-top:10px; transition:0.2s; }
 button:hover { background:#60a5fa; }
-#output { margin-top:10px; }
+#output { margin-top:10px; font-weight:bold; }
 .certificate { display:none; padding:20px; background:#111827; color:#38bdf8; border-radius:8px; text-align:center; font-size:1.2rem; margin-top:10px; }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>AceBlocks | Learn Roblox Lua</h1>
+  <h1>AceBlocks Ultimate | Learn Roblox Lua</h1>
 </header>
 
 <div class="container">
@@ -38,15 +38,22 @@ button:hover { background:#60a5fa; }
     <h2>Movement</h2>
     <div class="block" data-code="player.WalkSpeed = VALUE">Set WalkSpeed</div>
     <div class="block" data-code="player.JumpPower = VALUE">Set JumpPower</div>
+
     <h2>Events</h2>
     <div class="block" data-code="game.Players.PlayerAdded:Connect(function(player)\n  -- code here\nend)">On Player Join</div>
     <div class="block" data-code="workspace.Touched:Connect(function(hit)\n  -- code here\nend)">On Touch</div>
+
     <h2>UI</h2>
     <div class="block" data-code="local gui = Instance.new('ScreenGui', player.PlayerGui)">Create GUI</div>
     <div class="block" data-code="local textLabel = Instance.new('TextLabel', gui)">Add TextLabel</div>
+
     <h2>Loops & Logic</h2>
     <div class="block" data-code="for i = 1, VALUE do\n  -- code here\nend">For Loop</div>
     <div class="block" data-code="if CONDITION then\n  -- code here\nend">If Statement</div>
+
+    <h2>Variables</h2>
+    <div class="block" data-code="local VAR = VALUE">Create Variable</div>
+    <div class="block" data-code="VAR = VALUE">Change Variable</div>
   </div>
 
   <div id="workspace">
@@ -63,7 +70,7 @@ button:hover { background:#60a5fa; }
 </div>
 
 <script>
-// Lessons aligned with NZ curriculum basics
+// --- Lesson System ---
 const lessons = [
   {objective:"Make your player move faster", check:"WalkSpeed"},
   {objective:"Make your player jump higher", check:"JumpPower"},
@@ -71,10 +78,10 @@ const lessons = [
   {objective:"Detect when the player touches an object", check:"Touched"},
   {objective:"Create a GUI for the player", check:"ScreenGui"},
   {objective:"Add a TextLabel to GUI", check:"TextLabel"},
-  {objective:"Change WalkSpeed with a variable", check:"WalkSpeed"},
-  {objective:"Change JumpPower with a variable", check:"JumpPower"},
+  {objective:"Use a variable to change WalkSpeed", check:"VAR"},
+  {objective:"Use a variable to change JumpPower", check:"VAR"},
   {objective:"Connect multiple events", check:"Connect"},
-  {objective:"Make a stamina bar GUI", check:"TextLabel"},
+  {objective:"Create a stamina bar GUI", check:"TextLabel"},
   {objective:"Print player's name on join", check:"PlayerAdded"},
   {objective:"Combine movement + GUI + events", check:"WalkSpeed"}
 ];
@@ -83,20 +90,21 @@ let currentLesson = 0;
 const objectiveDiv = document.getElementById("objective");
 const workspace = document.getElementById("workspace");
 const character = document.getElementById("character");
+const output = document.getElementById("output");
 
-function nextLessonFunc() {
-  if(currentLesson < lessons.length - 1){
-    currentLesson++;
+// --- Update Objective ---
+function updateLesson() {
+  if(currentLesson < lessons.length){
     objectiveDiv.textContent = "Objective: " + lessons[currentLesson].objective;
     workspace.querySelectorAll(".workspace-block").forEach(b => b.remove());
-    document.getElementById("output").textContent = "";
-    updateWorkspaceDrag();
+    output.textContent = "";
   } else {
     document.getElementById("certificate").style.display = "block";
+    objectiveDiv.textContent = "All lessons completed!";
   }
 }
 
-// Drag & drop panel blocks
+// --- Drag & Drop Blocks ---
 document.querySelectorAll("#block-panel .block").forEach(block=>{
   block.setAttribute("draggable","true");
   block.addEventListener("dragstart", e=>{
@@ -104,7 +112,6 @@ document.querySelectorAll("#block-panel .block").forEach(block=>{
   });
 });
 
-// Drop into workspace
 workspace.addEventListener("dragover", e=>e.preventDefault());
 workspace.addEventListener("drop", e=>{
   e.preventDefault();
@@ -113,18 +120,24 @@ workspace.addEventListener("drop", e=>{
   newBlock.className = "workspace-block";
   newBlock.setAttribute("draggable","true");
   newBlock.dataset.code = code;
-  newBlock.innerHTML = code.replace("VALUE","<input type='number' class='value-input' value='10'>");
+  newBlock.innerHTML = code.replace("VALUE","<input type='number' class='value-input' value='10'>").replace("VAR","<input type='text' class='value-input' value='myVar'>").replace("CONDITION","<input type='text' class='value-input' value='true'>");
   workspace.appendChild(newBlock);
-  updateWorkspaceDrag();
+  setupDragReorder();
 });
 
-// Reorder workspace blocks
-function updateWorkspaceDrag() {
+// --- Drag Reorder ---
+function setupDragReorder() {
   let draggedBlock = null;
-  const wBlocks = workspace.querySelectorAll(".workspace-block");
-  wBlocks.forEach(block=>{
-    block.addEventListener("dragstart", e=>{ draggedBlock = block; block.classList.add("dragging"); });
-    block.addEventListener("dragend", e=>{ draggedBlock=null; block.classList.remove("dragging"); });
+  const blocks = workspace.querySelectorAll(".workspace-block");
+  blocks.forEach(block=>{
+    block.addEventListener("dragstart", e=>{
+      draggedBlock = block;
+      block.classList.add("dragging");
+    });
+    block.addEventListener("dragend", e=>{
+      draggedBlock=null;
+      block.classList.remove("dragging");
+    });
   });
   workspace.addEventListener("dragover", e=>{
     e.preventDefault();
@@ -145,31 +158,33 @@ function getDragAfterElement(container, y){
   },{offset:Number.NEGATIVE_INFINITY}).element;
 }
 
-// Run code & check lesson
+// --- Run Code & Validate ---
 document.getElementById("runCode").addEventListener("click", ()=>{
-  let success=false;
-  const wBlocks = workspace.querySelectorAll(".workspace-block");
-  const codes = [...wBlocks].map(b=>{
+  const blocks = workspace.querySelectorAll(".workspace-block");
+  const codeStrings = [...blocks].map(b=>{
     const input = b.querySelector("input");
-    if(input) return b.dataset.code.replace("VALUE",input.value);
-    else return b.dataset.code;
+    let code = b.dataset.code;
+    if(input) code = code.replace("VALUE",input.value).replace("VAR",input.value).replace("CONDITION",input.value);
+    return code;
   });
-  const combined = codes.join("\n");
-  success = combined.includes(lessons[currentLesson].check);
-  if(success){
-    document.getElementById("output").textContent="✅ Objective Completed!";
-    // Simple character animation example
-    if(combined.includes("WalkSpeed")) character.style.left = "70%";
-    if(combined.includes("JumpPower")) character.style.bottom = "50px";
-  } else {
-    document.getElementById("output").textContent="❌ Try Again!";
-  }
+  const combined = codeStrings.join("\n");
+  if(combined.includes(lessons[currentLesson].check)){
+    output.textContent = "✅ Objective Completed!";
+    // Character animation
+    if(combined.includes("WalkSpeed")) character.style.left="70%";
+    if(combined.includes("JumpPower")) character.style.bottom="60px";
+    if(combined.includes("JumpPower") && combined.includes("WalkSpeed")) character.style.background="#facc15";
+  } else output.textContent = "❌ Try Again!";
 });
 
-// Next lesson
-document.getElementById("nextLesson").addEventListener("click", nextLessonFunc);
-updateWorkspaceDrag();
-</script>
+// --- Next Lesson ---
+document.getElementById("nextLesson").addEventListener("click", ()=>{
+  currentLesson++;
+  updateLesson();
+});
 
+updateLesson();
+setupDragReorder();
+</script>
 </body>
 </html>
