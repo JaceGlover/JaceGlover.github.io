@@ -3,122 +3,54 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AceBlocks v4 | Ultimate Roblox Block Builder</title>
+<title>AceBlocks | Roblox Block Engine</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  body {
-    font-family: 'Montserrat', sans-serif;
-    background: #0f172a;
-    color: white;
-    margin: 0;
-    padding: 20px;
-    text-align: center;
-  }
-  h1 { color: #38bdf8; margin-bottom: 10px; }
-  #toolbox {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-  .block {
-    padding: 10px 20px;
-    margin: 5px;
-    border-radius: 12px;
-    cursor: grab;
-    user-select: none;
-    transition: 0.2s;
-    font-weight: bold;
-    color: white;
-  }
-  .Player { background: #2563eb; }
-  .Action { background: #f59e0b; }
-  .Print { background: #10b981; }
-  .Loop { background: #8b5cf6; }
-  .Teleport { background: #ef4444; }
-  .block:hover { transform: scale(1.05); }
-
-  #workspace {
-    margin: 0 auto;
-    background: #111827;
-    padding: 20px;
-    border-radius: 12px;
-    min-height: 400px;
-    width: 90%;
-    text-align: left;
-    position: relative;
-  }
-  .workspace-block {
-    border-radius: 8px;
-    padding: 10px;
-    margin-bottom: 5px;
-    display: flex;
-    align-items: center;
-    cursor: grab;
-    position: relative;
-    transition: 0.2s;
-  }
-  .workspace-block input {
-    width: 60px;
-    margin-left: 5px;
-    border-radius: 4px;
-    border: none;
-    padding: 2px 5px;
-  }
-  .nested {
-    margin-left: 20px;
-    border-left: 2px dashed #38bdf8;
-    padding-left: 10px;
-  }
-  .delete-btn {
-    background: red;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    margin-left: 10px;
-    cursor: pointer;
-    padding: 2px 5px;
-  }
-  #codeOutput {
-    margin-top: 20px;
-    background: #0f172a;
-    color: #38bdf8;
-    padding: 15px;
-    border-radius: 12px;
-    font-family: monospace;
-    white-space: pre-wrap;
-    text-align: left;
-    max-width: 90%;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .button {
-    display: inline-block;
-    padding: 10px 20px;
-    margin: 10px;
-    background: #38bdf8;
-    color: #0f172a;
-    text-decoration: none;
-    border-radius: 8px;
-    font-weight: 700;
-    transition: 0.3s ease;
-  }
-  .button:hover { background: white; }
+body { font-family:'Montserrat', sans-serif; background:#0f172a; color:white; margin:0; padding:20px; text-align:center; }
+h1 { color:#38bdf8; margin-bottom:10px; }
+#toolbox { display:flex; flex-wrap:wrap; justify-content:center; margin-bottom:20px; }
+.block { padding:10px 20px; margin:5px; border-radius:12px; cursor:grab; user-select:none; font-weight:bold; color:white; transition:0.2s; }
+.Player{background:#2563eb;} .Action{background:#f59e0b;} .Print{background:#10b981;} .Loop{background:#8b5cf6;} .Teleport{background:#ef4444;} .Event{background:#f43f5e;}
+.block:hover{transform:scale(1.05);}
+#workspace{margin:0 auto; background:#111827; padding:20px; border-radius:12px; min-height:500px; width:90%; text-align:left; position:relative;}
+.workspace-block{border-radius:8px; padding:10px; margin-bottom:5px; display:flex; align-items:center; cursor:grab; position:relative; transition:0.2s;}
+.workspace-block input{width:70px; margin-left:5px; border-radius:4px; border:none; padding:2px 5px;}
+.nested{margin-left:20px; border-left:2px dashed #38bdf8; padding-left:10px;}
+.delete-btn{background:red;color:white;border:none;border-radius:4px;margin-left:10px;cursor:pointer;padding:2px 5px;}
+#codeOutput{margin-top:20px;background:#0f172a;color:#38bdf8;padding:15px;border-radius:12px;font-family:monospace;white-space:pre-wrap;text-align:left; max-width:90%; margin-left:auto;margin-right:auto;}
+.button{display:inline-block;padding:10px 20px;margin:10px;background:#38bdf8;color:#0f172a;text-decoration:none;border-radius:8px;font-weight:700;transition:0.3s ease;}
+.button:hover{background:white;}
 </style>
 </head>
 <body>
 
-<h1>AceBlocks v4 | Ultimate Roblox Builder</h1>
-<p>Drag, snap, nest, edit, and export Lua for Roblox!</p>
+<h1>AceBlocks | Roblox Block Engine</h1>
+<p>Drag, snap, nest, type, and export Lua for Roblox!</p>
 
 <div id="toolbox">
+  <div class="block Event" draggable="true" data-type="OnPlayerJoin">On Player Join</div>
+  <div class="block Event" draggable="true" data-type="OnKeyPress">On Key Press</div>
+  <div class="block Event" draggable="true" data-type="OnTouch">On Touch</div>
+  <div class="block Event" draggable="true" data-type="OnClick">On Click</div>
+  <div class="block Event" draggable="true" data-type="OnDeath">On Death</div>
+
   <div class="block Player" draggable="true" data-type="WalkSpeed">WalkSpeed</div>
   <div class="block Player" draggable="true" data-type="JumpPower">JumpPower</div>
   <div class="block Player" draggable="true" data-type="Stamina">Stamina</div>
+
   <div class="block Print" draggable="true" data-type="Print">Print Text</div>
+
   <div class="block Loop" draggable="true" data-type="Loop">Loop</div>
-  <div class="block Teleport" draggable="true" data-type="Teleport">Teleport</div>
+  <div class="block Loop" draggable="true" data-type="While">While</div>
+  <div class="block Loop" draggable="true" data-type="If">If</div>
+  <div class="block Loop" draggable="true" data-type="IfElse">IfElse</div>
+
   <div class="block Action" draggable="true" data-type="Say">Say Message</div>
+  <div class="block Action" draggable="true" data-type="Teleport">Teleport</div>
+  <div class="block Action" draggable="true" data-type="PlaySound">Play Sound</div>
+  <div class="block Action" draggable="true" data-type="SpawnItem">Spawn Item</div>
+  <div class="block Action" draggable="true" data-type="ChangeHealth">Change Health</div>
+  <div class="block Action" draggable="true" data-type="MessageAll">Message All</div>
 </div>
 
 <div id="workspace">Workspace: Drop blocks here</div>
@@ -139,128 +71,133 @@ const loadBtn = document.getElementById('loadBtn');
 let workspaceBlocks = [];
 
 // Drag toolbox blocks
-document.querySelectorAll('.block').forEach(block => {
-  block.addEventListener('dragstart', e => {
-    e.dataTransfer.setData('text/plain', block.dataset.type);
-  });
+document.querySelectorAll('.block').forEach(block=>{
+  block.addEventListener('dragstart', e=>{ e.dataTransfer.setData('text/plain', block.dataset.type); });
 });
 
 // Drop in workspace
-workspace.addEventListener('dragover', e => e.preventDefault());
-workspace.addEventListener('drop', e => {
+workspace.addEventListener('dragover', e=>e.preventDefault());
+workspace.addEventListener('drop', e=>{
   e.preventDefault();
   const type = e.dataTransfer.getData('text/plain');
   addBlockToWorkspace(type, workspace);
 });
 
-// Add block function
-function addBlockToWorkspace(type, parent){
-  const blockEl = document.createElement('div');
-  blockEl.className = 'workspace-block';
-  blockEl.dataset.type = type;
+function addBlockToWorkspace(type,parent){
+  const blockEl=document.createElement('div');
+  blockEl.className='workspace-block';
+  blockEl.dataset.type=type;
 
-  let html = '';
+  let html='';
   switch(type){
-    case 'WalkSpeed':
-      html = 'WalkSpeed = <input type="number" value="24">';
-      break;
-    case 'JumpPower':
-      html = 'JumpPower = <input type="number" value="50">';
-      break;
-    case 'Stamina':
-      html = 'Stamina = <input type="number" value="100">';
-      break;
-    case 'Print':
-      html = 'Print = <input type="text" value="Hello Roblox">';
-      break;
-    case 'Loop':
-      html = 'Loop <input type="number" value="5"> times <div class="nested"></div>';
-      break;
-    case 'Teleport':
-      html = 'Teleport to <input type="text" value="x,y,z">';
-      break;
-    case 'Say':
-      html = 'Say = <input type="text" value="Hi!">';
-      break;
+    case 'WalkSpeed': html='WalkSpeed=<input type="number" value="24">'; break;
+    case 'JumpPower': html='JumpPower=<input type="number" value="50">'; break;
+    case 'Stamina': html='Stamina=<input type="number" value="100">'; break;
+    case 'Print': html='print(<input type="text" value=\"Hello Roblox\">)'; break;
+    case 'Say': html='Say(<input type="text" value=\"Hi!\")>'; break;
+    case 'Teleport': html='Teleport to <input type="text" value="x,y,z">'; break;
+    case 'PlaySound': html='PlaySound(<input type="text" value="SoundID">)'; break;
+    case 'SpawnItem': html='SpawnItem(<input type="text" value="ItemName">)'; break;
+    case 'ChangeHealth': html='ChangeHealth(<input type="number" value="10">)'; break;
+    case 'MessageAll': html='MessageAll(<input type="text" value="Hello Everyone">)'; break;
+    case 'Loop': html='Loop <input type="number" value="5"> times <div class="nested"></div>'; break;
+    case 'While': html='While <input type="text" value="condition"> do <div class="nested"></div>'; break;
+    case 'If': html='If <input type="text" value="condition"> then <div class="nested"></div>'; break;
+    case 'IfElse': html='If <input type="text" value="condition"> then <div class="nested"></div> else <div class="nested"></div>'; break;
+    case 'OnPlayerJoin': html='OnPlayerJoin <div class="nested"></div>'; break;
+    case 'OnKeyPress': html='OnKeyPress key <input type="text" value="E"> <div class="nested"></div>'; break;
+    case 'OnTouch': html='OnTouch <div class="nested"></div>'; break;
+    case 'OnClick': html='OnClick <div class="nested"></div>'; break;
+    case 'OnDeath': html='OnDeath <div class="nested"></div>'; break;
   }
-  blockEl.innerHTML = html;
+  blockEl.innerHTML=html;
 
-  const del = document.createElement('button');
-  del.textContent = 'X';
-  del.className = 'delete-btn';
-  del.onclick = () => { blockEl.remove(); updateCode(); };
+  const del=document.createElement('button');
+  del.textContent='X';
+  del.className='delete-btn';
+  del.onclick=()=>{ blockEl.remove(); updateCode(); };
   blockEl.appendChild(del);
 
   parent.appendChild(blockEl);
   workspaceBlocks.push(blockEl);
 
-  // Nested loops
-  if(type === 'Loop'){
-    const nestedDiv = blockEl.querySelector('.nested');
-    nestedDiv.addEventListener('dragover', e => e.preventDefault());
-    nestedDiv.addEventListener('drop', e => {
+  // Nested blocks
+  blockEl.querySelectorAll('.nested').forEach(nestedDiv=>{
+    nestedDiv.addEventListener('dragover', e=>e.preventDefault());
+    nestedDiv.addEventListener('drop', e=>{
       e.preventDefault();
-      const nestedType = e.dataTransfer.getData('text/plain');
-      addBlockToWorkspace(nestedType, nestedDiv);
+      const nestedType=e.dataTransfer.getData('text/plain');
+      addBlockToWorkspace(nestedType,nestedDiv);
     });
-  }
+  });
 
-  blockEl.querySelectorAll('input').forEach(inp => inp.addEventListener('input', updateCode));
+  blockEl.querySelectorAll('input').forEach(inp=>inp.addEventListener('input', updateCode));
   updateCode();
 }
 
-// Generate Lua code
-function generateLua(blocks, indent=''){
-  let lua = '';
-  blocks.forEach(b => {
-    const type = b.dataset.type;
-    const input = b.querySelector('input');
+// Generate Lua
+function generateLua(blocks,indent=''){
+  let lua='';
+  blocks.forEach(b=>{
+    const type=b.dataset.type;
+    const input=b.querySelector('input');
     switch(type){
-      case 'WalkSpeed': lua += `${indent}Player.WalkSpeed = ${input.value}\n`; break;
-      case 'JumpPower': lua += `${indent}Player.JumpPower = ${input.value}\n`; break;
-      case 'Stamina': lua += `${indent}Player.Stamina = ${input.value}\n`; break;
-      case 'Print': lua += `${indent}print("${input.value}")\n`; break;
+      case 'WalkSpeed': lua+=`${indent}Player.WalkSpeed=${input.value}\n`; break;
+      case 'JumpPower': lua+=`${indent}Player.JumpPower=${input.value}\n`; break;
+      case 'Stamina': lua+=`${indent}Player.Stamina=${input.value}\n`; break;
+      case 'Print': lua+=`${indent}print("${input.value}")\n`; break;
+      case 'Say': lua+=`${indent}Player:Say("${input.value}")\n`; break;
+      case 'Teleport': lua+=`${indent}Player:Teleport(Vector3.new(${input.value}))\n`; break;
+      case 'PlaySound': lua+=`${indent}PlaySound("${input.value}")\n`; break;
+      case 'SpawnItem': lua+=`${indent}SpawnItem("${input.value}")\n`; break;
+      case 'ChangeHealth': lua+=`${indent}ChangeHealth(${input.value})\n`; break;
+      case 'MessageAll': lua+=`${indent}MessageAll("${input.value}")\n`; break;
       case 'Loop':
-        lua += `${indent}for i=1,${input.value} do\n`;
-        lua += generateLua(Array.from(b.querySelector('.nested').children), indent+'  ');
-        lua += `${indent}end\n`; break;
-      case 'Teleport': lua += `${indent}Player:Teleport(Vector3.new(${input.value}))\n`; break;
-      case 'Say': lua += `${indent}Player:Say("${input.value}")\n`; break;
+        lua+=`${indent}for i=1,${input.value} do\n`;
+        lua+=generateLua(Array.from(b.querySelector('.nested').children),indent+'  ');
+        lua+=`${indent}end\n`; break;
+      case 'While':
+        lua+=`${indent}while ${input.value} do\n`;
+        lua+=generateLua(Array.from(b.querySelector('.nested').children),indent+'  ');
+        lua+=`${indent}end\n`; break;
+      case 'If':
+        lua+=`${indent}if ${input.value} then\n`;
+        lua+=generateLua(Array.from(b.querySelector('.nested').children),indent+'  ');
+        lua+=`${indent}end\n`; break;
+      case 'IfElse':
+        const children=b.querySelectorAll('.nested');
+        lua+=`${indent}if ${input.value} then\n`;
+        lua+=generateLua(Array.from(children[0].children),indent+'  ');
+        lua+=`${indent}else\n`;
+        lua+=generateLua(Array.from(children[1].children),indent+'  ');
+        lua+=`${indent}end\n`; break;
+      case 'OnPlayerJoin': lua+=`${indent}game.Players.PlayerAdded:Connect(function(player)\n`; lua+=generateLua(Array.from(b.querySelector('.nested').children),indent+'  '); lua+=`${indent}end)\n`; break;
+      case 'OnKeyPress': lua+=`${indent}game:GetService("UserInputService").InputBegan:Connect(function(input,processed)\n`; lua+=`${indent}  if input.KeyCode==Enum.KeyCode.${input.value} then\n`; lua+=generateLua(Array.from(b.querySelector('.nested').children),indent+'    '); lua+=`${indent}  end\n`; lua+=`${indent}end)\n`; break;
+      case 'OnTouch': lua+=`${indent}part.Touched:Connect(function(hit)\n`; lua+=generateLua(Array.from(b.querySelector('.nested').children),indent+'  '); lua+=`${indent}end)\n`; break;
+      case 'OnClick': lua+=`${indent}clickDetector.MouseClick:Connect(function(player)\n`; lua+=generateLua(Array.from(b.querySelector('.nested').children),indent+'  '); lua+=`${indent}end)\n`; break;
+      case 'OnDeath': lua+=`${indent}player.Character.Humanoid.Died:Connect(function()\n`; lua+=generateLua(Array.from(b.querySelector('.nested').children),indent+'  '); lua+=`${indent}end)\n`; break;
     }
   });
   return lua;
 }
 
-function updateCode(){
-  const lua = generateLua(Array.from(workspace.children));
-  codeOutput.textContent = lua || '-- Lua code will appear here';
-}
+function updateCode(){ codeOutput.textContent=generateLua(Array.from(workspace.children))||'-- Lua code will appear here'; }
 
 // Export Lua
-exportBtn.addEventListener('click', () => {
-  const blob = new Blob([codeOutput.textContent], {type:'text/plain'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'AceBlocks.lua';
+exportBtn.addEventListener('click', ()=>{
+  const blob=new Blob([codeOutput.textContent],{type:'text/plain'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='AceBlocks.lua';
   a.click();
 });
 
-// Save workspace to localStorage
-saveBtn.addEventListener('click', () => {
-  localStorage.setItem('aceblocksWorkspace', workspace.innerHTML);
-  alert('Workspace saved!');
-});
-
-// Load workspace
-loadBtn.addEventListener('click', () => {
-  const data = localStorage.getItem('aceblocksWorkspace');
-  if(data) {
-    workspace.innerHTML = data;
-    updateCode();
-    alert('Workspace loaded!');
-  }
+// Save/load workspace
+saveBtn.addEventListener('click', ()=>{ localStorage.setItem('aceblocksWorkspace',workspace.innerHTML); alert('Workspace saved!'); });
+loadBtn.addEventListener('click', ()=>{
+  const data=localStorage.getItem('aceblocksWorkspace');
+  if(data){ workspace.innerHTML=data; updateCode(); alert('Workspace loaded!'); }
 });
 </script>
-
 </body>
 </html>
