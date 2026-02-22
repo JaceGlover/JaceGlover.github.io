@@ -2,158 +2,231 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>AceBlocks Lua Academy</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="AceBlocks Lua Academy - Learn Roblox Lua visually with drag-and-drop blocks and interactive character animations.">
-<meta name="keywords" content="AceBlocks, Lua, Roblox, coding, block coding, Lua lessons">
-<meta name="author" content="Jace Glover">
-
+<title>AceBlocks Lua Lessons | Jace Glover</title>
+<meta name="description" content="AceBlocks: Interactive Lua coding lessons for Roblox beginners. Complete objectives and earn certificates!">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/blockly/blockly.min.js"></script>
-
 <style>
-  body { margin: 0; font-family: 'Montserrat', sans-serif; display: flex; height: 100vh; background: #0f172a; color: #fff; }
-  #sidebar { width: 250px; background: #111827; padding: 20px; overflow-y: auto; }
-  #sidebar h2 { font-size: 1.5rem; margin-bottom: 15px; color: #38bdf8; }
-  #sidebar button { display: block; width: 100%; margin: 5px 0; padding: 10px; background: #1e293b; color: #38bdf8; border: none; border-radius: 6px; cursor: pointer; text-align: left; }
-  #sidebar button:hover { background: #38bdf8; color: #0f172a; }
-  #main { flex: 1; display: flex; flex-direction: column; padding: 20px; }
-  #blocklyDiv { height: 400px; width: 100%; border: 2px solid #38bdf8; border-radius: 10px; }
-  #character { width: 100px; height: 100px; background: #38bdf8; border-radius: 50%; margin-top: 20px; position: relative; transition: all 0.3s ease; }
-  #controls { margin-top: 20px; }
-  #controls button { margin-right: 10px; padding: 10px 20px; background: #38bdf8; color: #0f172a; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
-  #controls button:hover { background: #fff; }
+body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    background: #0f172a;
+    color: white;
+}
+.header {
+    padding: 20px;
+    text-align: center;
+    background: #111827;
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    color: #38bdf8;
+}
+.lesson-container {
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+}
+#block-categories {
+    width: 200px;
+    background: #1e293b;
+    padding: 10px;
+    border-radius: 8px;
+}
+.category {
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #38bdf8;
+}
+.block {
+    background: #334155;
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 5px;
+    cursor: grab;
+    user-select: none;
+    text-align: center;
+}
+.block:hover {
+    background: #475569;
+}
+#lesson-area {
+    flex: 1;
+    background: #111827;
+    padding: 20px;
+    border-radius: 8px;
+}
+#character {
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    background: #38bdf8;
+    margin: 10px auto;
+    transition: transform 0.3s ease;
+}
+.button {
+    padding: 10px 20px;
+    margin: 10px 5px;
+    background: #38bdf8;
+    color: #0f172a;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.button:hover {
+    background: #60a5fa;
+}
+#script-output {
+    background: #1e293b;
+    padding: 10px;
+    margin-top: 10px;
+    height: 150px;
+    overflow-y: auto;
+    border-radius: 5px;
+    font-family: monospace;
+}
 </style>
 </head>
 <body>
 
-<div id="sidebar">
-  <h2>Lessons</h2>
-  <button onclick="loadLesson(1)">Lesson 1: Variables</button>
-  <button onclick="loadLesson(2)">Lesson 2: Math</button>
-  <button onclick="loadLesson(3)">Lesson 3: Text</button>
-  <button onclick="loadLesson(4)">Loops</button>
-  <button onclick="loadLesson(5)">Events</button>
-  <button onclick="loadLesson(6)">Functions</button>
-  <button onclick="loadLesson(7)">Player Movement</button>
-  <button onclick="loadLesson(8)">Stamina System</button>
-  <button onclick="loadLesson(9)">UI Updates</button>
-  <button onclick="loadLesson(10)">LocalScripts vs Scripts</button>
-  <button onclick="loadLesson(11)">Advanced Roblox Events</button>
-  <button onclick="loadLesson(12)">Final Project</button>
+<div class="header">
+    <h1>AceBlocks Lua Lessons</h1>
+    <p>Complete objectives to unlock the next lesson!</p>
 </div>
 
-<div id="main">
-  <div id="blocklyDiv"></div>
-  <div id="character"></div>
-  <div id="controls">
-    <button onclick="runCode()">Run Code</button>
-    <button onclick="exportLua()">Export Lua</button>
-    <button onclick="getCertificate()">Get Certificate</button>
-  </div>
+<div class="lesson-container">
+    <div id="block-categories">
+        <div class="category">Movement</div>
+        <div class="block" draggable="true" data-code="MoveForward(5)">Move Forward</div>
+        <div class="block" draggable="true" data-code="MoveBackward(5)">Move Backward</div>
+        <div class="block" draggable="true" data-code="TurnLeft(90)">Turn Left</div>
+        <div class="block" draggable="true" data-code="TurnRight(90)">Turn Right</div>
+
+        <div class="category">Player Stats</div>
+        <div class="block" draggable="true" data-code="SetSpeed(16)">Set Speed</div>
+        <div class="block" draggable="true" data-code="AddStaminaBar()">Add Stamina</div>
+        <div class="block" draggable="true" data-code="Sprint(2)">Sprint Ability</div>
+
+        <div class="category">Control</div>
+        <div class="block" draggable="true" data-code="Loop(5)">Loop</div>
+        <div class="block" draggable="true" data-code="Wait(1)">Wait</div>
+    </div>
+
+    <div id="lesson-area">
+        <h2 id="lesson-title"></h2>
+        <p id="lesson-objective"></p>
+        <div id="character"></div>
+        <div id="workspace" style="min-height: 100px; border: 2px dashed #38bdf8; padding:10px;"></div>
+        <button class="button" onclick="runCode()">Run Code</button>
+        <button class="button" onclick="completeLesson()">Complete Lesson</button>
+        <div id="script-output"></div>
+    </div>
 </div>
 
 <script>
-  // Initialize Blockly workspace
-  var workspace = Blockly.inject('blocklyDiv', {
-    toolbox: `<xml xmlns="https://developers.google.com/blockly/xml">
-      <category name="Variables" colour="#4a90e2">
-        <block type="variables_set"></block>
-        <block type="variables_get"></block>
-      </category>
-      <category name="Math" colour="#e67e22">
-        <block type="math_number"></block>
-        <block type="math_arithmetic"></block>
-      </category>
-      <category name="Text" colour="#f1c40f">
-        <block type="text"></block>
-        <block type="text_print"></block>
-      </category>
-      <category name="Logic" colour="#2ecc71">
-        <block type="controls_if"></block>
-        <block type="logic_compare"></block>
-      </category>
-      <category name="Loops" colour="#9b59b6">
-        <block type="controls_repeat_ext"></block>
-        <block type="controls_whileUntil"></block>
-      </category>
-      <category name="Events" colour="#e74c3c">
-        <block type="event_whenflagclicked"></block>
-        <block type="event_playerjoined"></block>
-      </category>
-      <category name="Roblox" colour="#1abc9c">
-        <block type="roblox_move"></block>
-        <block type="roblox_stamina"></block>
-      </category>
-    </xml>`
-  });
-
-  // Custom block definitions
-  Blockly.defineBlocksWithJsonArray([
+const lessons = [
     {
-      "type": "event_whenflagclicked",
-      "message0": "when program starts",
-      "nextStatement": null,
-      "colour": 230,
-      "tooltip": "",
-      "helpUrl": ""
+        title: "Lesson 1: Move Forward",
+        objective: "Make the character move forward 5 studs",
+        blocks: ["MoveForward(5)", "Loop(1)"],
+        completed: false
     },
     {
-      "type": "event_playerjoined",
-      "message0": "when player joins",
-      "nextStatement": null,
-      "colour": 230
+        title: "Lesson 2: Add Stamina",
+        objective: "Add a stamina bar that decreases when moving",
+        blocks: ["AddStaminaBar()", "MoveForward(5)"],
+        completed: false
     },
     {
-      "type": "roblox_move",
-      "message0": "move player %1 studs",
-      "args0": [{"type": "field_number","name":"STUDS","value":1,"min":0}],
-      "previousStatement": null,
-      "nextStatement": null,
-      "colour": 120
+        title: "Lesson 3: Sprint Ability",
+        objective: "Create a sprint ability that doubles speed",
+        blocks: ["Sprint(2)", "SetSpeed(16)"],
+        completed: false
     },
     {
-      "type": "roblox_stamina",
-      "message0": "set stamina %1",
-      "args0": [{"type": "field_number","name":"STAMINA","value":100,"min":0,"max":100}],
-      "previousStatement": null,
-      "nextStatement": null,
-      "colour": 120
+        title: "Lesson 4: Complete Run",
+        objective: "Combine movement and sprint to reach the finish line",
+        blocks: ["MoveForward(5)", "Sprint(2)", "Loop(2)"],
+        completed: false
     }
-  ]);
+];
 
-  // Load lesson (placeholder: can customize each lesson's starting blocks)
-  function loadLesson(lesson) {
-    workspace.clear();
-    alert('Loaded Lesson ' + lesson + ' (example starting blocks can be added here)');
-  }
+let currentLessonIndex = 0;
 
-  // Run code simulation
-  function runCode() {
-    var code = Blockly.Lua.workspaceToCode(workspace);
-    console.log('Generated Lua:\n', code);
-    // Animate character based on blocks
-    var character = document.getElementById('character');
-    if(code.includes('move')) { character.style.transform = 'translateX(100px)'; setTimeout(()=>{character.style.transform='translateX(0)';},500);}
-    if(code.includes('stamina')) { character.style.backgroundColor = '#f1c40f'; setTimeout(()=>{character.style.backgroundColor='#38bdf8';},500);}
-  }
+function loadLesson(index) {
+    const lesson = lessons[index];
+    document.getElementById("lesson-title").innerText = lesson.title;
+    document.getElementById("lesson-objective").innerText = lesson.objective;
+    document.getElementById("workspace").innerHTML = "";
+    document.getElementById("script-output").innerHTML = "";
 
-  // Export Lua code
-  function exportLua() {
-    var code = Blockly.Lua.workspaceToCode(workspace);
-    var blob = new Blob([code], {type: 'text/plain'});
-    var a = document.createElement('a');
-    a.download = 'script.lua';
-    a.href = URL.createObjectURL(blob);
-    a.click();
-  }
+    // Only show relevant blocks
+    const allBlocks = document.querySelectorAll("#block-categories .block");
+    allBlocks.forEach(block => {
+        block.style.display = lesson.blocks.includes(block.getAttribute("data-code")) ? "block" : "none";
+    });
+}
 
-  // Generate simple certificate
-  function getCertificate() {
-    var lesson = prompt("Enter your name for the certificate:");
-    if(!lesson) return;
-    alert(`Congratulations ${lesson}!\nYou completed this AceBlocks Lua lesson!`);
-  }
+function runCode() {
+    const workspace = document.getElementById("workspace");
+    const codeBlocks = workspace.querySelectorAll(".block");
+    let codeOutput = "";
+    const character = document.getElementById("character");
+
+    codeBlocks.forEach(block => {
+        const code = block.getAttribute("data-code");
+        codeOutput += code + ";\n";
+
+        // Simulate simple character reactions
+        if (code.startsWith("MoveForward")) character.style.transform = "translateY(-20px)";
+        if (code.startsWith("MoveBackward")) character.style.transform = "translateY(20px)";
+        if (code.startsWith("TurnLeft")) character.style.transform = "rotate(-15deg)";
+        if (code.startsWith("TurnRight")) character.style.transform = "rotate(15deg)";
+        if (code.startsWith("Sprint")) character.style.transform = "scale(1.2)";
+        setTimeout(() => { character.style.transform = "none"; }, 500);
+    });
+
+    document.getElementById("script-output").innerText = codeOutput;
+}
+
+// Drag and drop functionality
+const blocks = document.querySelectorAll(".block");
+blocks.forEach(block => {
+    block.addEventListener("dragstart", e => {
+        e.dataTransfer.setData("text/plain", block.getAttribute("data-code"));
+    });
+});
+
+const workspace = document.getElementById("workspace");
+workspace.addEventListener("dragover", e => e.preventDefault());
+workspace.addEventListener("drop", e => {
+    e.preventDefault();
+    const code = e.dataTransfer.getData("text/plain");
+    const newBlock = document.createElement("div");
+    newBlock.className = "block";
+    newBlock.innerText = code;
+    newBlock.setAttribute("data-code", code);
+    workspace.appendChild(newBlock);
+});
+
+function completeLesson() {
+    lessons[currentLessonIndex].completed = true;
+    alert("✅ Lesson Completed!");
+
+    if (currentLessonIndex + 1 < lessons.length) {
+        currentLessonIndex++;
+        loadLesson(currentLessonIndex);
+    } else {
+        alert("🎉 Congratulations! You completed all lessons!");
+    }
+}
+
+// Load first lesson
+window.onload = function() {
+    loadLesson(currentLessonIndex);
+};
 </script>
 
 </body>
