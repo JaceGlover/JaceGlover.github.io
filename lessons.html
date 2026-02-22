@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AceBlocks Lua Academy</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="AceBlocks Lua Academy - Learn Roblox Lua visually with drag-and-drop blocks and interactive character animations.">
+<meta name="keywords" content="AceBlocks, Lua, Roblox, coding, block coding, Lua lessons">
+<meta name="author" content="Jace Glover">
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/blockly/blockly.min.js"></script>
+
+<style>
+  body { margin: 0; font-family: 'Montserrat', sans-serif; display: flex; height: 100vh; background: #0f172a; color: #fff; }
+  #sidebar { width: 250px; background: #111827; padding: 20px; overflow-y: auto; }
+  #sidebar h2 { font-size: 1.5rem; margin-bottom: 15px; color: #38bdf8; }
+  #sidebar button { display: block; width: 100%; margin: 5px 0; padding: 10px; background: #1e293b; color: #38bdf8; border: none; border-radius: 6px; cursor: pointer; text-align: left; }
+  #sidebar button:hover { background: #38bdf8; color: #0f172a; }
+  #main { flex: 1; display: flex; flex-direction: column; padding: 20px; }
+  #blocklyDiv { height: 400px; width: 100%; border: 2px solid #38bdf8; border-radius: 10px; }
+  #character { width: 100px; height: 100px; background: #38bdf8; border-radius: 50%; margin-top: 20px; position: relative; transition: all 0.3s ease; }
+  #controls { margin-top: 20px; }
+  #controls button { margin-right: 10px; padding: 10px 20px; background: #38bdf8; color: #0f172a; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+  #controls button:hover { background: #fff; }
+</style>
+</head>
+<body>
+
+<div id="sidebar">
+  <h2>Lessons</h2>
+  <button onclick="loadLesson(1)">Lesson 1: Variables</button>
+  <button onclick="loadLesson(2)">Lesson 2: Math</button>
+  <button onclick="loadLesson(3)">Lesson 3: Text</button>
+  <button onclick="loadLesson(4)">Loops</button>
+  <button onclick="loadLesson(5)">Events</button>
+  <button onclick="loadLesson(6)">Functions</button>
+  <button onclick="loadLesson(7)">Player Movement</button>
+  <button onclick="loadLesson(8)">Stamina System</button>
+  <button onclick="loadLesson(9)">UI Updates</button>
+  <button onclick="loadLesson(10)">LocalScripts vs Scripts</button>
+  <button onclick="loadLesson(11)">Advanced Roblox Events</button>
+  <button onclick="loadLesson(12)">Final Project</button>
+</div>
+
+<div id="main">
+  <div id="blocklyDiv"></div>
+  <div id="character"></div>
+  <div id="controls">
+    <button onclick="runCode()">Run Code</button>
+    <button onclick="exportLua()">Export Lua</button>
+    <button onclick="getCertificate()">Get Certificate</button>
+  </div>
+</div>
+
+<script>
+  // Initialize Blockly workspace
+  var workspace = Blockly.inject('blocklyDiv', {
+    toolbox: `<xml xmlns="https://developers.google.com/blockly/xml">
+      <category name="Variables" colour="#4a90e2">
+        <block type="variables_set"></block>
+        <block type="variables_get"></block>
+      </category>
+      <category name="Math" colour="#e67e22">
+        <block type="math_number"></block>
+        <block type="math_arithmetic"></block>
+      </category>
+      <category name="Text" colour="#f1c40f">
+        <block type="text"></block>
+        <block type="text_print"></block>
+      </category>
+      <category name="Logic" colour="#2ecc71">
+        <block type="controls_if"></block>
+        <block type="logic_compare"></block>
+      </category>
+      <category name="Loops" colour="#9b59b6">
+        <block type="controls_repeat_ext"></block>
+        <block type="controls_whileUntil"></block>
+      </category>
+      <category name="Events" colour="#e74c3c">
+        <block type="event_whenflagclicked"></block>
+        <block type="event_playerjoined"></block>
+      </category>
+      <category name="Roblox" colour="#1abc9c">
+        <block type="roblox_move"></block>
+        <block type="roblox_stamina"></block>
+      </category>
+    </xml>`
+  });
+
+  // Custom block definitions
+  Blockly.defineBlocksWithJsonArray([
+    {
+      "type": "event_whenflagclicked",
+      "message0": "when program starts",
+      "nextStatement": null,
+      "colour": 230,
+      "tooltip": "",
+      "helpUrl": ""
+    },
+    {
+      "type": "event_playerjoined",
+      "message0": "when player joins",
+      "nextStatement": null,
+      "colour": 230
+    },
+    {
+      "type": "roblox_move",
+      "message0": "move player %1 studs",
+      "args0": [{"type": "field_number","name":"STUDS","value":1,"min":0}],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": 120
+    },
+    {
+      "type": "roblox_stamina",
+      "message0": "set stamina %1",
+      "args0": [{"type": "field_number","name":"STAMINA","value":100,"min":0,"max":100}],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": 120
+    }
+  ]);
+
+  // Load lesson (placeholder: can customize each lesson's starting blocks)
+  function loadLesson(lesson) {
+    workspace.clear();
+    alert('Loaded Lesson ' + lesson + ' (example starting blocks can be added here)');
+  }
+
+  // Run code simulation
+  function runCode() {
+    var code = Blockly.Lua.workspaceToCode(workspace);
+    console.log('Generated Lua:\n', code);
+    // Animate character based on blocks
+    var character = document.getElementById('character');
+    if(code.includes('move')) { character.style.transform = 'translateX(100px)'; setTimeout(()=>{character.style.transform='translateX(0)';},500);}
+    if(code.includes('stamina')) { character.style.backgroundColor = '#f1c40f'; setTimeout(()=>{character.style.backgroundColor='#38bdf8';},500);}
+  }
+
+  // Export Lua code
+  function exportLua() {
+    var code = Blockly.Lua.workspaceToCode(workspace);
+    var blob = new Blob([code], {type: 'text/plain'});
+    var a = document.createElement('a');
+    a.download = 'script.lua';
+    a.href = URL.createObjectURL(blob);
+    a.click();
+  }
+
+  // Generate simple certificate
+  function getCertificate() {
+    var lesson = prompt("Enter your name for the certificate:");
+    if(!lesson) return;
+    alert(`Congratulations ${lesson}!\nYou completed this AceBlocks Lua lesson!`);
+  }
+</script>
+
+</body>
+</html>
