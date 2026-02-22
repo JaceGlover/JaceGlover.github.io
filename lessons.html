@@ -10,27 +10,28 @@ body { margin:0; font-family:'Montserrat',sans-serif; background:#0f172a; color:
 header { padding:20px; background:#111827; text-align:center; }
 header h1 { margin:0; font-size:2rem; color:#38bdf8; }
 .container { display:flex; height:calc(100vh - 80px); }
-#block-panel { width:260px; background:#1e293b; padding:10px; overflow-y:auto; border-right:2px solid #38bdf8; }
+#block-panel { width:280px; background:#1e293b; padding:15px; overflow-y:auto; border-right:3px solid #38bdf8; border-radius:0 10px 10px 0; }
 #block-panel h2 { font-size:1.2rem; margin-top:0; color:#60a5fa; border-bottom:1px solid #475569; padding-bottom:4px; }
-.block-category { margin-bottom:20px; }
-.block { background:#334155; padding:10px; margin:5px 0; border-radius:6px; cursor:grab; user-select:none; transition:0.2s; }
-.block:hover { background:#475569; }
-#workspace { flex:1; background:#0f172a; padding:20px; overflow-y:auto; position:relative; }
-.workspace-block { background:#1e293b; padding:10px; margin:5px 0; border-radius:6px; cursor:grab; display:flex; justify-content:space-between; align-items:center; transition:0.2s; }
+.block-category { margin-bottom:25px; }
+.block { background: linear-gradient(145deg,#334155,#1e293b); padding:12px; margin:8px 0; border-radius:10px; cursor:grab; user-select:none; font-weight:600; box-shadow:0 3px 6px rgba(0,0,0,0.3); transition:0.2s; }
+.block:hover { background: linear-gradient(145deg,#475569,#334155); }
+#workspace { flex:1; background:#0f172a; padding:20px; overflow-y:auto; position:relative; border-left:3px solid #38bdf8; }
+.workspace-block { background: linear-gradient(145deg,#1e293b,#334155); padding:10px; margin:8px 0; border-radius:10px; cursor:grab; display:flex; justify-content:space-between; align-items:center; transition:0.2s; position:relative; }
 .workspace-block.dragging { opacity:0.5; }
-input.value-input { width:50px; margin-left:5px; border-radius:4px; border:none; padding:2px 4px; }
-#objective { padding:10px; background:#1e293b; border-radius:6px; margin-bottom:10px; font-weight:bold; }
+input.value-input { width:50px; margin-left:5px; border-radius:4px; border:none; padding:2px 4px; background:#f1f5f9; }
+#objective { padding:12px; background:#1e293b; border-radius:8px; margin-bottom:12px; font-weight:bold; font-size:1.1rem; }
 #character { width:40px; height:40px; background:#38bdf8; border-radius:50%; position:absolute; bottom:20px; left:50%; transition:0.3s all ease; }
-button { background:#38bdf8; color:#0f172a; border:none; padding:10px 20px; border-radius:6px; cursor:pointer; margin-top:10px; transition:0.2s; }
+button { background:#38bdf8; color:#0f172a; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; margin-top:10px; transition:0.2s; font-weight:600; }
 button:hover { background:#60a5fa; }
-#output { margin-top:10px; font-weight:bold; }
-.certificate { display:none; padding:20px; background:#111827; color:#38bdf8; border-radius:8px; text-align:center; font-size:1.2rem; margin-top:10px; }
+#output { margin-top:12px; font-weight:bold; }
+.certificate { display:none; padding:20px; background:#111827; color:#38bdf8; border-radius:10px; text-align:center; font-size:1.3rem; margin-top:10px; }
+.delete-btn { background:red; color:white; border:none; border-radius:50%; width:20px; height:20px; font-size:14px; font-weight:bold; cursor:pointer; display:flex; align-items:center; justify-content:center; margin-left:8px; }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>AceBlocks Ultimate | Learn Roblox Lua</h1>
+  <h1>AceBlocks Ultimate | Roblox Lua Lessons</h1>
 </header>
 
 <div class="container">
@@ -42,14 +43,17 @@ button:hover { background:#60a5fa; }
     <h2>Events</h2>
     <div class="block" data-code="game.Players.PlayerAdded:Connect(function(player)\n  -- code here\nend)">On Player Join</div>
     <div class="block" data-code="workspace.Touched:Connect(function(hit)\n  -- code here\nend)">On Touch</div>
+    <div class="block" data-code="game.Players.PlayerRemoving:Connect(function(player)\n  -- code here\nend)">On Player Leave</div>
 
     <h2>UI</h2>
     <div class="block" data-code="local gui = Instance.new('ScreenGui', player.PlayerGui)">Create GUI</div>
     <div class="block" data-code="local textLabel = Instance.new('TextLabel', gui)">Add TextLabel</div>
+    <div class="block" data-code="textLabel.Text = 'VALUE'">Set Label Text</div>
 
     <h2>Loops & Logic</h2>
     <div class="block" data-code="for i = 1, VALUE do\n  -- code here\nend">For Loop</div>
     <div class="block" data-code="if CONDITION then\n  -- code here\nend">If Statement</div>
+    <div class="block" data-code="while CONDITION do\n  -- code here\nend">While Loop</div>
 
     <h2>Variables</h2>
     <div class="block" data-code="local VAR = VALUE">Create Variable</div>
@@ -57,7 +61,7 @@ button:hover { background:#60a5fa; }
   </div>
 
   <div id="workspace">
-    <div id="objective">Objective: Complete Lesson 1: Make your player move faster</div>
+    <div id="objective">Objective: Complete Lesson 1: Make your player move faster than normal</div>
     <div id="character"></div>
   </div>
 </div>
@@ -72,18 +76,18 @@ button:hover { background:#60a5fa; }
 <script>
 // --- Lesson System ---
 const lessons = [
-  {objective:"Make your player move faster", check:"WalkSpeed"},
-  {objective:"Make your player jump higher", check:"JumpPower"},
-  {objective:"Show a welcome message when a player joins", check:"PlayerAdded"},
-  {objective:"Detect when the player touches an object", check:"Touched"},
-  {objective:"Create a GUI for the player", check:"ScreenGui"},
-  {objective:"Add a TextLabel to GUI", check:"TextLabel"},
-  {objective:"Use a variable to change WalkSpeed", check:"VAR"},
-  {objective:"Use a variable to change JumpPower", check:"VAR"},
-  {objective:"Connect multiple events", check:"Connect"},
-  {objective:"Create a stamina bar GUI", check:"TextLabel"},
-  {objective:"Print player's name on join", check:"PlayerAdded"},
-  {objective:"Combine movement + GUI + events", check:"WalkSpeed"}
+  {objective:"Make your player move faster than normal", check:"WalkSpeed"},
+  {objective:"Make your player jump higher and move faster", check:"JumpPower"},
+  {objective:"Display a welcome message when a player joins", check:"PlayerAdded"},
+  {objective:"Detect when the player touches an object and print 'hit'", check:"Touched"},
+  {objective:"Create a GUI for the player with at least one element", check:"ScreenGui"},
+  {objective:"Add a TextLabel to the GUI and set text", check:"TextLabel"},
+  {objective:"Use a variable to change WalkSpeed dynamically", check:"VAR"},
+  {objective:"Use a variable to change JumpPower dynamically", check:"VAR"},
+  {objective:"Connect multiple events and print feedback", check:"Connect"},
+  {objective:"Create a stamina bar GUI that updates", check:"TextLabel"},
+  {objective:"Print player's name when they join", check:"PlayerAdded"},
+  {objective:"Combine movement, GUI, and events into a mini game", check:"WalkSpeed"}
 ];
 let currentLesson = 0;
 
@@ -92,7 +96,7 @@ const workspace = document.getElementById("workspace");
 const character = document.getElementById("character");
 const output = document.getElementById("output");
 
-// --- Update Objective ---
+// --- Update Lesson ---
 function updateLesson() {
   if(currentLesson < lessons.length){
     objectiveDiv.textContent = "Objective: " + lessons[currentLesson].objective;
@@ -120,7 +124,12 @@ workspace.addEventListener("drop", e=>{
   newBlock.className = "workspace-block";
   newBlock.setAttribute("draggable","true");
   newBlock.dataset.code = code;
-  newBlock.innerHTML = code.replace("VALUE","<input type='number' class='value-input' value='10'>").replace("VAR","<input type='text' class='value-input' value='myVar'>").replace("CONDITION","<input type='text' class='value-input' value='true'>");
+  newBlock.innerHTML = `<span>${code.replace("VALUE","<input type='number' class='value-input' value='10'>").replace("VAR","<input type='text' class='value-input' value='myVar'>").replace("CONDITION","<input type='text' class='value-input' value='true'>")}</span>`;
+  const delBtn = document.createElement("button");
+  delBtn.textContent = "×";
+  delBtn.className = "delete-btn";
+  delBtn.addEventListener("click", ()=>newBlock.remove());
+  newBlock.appendChild(delBtn);
   workspace.appendChild(newBlock);
   setupDragReorder();
 });
@@ -170,7 +179,6 @@ document.getElementById("runCode").addEventListener("click", ()=>{
   const combined = codeStrings.join("\n");
   if(combined.includes(lessons[currentLesson].check)){
     output.textContent = "✅ Objective Completed!";
-    // Character animation
     if(combined.includes("WalkSpeed")) character.style.left="70%";
     if(combined.includes("JumpPower")) character.style.bottom="60px";
     if(combined.includes("JumpPower") && combined.includes("WalkSpeed")) character.style.background="#facc15";
