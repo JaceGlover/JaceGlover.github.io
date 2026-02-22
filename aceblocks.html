@@ -1,187 +1,218 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AceBlocks Demo | Jace Glover</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Montserrat', sans-serif;
-      background: #0f172a;
-      color: white;
-      text-align: center;
-      padding: 40px;
-    }
-    h1 { color: #38bdf8; }
-    .block {
-      display: inline-block;
-      padding: 15px 25px;
-      margin: 10px;
-      background: #1e293b;
-      border-radius: 12px;
-      cursor: grab;
-      transition: 0.2s;
-      user-select: none;
-    }
-    .block:hover { background: #38bdf8; color: #0f172a; transform: scale(1.05); }
-    #workspace {
-      margin-top: 30px;
-      background: #111827;
-      padding: 20px;
-      border-radius: 12px;
-      min-height: 200px;
-      width: 80%;
-      margin-left: auto;
-      margin-right: auto;
-      position: relative;
-    }
-    .workspace-block {
-      position: absolute;
-      padding: 10px 20px;
-      background: #2563eb;
-      border-radius: 8px;
-      cursor: grab;
-      user-select: none;
-      color: white;
-    }
-    #codeOutput {
-      margin-top: 20px;
-      background: #0f172a;
-      color: #38bdf8;
-      padding: 15px;
-      border-radius: 12px;
-      font-family: monospace;
-      white-space: pre-wrap;
-      text-align: left;
-      max-width: 80%;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .button {
-      display: inline-block;
-      padding: 10px 20px;
-      margin: 10px;
-      background: #38bdf8;
-      color: #0f172a;
-      text-decoration: none;
-      border-radius: 8px;
-      font-weight: 700;
-      transition: 0.3s ease;
-    }
-    .button:hover { background: white; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AceBlocks | Scratch-style Roblox Builder</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: #0f172a;
+    color: white;
+    margin: 0;
+    padding: 30px;
+    text-align: center;
+  }
+  h1 { color: #38bdf8; margin-bottom: 10px; }
+  #blocks { margin-bottom: 20px; }
+  .block {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 5px;
+    background: #1e293b;
+    border-radius: 12px;
+    cursor: grab;
+    user-select: none;
+    transition: 0.2s;
+  }
+  .block:hover { background: #38bdf8; color: #0f172a; transform: scale(1.05); }
+  #workspace {
+    margin: 0 auto;
+    background: #111827;
+    padding: 20px;
+    border-radius: 12px;
+    min-height: 300px;
+    width: 80%;
+    text-align: left;
+    position: relative;
+  }
+  .workspace-block {
+    background: #2563eb;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    cursor: grab;
+    position: relative;
+  }
+  .workspace-block input {
+    width: 60px;
+    margin-left: 5px;
+    border-radius: 4px;
+    border: none;
+    padding: 2px 5px;
+  }
+  #codeOutput {
+    margin-top: 20px;
+    background: #0f172a;
+    color: #38bdf8;
+    padding: 15px;
+    border-radius: 12px;
+    font-family: monospace;
+    white-space: pre-wrap;
+    text-align: left;
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 10px;
+    background: #38bdf8;
+    color: #0f172a;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 700;
+    transition: 0.3s ease;
+  }
+  .button:hover { background: white; }
+</style>
 </head>
 <body>
-  <h1>AceBlocks Demo</h1>
-  <p>Drag blocks from the toolbox into the workspace. Export your Lua code!</p>
 
-  <!-- Blocks Toolbox -->
-  <div id="blocks">
-    <div class="block" draggable="true" data-type="WalkSpeed">Change WalkSpeed</div>
-    <div class="block" draggable="true" data-type="Stamina">Add Stamina</div>
-    <div class="block" draggable="true" data-type="JumpPower">Change JumpPower</div>
-    <div class="block" draggable="true" data-type="Print">Print Text</div>
-    <div class="block" draggable="true" data-type="Loop">Loop</div>
-  </div>
+<h1>AceBlocks | Scratch-style Roblox Builder</h1>
+<p>Drag blocks to the workspace and set values. Export Lua!</p>
 
-  <!-- Workspace -->
-  <div id="workspace">Workspace: Drop blocks here</div>
+<!-- Toolbox -->
+<div id="blocks">
+  <div class="block" draggable="true" data-type="WalkSpeed">WalkSpeed</div>
+  <div class="block" draggable="true" data-type="JumpPower">JumpPower</div>
+  <div class="block" draggable="true" data-type="Stamina">Stamina</div>
+  <div class="block" draggable="true" data-type="Print">Print Text</div>
+  <div class="block" draggable="true" data-type="Loop">Loop</div>
+  <div class="block" draggable="true" data-type="Teleport">Teleport</div>
+  <div class="block" draggable="true" data-type="Say">Say Message</div>
+</div>
 
-  <!-- Generated Lua -->
-  <h3>Generated Lua Code:</h3>
-  <div id="codeOutput">-- Your Lua code will appear here</div>
+<!-- Workspace -->
+<div id="workspace">Workspace: Drop blocks here</div>
 
-  <!-- Export Button -->
-  <a href="#" class="button" id="exportBtn">Export Lua</a>
+<!-- Code Output -->
+<h3>Generated Lua Code:</h3>
+<div id="codeOutput">-- Your Lua code will appear here</div>
 
-  <script>
-    const workspace = document.getElementById('workspace');
-    const codeOutput = document.getElementById('codeOutput');
-    const exportBtn = document.getElementById('exportBtn');
+<a href="#" class="button" id="exportBtn">Export Lua</a>
 
-    let blocksInWorkspace = [];
+<script>
+const workspace = document.getElementById('workspace');
+const codeOutput = document.getElementById('codeOutput');
+const exportBtn = document.getElementById('exportBtn');
 
-    // Drag & drop events
-    document.querySelectorAll('.block').forEach(block => {
-      block.addEventListener('dragstart', e => {
-        e.dataTransfer.setData('text/plain', block.dataset.type);
-      });
-    });
+let workspaceBlocks = [];
 
-    workspace.addEventListener('dragover', e => {
-      e.preventDefault();
-    });
+// Drag blocks from toolbox
+document.querySelectorAll('.block').forEach(block => {
+  block.addEventListener('dragstart', e => {
+    e.dataTransfer.setData('text/plain', block.dataset.type);
+  });
+});
 
-    workspace.addEventListener('drop', e => {
-      e.preventDefault();
-      const type = e.dataTransfer.getData('text/plain');
-      const rect = workspace.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      addWorkspaceBlock(type, x, y);
-    });
+// Drop in workspace
+workspace.addEventListener('dragover', e => e.preventDefault());
+workspace.addEventListener('drop', e => {
+  e.preventDefault();
+  const type = e.dataTransfer.getData('text/plain');
+  addBlockToWorkspace(type);
+});
 
-    function addWorkspaceBlock(type, x, y) {
-      const blockEl = document.createElement('div');
-      blockEl.className = 'workspace-block';
-      blockEl.dataset.type = type;
-      blockEl.style.left = x + 'px';
-      blockEl.style.top = y + 'px';
-      blockEl.textContent = type;
+// Add block to workspace
+function addBlockToWorkspace(type){
+  const blockEl = document.createElement('div');
+  blockEl.className = 'workspace-block';
+  blockEl.dataset.type = type;
 
-      blockEl.draggable = true;
+  // Editable inputs per block
+  switch(type){
+    case 'WalkSpeed':
+      blockEl.innerHTML = 'WalkSpeed = <input type="number" value="24">';
+      break;
+    case 'JumpPower':
+      blockEl.innerHTML = 'JumpPower = <input type="number" value="50">';
+      break;
+    case 'Stamina':
+      blockEl.innerHTML = 'Stamina = <input type="number" value="100">';
+      break;
+    case 'Print':
+      blockEl.innerHTML = 'Print = <input type="text" value="Hello Roblox">';
+      break;
+    case 'Loop':
+      blockEl.innerHTML = 'Loop 5 times';
+      break;
+    case 'Teleport':
+      blockEl.innerHTML = 'Teleport to <input type="text" value="x,y,z">';
+      break;
+    case 'Say':
+      blockEl.innerHTML = 'Say = <input type="text" value="Hi!">';
+      break;
+  }
 
-      // Make blocks draggable inside workspace
-      blockEl.addEventListener('dragstart', e => {
-        e.dataTransfer.setData('text/plain', null);
-        blockEl.dataset.offsetX = e.offsetX;
-        blockEl.dataset.offsetY = e.offsetY;
-      });
-      blockEl.addEventListener('dragend', e => {
-        const rect = workspace.getBoundingClientRect();
-        blockEl.style.left = (e.clientX - rect.left - blockEl.dataset.offsetX) + 'px';
-        blockEl.style.top = (e.clientY - rect.top - blockEl.dataset.offsetY) + 'px';
-        updateCode();
-      });
+  workspace.appendChild(blockEl);
+  workspaceBlocks.push(blockEl);
 
-      workspace.appendChild(blockEl);
-      blocksInWorkspace.push(blockEl);
-      updateCode();
+  // Snap blocks vertically
+  blockEl.style.position = 'relative';
+  updateCode();
+
+  // Input change triggers code update
+  const inputs = blockEl.querySelectorAll('input');
+  inputs.forEach(inp => inp.addEventListener('input', updateCode));
+}
+
+// Generate Lua code
+function updateCode(){
+  let lua = '';
+  workspaceBlocks.forEach(b => {
+    const type = b.dataset.type;
+    const input = b.querySelector('input');
+    switch(type){
+      case 'WalkSpeed':
+        lua += `Player.WalkSpeed = ${input.value}\n`;
+        break;
+      case 'JumpPower':
+        lua += `Player.JumpPower = ${input.value}\n`;
+        break;
+      case 'Stamina':
+        lua += `Player.Stamina = ${input.value}\n`;
+        break;
+      case 'Print':
+        lua += `print("${input.value}")\n`;
+        break;
+      case 'Loop':
+        lua += `for i=1,5 do\n  print(i)\nend\n`;
+        break;
+      case 'Teleport':
+        lua += `Player:Teleport(Vector3.new(${input.value}))\n`;
+        break;
+      case 'Say':
+        lua += `Player:Say("${input.value}")\n`;
+        break;
     }
+  });
+  codeOutput.textContent = lua || '-- Your Lua code will appear here';
+}
 
-    function updateCode() {
-      let lua = '';
-      blocksInWorkspace.forEach(b => {
-        switch(b.dataset.type){
-          case 'WalkSpeed':
-            lua += 'Player.WalkSpeed = 24\n';
-            break;
-          case 'Stamina':
-            lua += 'Player.Stamina = 100\n';
-            break;
-          case 'JumpPower':
-            lua += 'Player.JumpPower = 50\n';
-            break;
-          case 'Print':
-            lua += 'print("Hello Roblox")\n';
-            break;
-          case 'Loop':
-            lua += 'for i = 1,5 do\n  print(i)\nend\n';
-            break;
-        }
-      });
-      codeOutput.textContent = lua || '-- Your Lua code will appear here';
-    }
+// Export Lua
+exportBtn.addEventListener('click', () => {
+  const blob = new Blob([codeOutput.textContent], {type:'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'AceBlocks.lua';
+  a.click();
+});
+</script>
 
-    // Export Lua
-    exportBtn.addEventListener('click', () => {
-      const blob = new Blob([codeOutput.textContent], { type: 'text/plain' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'AceBlocks.lua';
-      a.click();
-    });
-  </script>
 </body>
 </html>
