@@ -1,209 +1,181 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>AceBlocks | Lua Coding for Kids</title>
+<title>AceBlocks | Learn Roblox Lua</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&display=swap" rel="stylesheet">
 <style>
-body {margin:0;font-family:'Baloo 2',cursive;background:#0f172a;color:white;}
-header{background:#1e293b;padding:15px;text-align:center;}
-header h1{margin:0;color:#38bdf8;}
-#main{display:flex;height:calc(100vh - 70px);}
-#blocks-panel{width:300px;background:#1e293b;padding:10px;overflow-y:auto;}
-.category{margin-bottom:20px;}
-.category h3{color:#38bdf8;border-bottom:1px solid #38bdf8;padding-bottom:5px;}
-.block{background:#334155;color:white;padding:10px;margin:5px 0;border-radius:8px;cursor:pointer;text-align:center;user-select:none;}
-#workspace{flex:1;background:#111827;padding:20px;overflow-y:auto;position:relative;}
-.workspace-block{background:#38bdf8;color:#0f172a;padding:10px;margin:5px 0;border-radius:8px;cursor:grab;}
-.workspace-block.dragging{opacity:0.5;}
-#lesson-objective-container{background:#1e293b;padding:15px;border-radius:10px;margin-bottom:10px;}
-#lesson-objective{font-size:1.2rem;margin:0;}
-#lesson-message{color:#34d399;margin-top:5px;font-weight:700;}
-#progress-bar{width:100%;background:#334155;border-radius:10px;margin:10px 0;height:20px;}
-#progress-fill{height:100%;width:0%;background:#38bdf8;border-radius:10px;}
-#certificate{display:none;background:#fbbf24;color:#0f172a;padding:20px;text-align:center;border-radius:10px;margin-top:20px;font-weight:700;}
-button{padding:10px 20px;margin:5px;background:#38bdf8;color:#0f172a;border:none;border-radius:8px;cursor:pointer;font-weight:700;}
-button:hover{background:white;}
+body {
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  background: #0f172a;
+  color: white;
+}
+header {
+  padding: 20px;
+  background: #111827;
+  text-align: center;
+}
+header h1 { margin: 0; font-size: 2rem; }
+.container {
+  display: flex;
+  height: calc(100vh - 80px);
+}
+#block-panel {
+  width: 240px;
+  background: #1e293b;
+  padding: 10px;
+  overflow-y: auto;
+}
+#block-panel h2 { font-size: 1.2rem; margin-top: 0; color: #38bdf8; }
+.block-category { margin-bottom: 20px; }
+.block { background: #334155; padding: 10px; margin: 5px 0; border-radius: 6px; cursor: grab; }
+.block:hover { background: #475569; }
+#workspace {
+  flex: 1;
+  background: #0f172a;
+  padding: 20px;
+  overflow-y: auto;
+  border-left: 2px solid #38bdf8;
+}
+.workspace-block { background: #1e293b; padding: 10px; margin: 5px 0; border-radius: 6px; cursor: grab; }
+.workspace-block.dragging { opacity: 0.5; }
+button { background: #38bdf8; color: #0f172a; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; margin-top: 10px; }
+button:hover { background: #60a5fa; }
+#objective { padding: 10px; background: #1e293b; border-radius: 6px; margin-bottom: 10px; }
 </style>
 </head>
 <body>
 
 <header>
-<h1>AceBlocks</h1>
-<p>Learn Lua Coding for Roblox in a Fun Way!</p>
+  <h1>AceBlocks | Learn Roblox Lua</h1>
 </header>
 
-<div id="main">
-<div id="blocks-panel">
-  <div class="category">
-    <h3>Movement</h3>
-    <div class="block" data-type="move">Move Forward</div>
-    <div class="block" data-type="jump">Jump</div>
-    <div class="block" data-type="walkspeed">Set WalkSpeed</div>
+<div class="container">
+  <div id="block-panel">
+    <h2>Movement</h2>
+    <div class="block" data-code="player.WalkSpeed = VALUE">Set WalkSpeed</div>
+    <div class="block" data-code="player.JumpPower = VALUE">Set JumpPower</div>
+    <h2>Events</h2>
+    <div class="block" data-code="game.Players.PlayerAdded:Connect(function(player)\n  -- code here\nend)">On Player Join</div>
+    <div class="block" data-code="workspace.Touched:Connect(function(hit)\n  -- code here\nend)">On Touch</div>
+    <h2>UI</h2>
+    <div class="block" data-code="local gui = Instance.new('ScreenGui', player.PlayerGui)">Create GUI</div>
+    <div class="block" data-code="local textLabel = Instance.new('TextLabel', gui)">Add TextLabel</div>
   </div>
-  <div class="category">
-    <h3>Events</h3>
-    <div class="block" data-type="whenClicked">When Clicked</div>
-    <div class="block" data-type="onTouch">On Touch</div>
-    <div class="block" data-type="onStart">On Start</div>
-  </div>
-  <div class="category">
-    <h3>Loops & Logic</h3>
-    <div class="block" data-type="repeat">Repeat</div>
-    <div class="block" data-type="if">If Condition</div>
-  </div>
-  <div class="category">
-    <h3>Output</h3>
-    <div class="block" data-type="print">Print Text</div>
+  <div id="workspace">
+    <div id="objective">Objective: Complete Lesson 1: Make your player move faster</div>
+    <!-- Workspace blocks will appear here -->
   </div>
 </div>
 
-<div id="workspace">
-<div id="lesson-objective-container">
-  <p id="lesson-objective"></p>
-  <div id="lesson-message"></div>
-</div>
-<div id="progress-bar"><div id="progress-fill"></div></div>
-<h2 id="lesson-title"></h2>
-<div id="workspace-blocks"></div>
-<button id="run-btn">Run Lua Code</button>
-<button id="export-btn">Export Lua Code</button>
-<div id="certificate">🎉 Congratulations! You completed all lessons and earned your Lua Certificate!</div>
-</div>
+<div style="text-align:center;padding:10px;">
+  <button id="runCode">Run Code</button>
+  <button id="nextLesson">Next Lesson</button>
+  <div id="output"></div>
 </div>
 
 <script>
-// --- Lessons with objectives and expected block sequence for checking ---
-const lessons=[
-  {title:"Lesson 1: Move Forward",objective:"Drag a Move Forward block",solution:["move"]},
-  {title:"Lesson 2: Jumping",objective:"Drag a Jump block",solution:["jump"]},
-  {title:"Lesson 3: WalkSpeed",objective:"Set WalkSpeed with a block",solution:["walkspeed"]},
-  {title:"Lesson 4: When Clicked",objective:"Use a When Clicked event block",solution:["whenClicked"]},
-  {title:"Lesson 5: On Touch",objective:"Use an On Touch block",solution:["onTouch"]},
-  {title:"Lesson 6: On Start",objective:"Use an On Start block",solution:["onStart"]},
-  {title:"Lesson 7: Repeat Loop",objective:"Use a Repeat block",solution:["repeat"]},
-  {title:"Lesson 8: If Condition",objective:"Use an If Condition block",solution:["if"]},
-  {title:"Lesson 9: Print Text",objective:"Use a Print Text block",solution:["print"]},
-  {title:"Lesson 10: Move with Event",objective:"Combine Move Forward and When Clicked",solution:["whenClicked","move"]},
-  {title:"Lesson 11: Jump with Event",objective:"Combine Jump and On Touch",solution:["onTouch","jump"]},
-  {title:"Lesson 12: Mini Project",objective:"Use at least 3 different blocks",solution:["move","jump","print"]},
+// Basic lesson objectives
+const lessons = [
+  "Lesson 1: Make your player move faster",
+  "Lesson 2: Make your player jump higher",
+  "Lesson 3: Show a welcome message when a player joins",
+  "Lesson 4: Detect when the player touches an object",
+  "Lesson 5: Create a GUI for the player",
+  "Lesson 6: Add a TextLabel to GUI",
+  "Lesson 7: Change WalkSpeed with a variable",
+  "Lesson 8: Change JumpPower with a variable",
+  "Lesson 9: Connect multiple events",
+  "Lesson 10: Make a stamina bar GUI",
+  "Lesson 11: Print player's name on join",
+  "Lesson 12: Combine movement + GUI + events"
 ];
+let currentLesson = 0;
 
-let currentLessonIndex=0;
-const workspaceBlocks=document.getElementById("workspace-blocks");
-
-// --- UI Helpers ---
-function showMessage(msg,color="#34d399"){
-  const messageEl=document.getElementById("lesson-message");
-  messageEl.style.color=color;
-  messageEl.innerText=msg;
-}
-
-function updateProgress(){
-  const fill=document.getElementById("progress-fill");
-  const percent=(lessons.filter(l=>l.completed).length/lessons.length)*100;
-  fill.style.width=percent+"%";
-}
-
-function loadLesson(index){
-  const lesson=lessons[index];
-  document.getElementById("lesson-title").innerText=lesson.title;
-  document.getElementById("lesson-objective").innerText="Objective: "+lesson.objective;
-  showMessage("Drag the correct blocks to complete the lesson.");
-  workspaceBlocks.innerHTML="";
-}
-
-function checkSolution(){
-  const blocksArray=Array.from(workspaceBlocks.children).map(b=>b.dataset.type);
-  const solution=lessons[currentLessonIndex].solution;
-  if(solution.every((val,i)=>blocksArray[i]===val)){
-    lessons[currentLessonIndex].completed=true;
-    updateProgress();
-    showMessage("✅ Correct! Lesson Completed.");
-    currentLessonIndex++;
-    if(currentLessonIndex<lessons.length){
-      setTimeout(()=>loadLesson(currentLessonIndex),1200);
-    } else {
-      showMessage("🎉 All lessons completed! Certificate unlocked!","#fbbf24");
-      document.getElementById("certificate").style.display="block";
-    }
+const objective = document.getElementById("objective");
+function nextLessonFunc() {
+  if(currentLesson < lessons.length - 1) {
+    currentLesson++;
+    objective.textContent = "Objective: " + lessons[currentLesson];
+    workspace.innerHTML = "";
+    updateWorkspaceDrag();
   } else {
-    showMessage("❌ Not correct yet. Try again!", "#f87171");
+    alert("All lessons completed!");
   }
 }
 
-// --- Drag & Drop ---
-document.querySelectorAll(".block").forEach(block=>{
+// Drag & drop from panel to workspace
+const blocks = document.querySelectorAll("#block-panel .block");
+const workspace = document.getElementById("workspace");
+blocks.forEach(block => {
   block.setAttribute("draggable","true");
-  block.addEventListener("dragstart",e=>{
-    e.dataTransfer.setData("type",block.dataset.type);
+  block.addEventListener("dragstart", e => {
+    e.dataTransfer.setData("text/plain", block.dataset.code);
   });
 });
 
-workspaceBlocks.addEventListener("dragover",e=>e.preventDefault());
-workspaceBlocks.addEventListener("drop",e=>{
+// Drop blocks into workspace
+workspace.addEventListener("dragover", e => e.preventDefault());
+workspace.addEventListener("drop", e => {
   e.preventDefault();
-  const type=e.dataTransfer.getData("type");
-  const el=document.createElement("div");
-  el.className="workspace-block";
-  el.textContent=type+" block";
-  el.setAttribute("data-type",type);
-  el.setAttribute("draggable","true");
-  workspaceBlocks.appendChild(el);
+  const code = e.dataTransfer.getData("text/plain");
+  const newBlock = document.createElement("div");
+  newBlock.className = "workspace-block";
+  newBlock.setAttribute("draggable","true");
+  newBlock.dataset.code = code;
+  newBlock.textContent = code.split("\n")[0];
+  workspace.appendChild(newBlock);
+  updateWorkspaceDrag();
 });
 
 // Reorder workspace blocks
-workspaceBlocks.addEventListener("dragstart",e=>{
-  if(!e.target.classList.contains("workspace-block")) return;
-  e.target.classList.add("dragging");
-});
-workspaceBlocks.addEventListener("dragend",e=>{
-  if(!e.target.classList.contains("workspace-block")) return;
-  e.target.classList.remove("dragging");
-});
-workspaceBlocks.addEventListener("dragover",e=>{
-  e.preventDefault();
-  const dragging=document.querySelector(".dragging");
-  const after=Array.from(workspaceBlocks.children)
-      .filter(b=>b!==dragging)
-      .reduce((closest,child)=>{
-        const box=child.getBoundingClientRect();
-        const offset=e.clientY-box.top-box.height/2;
-        if(offset<0 && offset>closest.offset) return {offset:offset,element:child};
-        else return closest;
-      },{offset:Number.NEGATIVE_INFINITY}).element;
-  if(after==null) workspaceBlocks.appendChild(dragging);
-  else workspaceBlocks.insertBefore(dragging,after);
-});
-
-// --- Buttons ---
-document.getElementById("run-btn").addEventListener("click",checkSolution);
-
-document.getElementById("export-btn").addEventListener("click",()=>{
-  let code="";
-  workspaceBlocks.querySelectorAll(".workspace-block").forEach(b=>{
-    const type=b.dataset.type;
-    if(type==="move") code+="player:MoveForward()\n";
-    else if(type==="jump") code+="player:Jump()\n";
-    else if(type==="walkspeed") code+="player.WalkSpeed=16\n";
-    else if(type==="print") code+='print("Hello Roblox!")\n';
-    else if(type==="whenClicked") code+="script.Parent.MouseClick:Connect(function() end)\n";
-    else if(type==="onTouch") code+="script.Parent.Touched:Connect(function() end)\n";
-    else if(type==="onStart") code+="game.Players.PlayerAdded:Connect(function(player) end)\n";
-    else if(type==="repeat") code+="for i=1,5 do end\n";
-    else if(type==="if") code+="if true then end\n";
+function updateWorkspaceDrag() {
+  let draggedBlock = null;
+  const wBlocks = workspace.querySelectorAll(".workspace-block");
+  wBlocks.forEach(block => {
+    block.addEventListener("dragstart", e => { draggedBlock = block; block.classList.add("dragging"); });
+    block.addEventListener("dragend", e => { draggedBlock = null; block.classList.remove("dragging"); });
   });
-  const blob=new Blob([code],{type:"text/plain"});
-  const link=document.createElement("a");
-  link.href=URL.createObjectURL(blob);
-  link.download="AceBlocksCode.lua";
-  link.click();
-  showMessage("✅ Lua code exported!");
+  workspace.addEventListener("dragover", e => {
+    e.preventDefault();
+    const afterElement = getDragAfterElement(workspace, e.clientY);
+    if(draggedBlock){
+      if(afterElement == null) workspace.appendChild(draggedBlock);
+      else workspace.insertBefore(draggedBlock, afterElement);
+    }
+  });
+}
+function getDragAfterElement(container, y){
+  const draggableElements = [...container.querySelectorAll(".workspace-block:not(.dragging)")];
+  return draggableElements.reduce((closest, child)=>{
+    const box = child.getBoundingClientRect();
+    const offset = y - box.top - box.height/2;
+    if(offset < 0 && offset > closest.offset) return { offset: offset, element: child };
+    else return closest;
+  }, { offset: Number.NEGATIVE_INFINITY }).element;
+}
+
+// Simple code check system
+document.getElementById("runCode").addEventListener("click", ()=>{
+  const wBlocks = workspace.querySelectorAll(".workspace-block");
+  const code = [...wBlocks].map(b=>b.dataset.code).join("\n");
+  let success = false;
+  switch(currentLesson){
+    case 0: success = code.includes("WalkSpeed"); break;
+    case 1: success = code.includes("JumpPower"); break;
+    case 2: success = code.includes("PlayerAdded"); break;
+    case 3: success = code.includes("Touched"); break;
+    case 4: success = code.includes("ScreenGui"); break;
+    case 5: success = code.includes("TextLabel"); break;
+    default: success = true;
+  }
+  document.getElementById("output").textContent = success ? "✅ Objective Completed!" : "❌ Try Again!";
 });
 
-// --- Initialize ---
-loadLesson(currentLessonIndex);
+// Next lesson
+document.getElementById("nextLesson").addEventListener("click", nextLessonFunc);
+updateWorkspaceDrag();
 </script>
 
 </body>
