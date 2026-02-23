@@ -2,56 +2,108 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>AceBlocks Lua Lessons</title>
+<title>AceBlocks Lua Academy</title>
 
 <style>
 body{
-  font-family: 'Comic Sans MS', sans-serif;
-  background: linear-gradient(90deg, #000000, #ffffff);
   margin:0;
-  text-align:center;
+  font-family: 'Segoe UI', sans-serif;
+  background:#f4f6f9;
+  display:flex;
+  height:100vh;
 }
 
-h1{
-  background:white;
-  padding:15px;
-  margin:0;
-}
-
-#lessonBox{
-  background:white;
-  margin:20px auto;
+/* Sidebar */
+#sidebar{
+  width:260px;
+  background:#2b2f42;
+  color:white;
   padding:20px;
-  width:90%;
-  max-width:900px;
-  border-radius:20px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+  overflow-y:auto;
 }
 
-#blocks, #workspace{
-  min-height:120px;
+#sidebar h2{
+  margin-top:0;
+}
+
+.lessonBtn{
+  background:#3a3f5a;
   padding:10px;
-  border-radius:15px;
-  margin:10px;
+  margin:6px 0;
+  border-radius:8px;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.lessonBtn:hover{
+  background:#5865f2;
+}
+
+/* Main Area */
+#main{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
+
+/* Top Bar */
+#topbar{
+  background:white;
+  padding:15px 25px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.1);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+#progressBar{
+  width:200px;
+  height:10px;
+  background:#ddd;
+  border-radius:5px;
+  overflow:hidden;
+}
+
+#progressFill{
+  height:100%;
+  width:0%;
+  background:#4caf50;
+  transition:0.4s;
+}
+
+/* Workspace Area */
+#content{
+  flex:1;
+  display:flex;
+  padding:20px;
+  gap:20px;
+}
+
+/* Blocks Panel */
+.panel{
+  background:white;
+  border-radius:12px;
+  padding:15px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.08);
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
+
+.panel h3{
+  margin-top:0;
 }
 
 #blocks{
-  background:#f0f0f0;
-}
-
-#workspace{
-  background:#fff8dc;
-  border:3px dashed #999;
+  flex:1;
 }
 
 .block{
-  display:inline-block;
-  background:#ffcc00;
-  padding:8px 12px;
-  margin:5px;
-  border-radius:10px;
+  background:#ffd54f;
+  padding:10px;
+  margin:6px 0;
+  border-radius:8px;
   cursor:grab;
-  user-select:none;
   font-weight:bold;
 }
 
@@ -59,203 +111,168 @@ h1{
   cursor:grabbing;
 }
 
-button{
-  padding:10px 20px;
-  margin:10px;
-  border:none;
+#workspace{
+  flex:1;
+  background:#f9fafc;
+  border:2px dashed #ccc;
   border-radius:10px;
-  background:#28a745;
+  padding:10px;
+  overflow:auto;
+}
+
+#trash{
+  margin-top:10px;
+  padding:8px;
+  background:#ff5252;
   color:white;
-  font-size:16px;
+  border-radius:8px;
+  text-align:center;
+}
+
+button{
+  margin-top:10px;
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  background:#4caf50;
+  color:white;
   cursor:pointer;
 }
 
-button:hover{
-  background:#218838;
-}
-
-#deleteBtn{
-  background:#dc3545;
-}
-
-#deleteBtn:hover{
-  background:#c82333;
-}
-
 #output{
-  background:#222;
+  margin-top:10px;
+  background:#111;
   color:#0f0;
   padding:10px;
-  border-radius:10px;
+  border-radius:8px;
   min-height:40px;
-  margin-top:10px;
 }
 </style>
 </head>
 <body>
 
-<h1>AceBlocks Lua Course </h1>
+<div id="sidebar">
+  <h2>AceBlocks</h2>
+  <div id="lessonList"></div>
+</div>
 
-<div id="lessonBox">
-  <h2 id="lessonTitle"></h2>
-  <p id="objective"></p>
+<div id="main">
 
-  <div id="blocks"></div>
+  <div id="topbar">
+    <div>
+      <strong id="lessonTitle"></strong><br>
+      <span id="objective"></span>
+    </div>
+    <div>
+      <div id="progressBar">
+        <div id="progressFill"></div>
+      </div>
+    </div>
+  </div>
 
-  <h3>Workspace</h3>
-  <div id="workspace"></div>
+  <div id="content">
 
-  <button onclick="runCode()">Run Code</button>
-  <button id="deleteBtn" onclick="clearWorkspace()">Delete Blocks</button>
+    <div class="panel">
+      <h3>Blocks</h3>
+      <div id="blocks"></div>
+    </div>
 
-  <div id="output"></div>
+    <div class="panel">
+      <h3>Workspace</h3>
+      <div id="workspace"></div>
+      <div id="trash">🗑 Drag Here To Delete</div>
+      <button onclick="runCode()">Run Code</button>
+      <div id="output"></div>
+    </div>
+
+  </div>
+
 </div>
 
 <script>
 let currentLesson = 0;
 
 const lessons = [
-{
- title:"Lesson 1: Print Text",
- objective:"Objective: Print 'Hello World'",
- blocks:["print('Hello World')"],
- answer:"print('Hello World')"
-},
-{
- title:"Lesson 2: Variables",
- objective:"Objective: Create variable x = 5 and print it",
- blocks:["x = 5","print(x)"],
- answer:"x = 5 print(x)"
-},
-{
- title:"Lesson 3: Math",
- objective:"Objective: Create y = 10 + 5 and print y",
- blocks:["y = 10 + 5","print(y)"],
- answer:"y = 10 + 5 print(y)"
-},
-{
- title:"Lesson 4: If Statements",
- objective:"Objective: If x equals 5 print 'Correct'",
- blocks:["x = 5","if x == 5 then","print('Correct')","end"],
- answer:"x = 5 if x == 5 then print('Correct') end"
-},
-{
- title:"Lesson 5: Greater Than",
- objective:"Objective: If x > 3 print 'Big'",
- blocks:["x = 5","if x > 3 then","print('Big')","end"],
- answer:"x = 5 if x > 3 then print('Big') end"
-},
-{
- title:"Lesson 6: Functions",
- objective:"Objective: Make function greet that prints 'Hi'",
- blocks:["function greet()","print('Hi')","end","greet()"],
- answer:"function greet() print('Hi') end greet()"
-},
-{
- title:"Lesson 7: Loops",
- objective:"Objective: Loop 1 to 3 and print i",
- blocks:["for i = 1,3 do","print(i)","end"],
- answer:"for i = 1,3 do print(i) end"
-},
-{
- title:"Lesson 8: Tables",
- objective:"Objective: Create table t = {1,2,3} and print t[1]",
- blocks:["t = {1,2,3}","print(t[1])"],
- answer:"t = {1,2,3} print(t[1])"
-},
-{
- title:"Lesson 9: While Loop",
- objective:"Objective: While x < 3 increase x",
- blocks:["x = 1","while x < 3 do","x = x + 1","end"],
- answer:"x = 1 while x < 3 do x = x + 1 end"
-},
-{
- title:"Lesson 10: Nested Logic",
- objective:"Objective: If x == 2 print 'Two'",
- blocks:["x = 2","if x == 2 then","print('Two')","end"],
- answer:"x = 2 if x == 2 then print('Two') end"
-},
-{
- title:"Lesson 11: Multiple Prints",
- objective:"Objective: Print 'A' and 'B'",
- blocks:["print('A')","print('B')"],
- answer:"print('A') print('B')"
-},
-{
- title:"Lesson 12: Final Challenge",
- objective:"Objective: Create function add that prints 2+3",
- blocks:["function add()","print(2+3)","end","add()"],
- answer:"function add() print(2+3) end add()"
-}
+{title:"Print Hello",objective:"Print 'Hello World'",blocks:["print('Hello World')"],answer:"print('Hello World')"},
+{title:"Variables",objective:"Set x=5 and print x",blocks:["x = 5","print(x)"],answer:"x = 5 print(x)"},
+{title:"If Statement",objective:"If x==5 print 'Correct'",blocks:["x = 5","if x == 5 then","print('Correct')","end"],answer:"x = 5 if x == 5 then print('Correct') end"},
+{title:"Loop",objective:"Loop 1 to 3 print i",blocks:["for i = 1,3 do","print(i)","end"],answer:"for i = 1,3 do print(i) end"},
+{title:"Function",objective:"Create greet() printing 'Hi'",blocks:["function greet()","print('Hi')","end","greet()"],answer:"function greet() print('Hi') end greet()"}
 ];
 
+function buildSidebar(){
+  let list=document.getElementById("lessonList");
+  list.innerHTML="";
+  lessons.forEach((l,i)=>{
+    let div=document.createElement("div");
+    div.className="lessonBtn";
+    div.innerText="Lesson "+(i+1);
+    div.onclick=()=>{currentLesson=i;loadLesson();};
+    list.appendChild(div);
+  });
+}
+
 function loadLesson(){
- document.getElementById("workspace").innerHTML="";
- document.getElementById("output").innerHTML="";
- 
- let lesson = lessons[currentLesson];
- document.getElementById("lessonTitle").innerText = lesson.title;
- document.getElementById("objective").innerText = lesson.objective;
- 
- let blockArea = document.getElementById("blocks");
- blockArea.innerHTML="";
- 
- lesson.blocks.forEach(text=>{
-   let div=document.createElement("div");
-   div.className="block";
-   div.innerText=text;
-   div.draggable=true;
-   div.addEventListener("dragstart",dragStart);
-   blockArea.appendChild(div);
- });
+  let lesson=lessons[currentLesson];
+  document.getElementById("lessonTitle").innerText=lesson.title;
+  document.getElementById("objective").innerText=lesson.objective;
+  document.getElementById("workspace").innerHTML="";
+  document.getElementById("output").innerHTML="";
+  let blockArea=document.getElementById("blocks");
+  blockArea.innerHTML="";
+  lesson.blocks.forEach(text=>{
+    let div=document.createElement("div");
+    div.className="block";
+    div.innerText=text;
+    div.draggable=true;
+    div.ondragstart=e=>e.dataTransfer.setData("text",text);
+    blockArea.appendChild(div);
+  });
+  updateProgress();
 }
 
-function dragStart(e){
- e.dataTransfer.setData("text",e.target.innerText);
-}
+document.getElementById("workspace").ondragover=e=>e.preventDefault();
+document.getElementById("workspace").ondrop=e=>{
+  e.preventDefault();
+  let text=e.dataTransfer.getData("text");
+  let div=document.createElement("div");
+  div.className="block";
+  div.innerText=text;
+  div.draggable=true;
+  div.ondragstart=ev=>ev.dataTransfer.setData("text",text);
+  document.getElementById("workspace").appendChild(div);
+};
 
-document.getElementById("workspace").addEventListener("dragover",e=>{
- e.preventDefault();
-});
-
-document.getElementById("workspace").addEventListener("drop",e=>{
- e.preventDefault();
- let text=e.dataTransfer.getData("text");
- let div=document.createElement("div");
- div.className="block";
- div.innerText=text;
- div.draggable=true;
- div.addEventListener("dragstart",dragStart);
- document.getElementById("workspace").appendChild(div);
-});
-
-function clearWorkspace(){
- document.getElementById("workspace").innerHTML="";
- document.getElementById("output").innerHTML="";
-}
+document.getElementById("trash").ondragover=e=>e.preventDefault();
+document.getElementById("trash").ondrop=e=>{
+  e.preventDefault();
+  document.getElementById("workspace").innerHTML="";
+};
 
 function runCode(){
- let workspace=document.getElementById("workspace");
- let blocks=workspace.querySelectorAll(".block");
- let code="";
- blocks.forEach(b=>code+=b.innerText+" ");
- code=code.trim();
- 
- if(code===lessons[currentLesson].answer){
-   document.getElementById("output").innerHTML="✅ Correct! Moving to next lesson...";
-   setTimeout(()=>{
-     currentLesson++;
-     if(currentLesson>=lessons.length){
-       document.getElementById("lessonBox").innerHTML="<h2>🎉 You Finished The Course!</h2>";
-     } else {
-       loadLesson();
-     }
-   },1500);
- } else {
-   document.getElementById("output").innerHTML="❌ Not quite right. Try again!";
- }
+  let blocks=document.querySelectorAll("#workspace .block");
+  let code="";
+  blocks.forEach(b=>code+=b.innerText+" ");
+  code=code.trim();
+  if(code===lessons[currentLesson].answer){
+    document.getElementById("output").innerText="✅ Correct!";
+    currentLesson++;
+    if(currentLesson<lessons.length){
+      setTimeout(loadLesson,1200);
+    } else {
+      document.getElementById("output").innerText="🎉 Course Complete!";
+    }
+  } else {
+    document.getElementById("output").innerText="❌ Try again!";
+  }
 }
 
+function updateProgress(){
+  let percent=((currentLesson)/lessons.length)*100;
+  document.getElementById("progressFill").style.width=percent+"%";
+}
+
+buildSidebar();
 loadLesson();
 </script>
 
