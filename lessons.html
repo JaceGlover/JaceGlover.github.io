@@ -7,50 +7,47 @@
 <style>
 body{
   margin:0;
-  font-family: 'Segoe UI', sans-serif;
-  background:#f4f6f9;
+  font-family:'Segoe UI',sans-serif;
+  background:#eef2f7;
   display:flex;
   height:100vh;
+  overflow:hidden;
 }
 
-/* Sidebar */
+/* SIDEBAR */
 #sidebar{
-  width:260px;
-  background:#2b2f42;
+  width:250px;
+  background:#1f2937;
   color:white;
   padding:20px;
   overflow-y:auto;
 }
 
-#sidebar h2{
-  margin-top:0;
-}
-
 .lessonBtn{
-  background:#3a3f5a;
   padding:10px;
   margin:6px 0;
+  background:#374151;
   border-radius:8px;
   cursor:pointer;
   transition:0.2s;
 }
 
 .lessonBtn:hover{
-  background:#5865f2;
+  background:#4f46e5;
 }
 
-/* Main Area */
+/* MAIN */
 #main{
   flex:1;
   display:flex;
   flex-direction:column;
 }
 
-/* Top Bar */
+/* TOP */
 #topbar{
   background:white;
   padding:15px 25px;
-  box-shadow:0 2px 8px rgba(0,0,0,0.1);
+  box-shadow:0 2px 6px rgba(0,0,0,0.1);
   display:flex;
   justify-content:space-between;
   align-items:center;
@@ -67,11 +64,11 @@ body{
 #progressFill{
   height:100%;
   width:0%;
-  background:#4caf50;
-  transition:0.4s;
+  background:#10b981;
+  transition:0.5s;
 }
 
-/* Workspace Area */
+/* CONTENT */
 #content{
   flex:1;
   display:flex;
@@ -79,32 +76,36 @@ body{
   gap:20px;
 }
 
-/* Blocks Panel */
+/* PANELS */
 .panel{
+  flex:1;
   background:white;
   border-radius:12px;
   padding:15px;
-  box-shadow:0 5px 15px rgba(0,0,0,0.08);
-  flex:1;
+  box-shadow:0 8px 20px rgba(0,0,0,0.08);
   display:flex;
   flex-direction:column;
 }
 
-.panel h3{
-  margin-top:0;
-}
-
-#blocks{
+#blocks, #workspace{
   flex:1;
+  overflow:auto;
+  padding:10px;
 }
 
 .block{
-  background:#ffd54f;
+  background:#facc15;
   padding:10px;
-  margin:6px 0;
-  border-radius:8px;
+  border-radius:10px;
+  margin-bottom:8px;
   cursor:grab;
   font-weight:bold;
+  transition:0.2s;
+}
+
+.block:hover{
+  transform:scale(1.03);
+  box-shadow:0 4px 10px rgba(0,0,0,0.2);
 }
 
 .block:active{
@@ -112,164 +113,216 @@ body{
 }
 
 #workspace{
-  flex:1;
-  background:#f9fafc;
-  border:2px dashed #ccc;
+  border:2px dashed #cbd5e1;
+  background:#f8fafc;
   border-radius:10px;
-  padding:10px;
-  overflow:auto;
 }
 
-#trash{
-  margin-top:10px;
-  padding:8px;
-  background:#ff5252;
-  color:white;
-  border-radius:8px;
-  text-align:center;
+#character{
+  width:60px;
+  height:60px;
+  background:#6366f1;
+  border-radius:50%;
+  margin:auto;
+  animation:bounce 2s infinite;
 }
 
-button{
-  margin-top:10px;
-  padding:10px;
-  border:none;
-  border-radius:8px;
-  background:#4caf50;
-  color:white;
-  cursor:pointer;
+@keyframes bounce{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-10px);}
 }
 
 #output{
   margin-top:10px;
-  background:#111;
-  color:#0f0;
-  padding:10px;
-  border-radius:8px;
   min-height:40px;
+  padding:8px;
+  border-radius:8px;
+  font-weight:bold;
+}
+
+.success{
+  background:#d1fae5;
+  color:#065f46;
+}
+
+.fail{
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+button{
+  padding:10px;
+  margin-top:10px;
+  border:none;
+  border-radius:8px;
+  background:#4f46e5;
+  color:white;
+  cursor:pointer;
 }
 </style>
 </head>
 <body>
 
 <div id="sidebar">
-  <h2>AceBlocks</h2>
-  <div id="lessonList"></div>
+<h2>AceBlocks</h2>
+<div id="lessonList"></div>
 </div>
 
 <div id="main">
 
-  <div id="topbar">
-    <div>
-      <strong id="lessonTitle"></strong><br>
-      <span id="objective"></span>
-    </div>
-    <div>
-      <div id="progressBar">
-        <div id="progressFill"></div>
-      </div>
-    </div>
-  </div>
+<div id="topbar">
+<div>
+<strong id="lessonTitle"></strong><br>
+<span id="objective"></span>
+</div>
+<div id="progressBar">
+<div id="progressFill"></div>
+</div>
+</div>
 
-  <div id="content">
+<div id="content">
 
-    <div class="panel">
-      <h3>Blocks</h3>
-      <div id="blocks"></div>
-    </div>
+<div class="panel">
+<h3>Blocks</h3>
+<div id="blocks"></div>
+</div>
 
-    <div class="panel">
-      <h3>Workspace</h3>
-      <div id="workspace"></div>
-      <div id="trash">🗑 Drag Here To Delete</div>
-      <button onclick="runCode()">Run Code</button>
-      <div id="output"></div>
-    </div>
+<div class="panel">
+<h3>Workspace</h3>
+<div id="workspace"></div>
+<div id="character"></div>
+<button onclick="runCode()">Run Script</button>
+<div id="output"></div>
+</div>
 
-  </div>
+</div>
 
 </div>
 
 <script>
-let currentLesson = 0;
+let currentLesson=0;
+let studentName="";
 
-const lessons = [
-{title:"Print Hello",objective:"Print 'Hello World'",blocks:["print('Hello World')"],answer:"print('Hello World')"},
-{title:"Variables",objective:"Set x=5 and print x",blocks:["x = 5","print(x)"],answer:"x = 5 print(x)"},
-{title:"If Statement",objective:"If x==5 print 'Correct'",blocks:["x = 5","if x == 5 then","print('Correct')","end"],answer:"x = 5 if x == 5 then print('Correct') end"},
-{title:"Loop",objective:"Loop 1 to 3 print i",blocks:["for i = 1,3 do","print(i)","end"],answer:"for i = 1,3 do print(i) end"},
-{title:"Function",objective:"Create greet() printing 'Hi'",blocks:["function greet()","print('Hi')","end","greet()"],answer:"function greet() print('Hi') end greet()"}
+const lessons=[
+{
+title:"Movement Script",
+objective:"Create a WalkSpeed boost script.",
+answer:["local player","player.Character","Humanoid","WalkSpeed"]
+},
+{
+title:"Conditional Jump",
+objective:"If JumpPower > 50 print 'High Jump'",
+answer:["if","JumpPower",">","50","then","print","end"]
+},
+{
+title:"Loop Counter",
+objective:"Loop 1 to 5 printing numbers.",
+answer:["for","1,5","do","print","end"]
+},
+{
+title:"Function System",
+objective:"Create function boost() and call it.",
+answer:["function","boost","end","boost()"]
+}
 ];
 
 function buildSidebar(){
-  let list=document.getElementById("lessonList");
-  list.innerHTML="";
-  lessons.forEach((l,i)=>{
-    let div=document.createElement("div");
-    div.className="lessonBtn";
-    div.innerText="Lesson "+(i+1);
-    div.onclick=()=>{currentLesson=i;loadLesson();};
-    list.appendChild(div);
-  });
+let list=document.getElementById("lessonList");
+list.innerHTML="";
+lessons.forEach((l,i)=>{
+let div=document.createElement("div");
+div.className="lessonBtn";
+div.innerText="Lesson "+(i+1);
+div.onclick=()=>{currentLesson=i;loadLesson();};
+list.appendChild(div);
+});
 }
 
 function loadLesson(){
-  let lesson=lessons[currentLesson];
-  document.getElementById("lessonTitle").innerText=lesson.title;
-  document.getElementById("objective").innerText=lesson.objective;
-  document.getElementById("workspace").innerHTML="";
-  document.getElementById("output").innerHTML="";
-  let blockArea=document.getElementById("blocks");
-  blockArea.innerHTML="";
-  lesson.blocks.forEach(text=>{
-    let div=document.createElement("div");
-    div.className="block";
-    div.innerText=text;
-    div.draggable=true;
-    div.ondragstart=e=>e.dataTransfer.setData("text",text);
-    blockArea.appendChild(div);
-  });
-  updateProgress();
+let l=lessons[currentLesson];
+document.getElementById("lessonTitle").innerText=l.title;
+document.getElementById("objective").innerText=l.objective;
+document.getElementById("workspace").innerHTML="";
+document.getElementById("output").innerHTML="";
+document.getElementById("output").className="";
+document.getElementById("blocks").innerHTML="";
+l.answer.forEach(word=>{
+let div=document.createElement("div");
+div.className="block";
+div.innerText=word;
+div.draggable=true;
+div.ondragstart=e=>e.dataTransfer.setData("text",word);
+document.getElementById("blocks").appendChild(div);
+});
+updateProgress();
 }
 
 document.getElementById("workspace").ondragover=e=>e.preventDefault();
 document.getElementById("workspace").ondrop=e=>{
-  e.preventDefault();
-  let text=e.dataTransfer.getData("text");
-  let div=document.createElement("div");
-  div.className="block";
-  div.innerText=text;
-  div.draggable=true;
-  div.ondragstart=ev=>ev.dataTransfer.setData("text",text);
-  document.getElementById("workspace").appendChild(div);
-};
-
-document.getElementById("trash").ondragover=e=>e.preventDefault();
-document.getElementById("trash").ondrop=e=>{
-  e.preventDefault();
-  document.getElementById("workspace").innerHTML="";
+e.preventDefault();
+let text=e.dataTransfer.getData("text");
+let div=document.createElement("div");
+div.className="block";
+div.innerText=text;
+div.draggable=true;
+div.ondragstart=ev=>ev.dataTransfer.setData("text",text);
+document.getElementById("workspace").appendChild(div);
 };
 
 function runCode(){
-  let blocks=document.querySelectorAll("#workspace .block");
-  let code="";
-  blocks.forEach(b=>code+=b.innerText+" ");
-  code=code.trim();
-  if(code===lessons[currentLesson].answer){
-    document.getElementById("output").innerText="✅ Correct!";
-    currentLesson++;
-    if(currentLesson<lessons.length){
-      setTimeout(loadLesson,1200);
-    } else {
-      document.getElementById("output").innerText="🎉 Course Complete!";
-    }
-  } else {
-    document.getElementById("output").innerText="❌ Try again!";
-  }
+let blocks=document.querySelectorAll("#workspace .block");
+let placed=[...blocks].map(b=>b.innerText);
+let required=lessons[currentLesson].answer;
+
+let success=required.every(r=>placed.includes(r));
+
+let out=document.getElementById("output");
+
+if(success){
+out.innerText="Correct Script!";
+out.className="success";
+animateSuccess();
+currentLesson++;
+if(currentLesson<lessons.length){
+setTimeout(loadLesson,1500);
+}else{
+generateCertificate();
+}
+}else{
+out.innerText="Script Incorrect!";
+out.className="fail";
+animateFail();
+}
+}
+
+function animateSuccess(){
+let c=document.getElementById("character");
+c.style.background="#10b981";
+c.style.transform="scale(1.2)";
+setTimeout(()=>{c.style.background="#6366f1";c.style.transform="scale(1)";},600);
+}
+
+function animateFail(){
+let c=document.getElementById("character");
+c.style.background="#ef4444";
+c.style.transform="rotate(15deg)";
+setTimeout(()=>{c.style.background="#6366f1";c.style.transform="rotate(0deg)";},600);
+}
+
+function generateCertificate(){
+studentName=prompt("Enter your name for certificate:");
+document.body.innerHTML=
+"<div style='text-align:center;padding:50px;font-family:serif'>"+
+"<h1>Certificate of Completion</h1>"+
+"<h2>"+studentName+"</h2>"+
+"<p>Has completed the AceBlocks Lua Academy</p>"+
+"<p>Date: "+new Date().toLocaleDateString()+"</p>"+
+"</div>";
 }
 
 function updateProgress(){
-  let percent=((currentLesson)/lessons.length)*100;
-  document.getElementById("progressFill").style.width=percent+"%";
+let percent=(currentLesson/lessons.length)*100;
+document.getElementById("progressFill").style.width=percent+"%";
 }
 
 buildSidebar();
