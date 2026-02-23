@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learn More | AceBlocks Courses</title>
+<meta name="description" content="Explore all coding courses, Lua lessons, and AceBlocks tutorials designed to make learning fun and easy.">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body {
+    margin:0;
+    font-family:'Montserrat', sans-serif;
+    background:#0f172a;
+    color:white;
+  }
+  header {
+    background:#111827;
+    padding:20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    box-shadow:0 2px 10px rgba(0,0,0,0.5);
+  }
+  header h1 {
+    font-size:1.8rem;
+    color:#38bdf8;
+    margin:0;
+  }
+  nav a {
+    color:white;
+    text-decoration:none;
+    margin:0 10px;
+    padding:8px 15px;
+    border-radius:6px;
+    font-weight:600;
+    transition:0.3s;
+  }
+  nav a:hover {
+    background:#38bdf8;
+    color:#0f172a;
+  }
+  .hero {
+    text-align:center;
+    padding:60px 20px;
+  }
+  .hero h2 {
+    color:#38bdf8;
+    font-size:2rem;
+    margin-bottom:10px;
+  }
+  .hero p {
+    color:#94a3b8;
+    font-size:1.1rem;
+    max-width:700px;
+    margin:0 auto 20px;
+  }
+  .courses {
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
+    gap:20px;
+    padding:40px 20px;
+  }
+  .course-card {
+    background:#1e293b;
+    border-radius:12px;
+    padding:20px;
+    transition:0.3s;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+  }
+  .course-card:hover {
+    transform:translateY(-5px);
+    box-shadow:0 10px 20px rgba(0,0,0,0.5);
+  }
+  .course-card img {
+    width:120px;
+    height:120px;
+    object-fit:cover;
+    border-radius:50%;
+    margin-bottom:15px;
+    border:3px solid #38bdf8;
+  }
+  .course-card h3 {
+    margin:10px 0;
+    font-size:1.3rem;
+    color:#38bdf8;
+  }
+  .course-card p {
+    color:#94a3b8;
+    font-size:0.95rem;
+    margin-bottom:15px;
+  }
+  .course-card a {
+    text-decoration:none;
+    background:#38bdf8;
+    color:#0f172a;
+    padding:10px 20px;
+    border-radius:8px;
+    font-weight:700;
+    transition:0.3s;
+  }
+  .course-card a:hover {
+    background:white;
+  }
+  footer {
+    text-align:center;
+    padding:20px;
+    background:#111827;
+    color:#94a3b8;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>AceBlocks</h1>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="aceblocks.html">AceBlocks Free</a>
+    <a href="lessons.html">Lua Lessons</a>
+  </nav>
+</header>
+
+<div class="hero">
+  <h2>Learn More & Level Up Your Coding Skills!</h2>
+  <p>Explore all the coding courses and Lua lessons we offer. Each course is designed to be fun, interactive, and kid-friendly while teaching real Roblox scripting skills.</p>
+</div>
+
+<div class="courses">
+  <div class="course-card">
+    <img src="course1.png" alt="Lua Basics">
+    <h3>Lua Basics</h3>
+    <p>Learn the fundamentals of Lua scripting with small interactive exercises.</p>
+    <a href="lessons.html#lua-basics">Start Course</a>
+  </div>
+
+  <div class="course-card">
+    <img src="course2.png" alt="Roblox Scripting">
+    <h3>Roblox Scripting</h3>
+    <p>Create your own Roblox scripts with drag-and-drop blocks and practice writing Lua.</p>
+    <a href="lessons.html#roblox-scripting">Start Course</a>
+  </div>
+
+  <div class="course-card">
+    <img src="course3.png" alt="AceBlocks Free Mode">
+    <h3>AceBlocks Free Mode</h3>
+    <p>Experiment freely using AceBlocks and see your code in action instantly!</p>
+    <a href="aceblocks.html">Try It Now</a>
+  </div>
+
+  <div class="course-card">
+    <img src="course4.png" alt="Advanced Lua">
+    <h3>Advanced Lua</h3>
+    <p>Take your Lua skills to the next level with loops, events, and real Roblox scenarios.</p>
+    <a href="lessons.html#advanced-lua">Start Course</a>
+  </div>
+</div>
+
+<footer>
+  © 2026 Jace Glover. All rights reserved.
+</footer>
+
+</body>
+</html>
