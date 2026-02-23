@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AceBlocks MAX | Roblox Block Engine</title>
+<title>AceBlocks MAX | Roblox Block Engine & Lessons</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 <style>
 body { font-family:'Montserrat', sans-serif; background:#0f172a; color:white; margin:0; padding:0; display:flex; height:100vh; overflow:hidden; }
-h1 { color:#38bdf8; margin:10px 0; font-size:1.5rem; }
-#sidebar { width:250px; background:#111827; padding:20px; overflow-y:auto; box-shadow:2px 0 10px rgba(0,0,0,0.5); }
+h1, h2, h3 { margin:0; }
+#sidebar { width:280px; background:#111827; padding:20px; overflow-y:auto; box-shadow:2px 0 10px rgba(0,0,0,0.5); }
 #workspace-container { flex:1; display:flex; flex-direction:column; padding:20px; overflow:auto; }
 .category { margin-bottom:15px; }
 .category h2 { cursor:pointer; background:#1e293b; padding:5px 10px; border-radius:8px; margin:0; font-size:1rem; display:flex; justify-content:space-between; align-items:center; }
@@ -27,12 +27,23 @@ h1 { color:#38bdf8; margin:10px 0; font-size:1.5rem; }
 #codeOutput{margin-top:20px;background:#0f172a;color:#38bdf8;padding:15px;border-radius:12px;font-family:monospace;white-space:pre-wrap;text-align:left; max-width:100%; }
 .button{display:inline-block;padding:10px 20px;margin:10px 5px 0 0;background:#38bdf8;color:#0f172a;text-decoration:none;border-radius:8px;font-weight:700;transition:0.3s ease;}
 .button:hover{background:white;}
+#character { width:80px; height:80px; background:#facc15; border-radius:50%; position:absolute; bottom:10px; left:10px; display:flex; align-items:center; justify-content:center; font-weight:bold; color:#0f172a; }
+#lessonMenu { margin-bottom:15px; }
+.lesson-button { padding:8px 15px; margin:5px 0; background:#38bdf8; border:none; border-radius:6px; color:#0f172a; cursor:pointer; font-weight:700; width:100%; text-align:left; }
+.lesson-button:hover { background:#0ea5e9; }
+#objective { margin-top:10px; padding:10px; background:#1e293b; border-radius:8px; }
+#certificate { display:none; padding:20px; background:#10b981; color:#0f172a; font-weight:bold; border-radius:12px; margin-top:20px; text-align:center; }
 </style>
 </head>
 <body>
 
 <div id="sidebar">
   <h1>AceBlocks MAX</h1>
+
+  <div id="lessonMenu">
+    <h2>Lessons</h2>
+    <div id="lessonButtons"></div>
+  </div>
 
   <div class="category" id="eventsCategory">
     <h2>Events <span>▶</span></h2>
@@ -85,42 +96,70 @@ h1 { color:#38bdf8; margin:10px 0; font-size:1.5rem; }
 </div>
 
 <div id="workspace-container">
+  <div id="objective">Complete a lesson to see your objective!</div>
   <div id="workspace">Workspace: Drop blocks here</div>
+  <div id="character">🙂</div>
   <h3>Generated Lua Code:</h3>
   <div id="codeOutput">-- Lua code will appear here</div>
   <a href="#" class="button" id="exportBtn">Export Lua</a>
   <a href="#" class="button" id="saveBtn">Save Workspace</a>
   <a href="#" class="button" id="loadBtn">Load Workspace</a>
+  <div id="certificate">🎉 Congratulations! You completed all lessons! 🎉</div>
 </div>
 
 <script>
-const workspace=document.getElementById('workspace');
-const codeOutput=document.getElementById('codeOutput');
-const exportBtn=document.getElementById('exportBtn');
-const saveBtn=document.getElementById('saveBtn');
-const loadBtn=document.getElementById('loadBtn');
+// ----- Setup lessons -----
+const lessons = [
+  {id:1,name:"Lesson 1: Print Hello",objective:"Use a Print block to display 'Hello Roblox'",blocks:["Print"]},
+  {id:2,name:"Lesson 2: Player Speed",objective:"Set Player WalkSpeed to 50",blocks:["WalkSpeed"]},
+  {id:3,name:"Lesson 3: Jump Power",objective:"Set Player JumpPower to 100",blocks:["JumpPower"]},
+  {id:4,name:"Lesson 4: Say Message",objective:"Make the player say 'Hi!'",blocks:["Say"]},
+  {id:5,name:"Lesson 5: Loop Print",objective:"Use a Loop to print 5 times",blocks:["Loop","Print"]},
+  {id:6,name:"Lesson 6: If Statement",objective:"Print only if a condition is true",blocks:["If","Print"]},
+  {id:7,name:"Lesson 7: If Else",objective:"Use If Else to choose between two prints",blocks:["IfElse","Print"]},
+  {id:8,name:"Lesson 8: On Key Press",objective:"Use OnKeyPress event for 'E' key",blocks:["OnKeyPress","Print"]},
+  {id:9,name:"Lesson 9: On Player Join",objective:"Use OnPlayerJoin to greet new player",blocks:["OnPlayerJoin","Print"]},
+  {id:10,name:"Lesson 10: Teleport",objective:"Teleport the player to x,y,z",blocks:["Teleport"]},
+  {id:11,name:"Lesson 11: Change Health",objective:"Change player's health to 50",blocks:["ChangeHealth"]},
+  {id:12,name:"Lesson 12: Message All",objective:"Send a message to all players",blocks:["MessageAll"]}
+];
 
-// Collapse categories
+const lessonButtonsDiv=document.getElementById('lessonButtons');
+let currentLesson=null;
+
+// Create buttons for lessons
+lessons.forEach(lesson=>{
+  const btn=document.createElement('button');
+  btn.textContent=lesson.name;
+  btn.className="lesson-button";
+  btn.onclick=()=>startLesson(lesson.id);
+  lessonButtonsDiv.appendChild(btn);
+});
+
+// ----- Category collapse -----
 document.querySelectorAll('.category h2').forEach(h2=>{
   h2.addEventListener('click',()=>{
     h2.parentElement.classList.toggle('collapsed');
-    h2.nextElementSibling.style.display = h2.parentElement.classList.contains('collapsed') ? 'none' : 'flex';
+    h2.nextElementSibling.style.display=h2.parentElement.classList.contains('collapsed')?'none':'flex';
   });
   h2.nextElementSibling.style.display='flex';
 });
 
-// Drag & drop
+// ----- Drag & drop blocks -----
 document.querySelectorAll('.block').forEach(block=>{
-  block.addEventListener('dragstart',e=>{ e.dataTransfer.setData('text/plain', block.dataset.type); });
+  block.addEventListener('dragstart',e=>{
+    e.dataTransfer.setData('text/plain', block.dataset.type);
+  });
 });
+const workspace=document.getElementById('workspace');
 workspace.addEventListener('dragover',e=>e.preventDefault());
 workspace.addEventListener('drop',e=>{
   e.preventDefault();
   const type=e.dataTransfer.getData('text/plain');
-  addBlockToWorkspace(type, workspace);
+  addBlockToWorkspace(type,workspace);
 });
 
-// Workspace logic (same as previous, with nested support)
+// ----- Add block to workspace -----
 function addBlockToWorkspace(type,parent){
   const blockEl=document.createElement('div');
   blockEl.className='workspace-block';
@@ -151,7 +190,7 @@ function addBlockToWorkspace(type,parent){
   const del=document.createElement('button');
   del.textContent='X';
   del.className='delete-btn';
-  del.onclick=()=>{ blockEl.remove(); updateCode(); };
+  del.onclick=()=>{ blockEl.remove(); updateCode(); checkObjective(); };
   blockEl.appendChild(del);
   parent.appendChild(blockEl);
 
@@ -163,11 +202,12 @@ function addBlockToWorkspace(type,parent){
       addBlockToWorkspace(nestedType,nested);
     });
   });
-  blockEl.querySelectorAll('input').forEach(inp=>inp.addEventListener('input', updateCode));
+  blockEl.querySelectorAll('input').forEach(inp=>inp.addEventListener('input', ()=>{ updateCode(); checkObjective(); }));
   updateCode();
+  checkObjective();
 }
 
-// Lua generation
+// ----- Generate Lua code -----
 function generateLua(blocks,indent=''){
   let lua='';
   blocks.forEach(b=>{
@@ -231,6 +271,11 @@ function generateLua(blocks,indent=''){
 
 function updateCode(){ codeOutput.textContent=generateLua(Array.from(workspace.children))||'-- Lua code will appear here'; }
 
+// ----- Export / Save / Load -----
+const exportBtn=document.getElementById('exportBtn');
+const saveBtn=document.getElementById('saveBtn');
+const loadBtn=document.getElementById('loadBtn');
+
 exportBtn.addEventListener('click', ()=>{
   const blob=new Blob([codeOutput.textContent],{type:'text/plain'});
   const a=document.createElement('a');
@@ -242,8 +287,39 @@ exportBtn.addEventListener('click', ()=>{
 saveBtn.addEventListener('click', ()=>{ localStorage.setItem('aceblocksWorkspace',workspace.innerHTML); alert('Workspace saved!'); });
 loadBtn.addEventListener('click', ()=>{
   const data=localStorage.getItem('aceblocksWorkspace');
-  if(data){ workspace.innerHTML=data; updateCode(); alert('Workspace loaded!'); }
+  if(data){ workspace.innerHTML=data; updateCode(); alert('Workspace loaded!'); checkObjective(); }
 });
+
+// ----- Start lesson -----
+const objectiveDiv=document.getElementById('objective');
+const certificateDiv=document.getElementById('certificate');
+const character=document.getElementById('character');
+
+function startLesson(id){
+  currentLesson=lessons.find(l=>l.id===id);
+  objectiveDiv.textContent="Objective: "+currentLesson.objective;
+  workspace.innerHTML='';
+  // Show only lesson blocks
+  document.querySelectorAll('.block').forEach(block=>{
+    block.parentElement.style.display=currentLesson.blocks.includes(block.dataset.type)?'flex':'none';
+  });
+  certificateDiv.style.display='none';
+  updateCode();
+  character.textContent='🙂';
+}
+
+// ----- Check if objective completed (simple simulation) -----
+function checkObjective(){
+  if(!currentLesson) return;
+  const presentBlocks=Array.from(workspace.children).map(b=>b.dataset.type);
+  const needed=currentLesson.blocks;
+  const completed=needed.every(b=>presentBlocks.includes(b));
+  character.textContent=completed?'😎':'🙂';
+  if(completed && currentLesson.id===12){
+    certificateDiv.style.display='block';
+  }
+}
+
 </script>
 </body>
 </html>
