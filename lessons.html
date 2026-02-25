@@ -4,7 +4,11 @@
 <meta charset="UTF-8">
 <title>AceBlocks Lessons</title>
 
-<script src="https://unpkg.com/blockly/blockly.min.js"></script>
+<!-- SAFE BLOCKLY VERSION -->
+<script src="https://cdn.jsdelivr.net/npm/blockly@10.3.1/blockly_compressed.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blockly@10.3.1/blocks_compressed.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blockly@10.3.1/javascript_compressed.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blockly@10.3.1/msg/en.js"></script>
 
 <style>
 body{
@@ -68,6 +72,7 @@ color:black;
 justify-content:center;
 align-items:center;
 flex-direction:column;
+z-index:999;
 }
 
 #certificate h1{
@@ -97,7 +102,7 @@ background:black;
 <h1>Certificate of Completion</h1>
 <p>This certifies that</p>
 <h2 id="certName"></h2>
-<p>has successfully completed AceBlocks Coding Lessons.</p>
+<p>has successfully completed all AceBlocks Coding Lessons.</p>
 <button id="printBtn" onclick="window.print()">Print Certificate</button>
 </div>
 
@@ -113,6 +118,7 @@ const workspace = Blockly.inject('blocklyDiv',{
 toolbox:document.getElementById('toolbox')
 });
 
+// Make print work
 Blockly.JavaScript['text_print'] = function(block){
 const msg = Blockly.JavaScript.valueToCode(block,'TEXT',Blockly.JavaScript.ORDER_NONE) || '""';
 return 'console.log('+msg+');\n';
@@ -126,10 +132,8 @@ title:'Lesson 1: Print "Hello World"',
 check:code=>code.includes('Hello World')
 },
 2:{
-title:'Lesson 2: Print Your Name',
-check:code=>{
-return /console\.log\(["'][A-Za-z ]+["']\)/.test(code);
-}
+title:'Lesson 2: Print Anything',
+check:code=>code.includes('console.log')
 },
 3:{
 title:'Lesson 3: Print the Number 5',
@@ -157,21 +161,20 @@ document.getElementById('output').innerText='';
 
 document.getElementById('runBtn').addEventListener('click',function(){
 const code = Blockly.JavaScript.workspaceToCode(workspace);
-console.log(code);
 
 if(lessons[currentLesson].check(code)){
-document.getElementById('output').innerText="Correct! Moving to next lesson...";
+document.getElementById('output').innerText="Correct!";
 
 currentLesson++;
 
 if(currentLesson>6){
 showCertificate();
 }else{
-setTimeout(loadLesson,1000);
+setTimeout(loadLesson,800);
 }
 
 }else{
-document.getElementById('output').innerText="Not quite right. Try again!";
+document.getElementById('output').innerText="Not correct. Try again.";
 }
 });
 
