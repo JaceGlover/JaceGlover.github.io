@@ -54,11 +54,33 @@ lessons.forEach((l,i)=>{
 
   workspaces[i] = Blockly.inject("blockly"+i,{
     toolbox:`<xml>
-      <block type="text_print"></block>
-      <block type="math_number"></block>
-      <block type="variables_set"></block>
-      <block type="variables_get"></block>
-      <block type="logic_compare"></block>
+      <category name="Text" colour="#5C81A6">
+        <block type="text"></block>
+        <block type="text_print"></block>
+      </category>
+      <category name="Math" colour="#5CA65C">
+        <block type="math_number"></block>
+        <block type="math_arithmetic"></block>
+      </category>
+      <category name="Variables" colour="#A65C81">
+        <block type="variables_set"></block>
+        <block type="variables_get"></block>
+      </category>
+      <category name="Logic" colour="#5C68A6">
+        <block type="logic_compare"></block>
+        <block type="logic_operation"></block>
+        <block type="logic_boolean"></block>
+      </category>
+      <category name="Loops" colour="#A6745C">
+        <block type="controls_repeat_ext"></block>
+        <block type="controls_whileUntil"></block>
+      </category>
+      <category name="Functions" colour="#A6A65C">
+        <block type="procedures_defnoreturn"></block>
+        <block type="procedures_defreturn"></block>
+        <block type="procedures_callnoreturn"></block>
+        <block type="procedures_callreturn"></block>
+      </category>
     </xml>`,
     grid:{spacing:20,length:3,colour:'#888',snap:true},
     trashcan:true
