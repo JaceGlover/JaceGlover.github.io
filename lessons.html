@@ -1,52 +1,48 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>AceBlocks | Interactive Lessons</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Playfair+Display:wght@700&family=Great+Vibes&display=swap" rel="stylesheet">
   <style>
-    body { margin:0; font-family:'Inter', sans-serif; background:#0b0f19; color:white; }
-    h1,h2,h3 { margin:10px 0; }
-    .container { display:flex; flex-direction:column; align-items:center; padding:20px; }
-    .lessonsList { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px; }
-    .lesson-btn { padding:10px 16px; border:none; border-radius:8px; cursor:pointer; font-weight:600; color:white; background:#3b82f6; }
-    .lesson-btn.completed { background:#10b981; }
-    .lesson-btn.current { background:#facc15; color:#111827; }
-    .lesson-btn:disabled { opacity:0.5; cursor:not-allowed; }
-    .grid { display:grid; gap:2px; margin:20px 0; background:#1f2937; }
-    .cell { width:50px; height:50px; display:flex; justify-content:center; align-items:center; border-radius:6px; font-size:18px; color:#111827; }
-    .player { background:#3b82f6; width:40px; height:40px; border-radius:5px; }
-    .goal { background:#f59e0b; width:40px; height:40px; border-radius:5px; }
-    .obstacle { background:#ef4444; width:40px; height:40px; border-radius:5px; }
-    .key { border:2px solid #fbbf24; width:40px; height:40px; border-radius:5px; }
-    .blocks { display:flex; gap:10px; margin:10px 0; flex-wrap:wrap; justify-content:center; }
-    .block { padding:8px 12px; background:#10b981; border-radius:6px; cursor:grab; user-select:none; font-weight:600; }
-    .block:hover { background:#059669; }
-    .workspace { background:#111827; min-height:60px; padding:10px; border-radius:8px; max-width:400px; margin:0 auto 10px; }
-    button { padding:10px 20px; border:none; border-radius:6px; cursor:pointer; background:#3b82f6; color:white; font-weight:600; margin-top:10px; }
-    button:hover { background:#2563eb; }
-    #feedback { margin-top:10px; font-weight:600; }
-    #certificateSection { display:none; margin-top:40px; padding:30px; background:#1f2937; border-radius:12px; max-width:700px; text-align:center; }
-    input { padding:10px; border-radius:6px; border:none; margin:10px; width:200px; }
-    canvas { margin-top:20px; border-radius:10px; }
+    body {margin:0; font-family:'Inter', sans-serif; background:#0b0f19; color:white; text-align:center;}
+    h1,h2,h3 {margin:10px 0;}
+    .container {padding:20px; max-width:900px; margin:auto;}
+    .lessonsList {display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom:20px;}
+    .lesson-btn {padding:10px 16px; border:none; border-radius:8px; cursor:pointer; font-weight:600; color:white; background:#3b82f6; transition:0.3s;}
+    .lesson-btn.completed {background:#10b981;}
+    .lesson-btn.current {background:#facc15; color:#111827;}
+    .lesson-btn:disabled {opacity:0.5; cursor:not-allowed;}
+    .grid {display:grid; gap:2px; margin:20px 0; background:#1f2937; justify-content:center;}
+    .cell {width:50px; height:50px; display:flex; justify-content:center; align-items:center; border-radius:6px; font-size:18px; color:#111827;}
+    .player {background:#3b82f6; width:40px; height:40px; border-radius:5px;}
+    .goal {background:#f59e0b; width:40px; height:40px; border-radius:5px;}
+    .obstacle {background:#ef4444; width:40px; height:40px; border-radius:5px;}
+    .key {border:2px solid #fbbf24; width:40px; height:40px; border-radius:5px;}
+    .teleport {border:2px dashed #a855f7; width:40px; height:40px; border-radius:5px;}
+    .blocks {display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom:10px;}
+    .block {padding:8px 12px; background:#10b981; border-radius:6px; cursor:grab; user-select:none; font-weight:600;}
+    .block:hover {background:#059669;}
+    .workspace {background:#111827; min-height:60px; padding:10px; border-radius:8px; max-width:400px; margin:0 auto 10px;}
+    button {padding:10px 20px; border:none; border-radius:6px; cursor:pointer; background:#3b82f6; color:white; font-weight:600; margin-top:10px;}
+    button:hover {background:#2563eb;}
+    #feedback {margin-top:10px; font-weight:600;}
+    #certificateSection {display:none; margin-top:40px; padding:30px; background:#1f2937; border-radius:12px;}
+    input {padding:10px; border-radius:6px; border:none; margin:10px; width:200px;}
+    canvas {margin-top:20px; border-radius:10px; background:#fef3c7;}
   </style>
 </head>
 <body>
 
-<h1 style="text-align:center;">AceBlocks Interactive Lessons</h1>
-
 <div class="container">
-
+  <h1>AceBlocks Interactive Lessons</h1>
   <div class="lessonsList" id="lessonSidebar"></div>
-
   <h2 id="lessonTitle"></h2>
-
   <div class="grid" id="lessonGrid"></div>
 
-  <h3>Blocks</h3>
+  <h3>Drag Blocks to Build Your Path</h3>
   <div class="blocks" id="blocksContainer"></div>
-
-  <h3>Workspace</h3>
   <div id="workspaceContainer" class="workspace" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
 
   <h3>Generated Lua Code</h3>
@@ -56,12 +52,11 @@
   <div id="feedback"></div>
 
   <div id="certificateSection">
-    <h2>🎉 You completed all lessons!</h2>
+    <h2>🎉 Congratulations!</h2>
     <input type="text" id="studentName" placeholder="Enter your name">
     <button onclick="generateCertificate()">Generate Certificate</button>
     <canvas id="certificateCanvas" width="700" height="400"></canvas>
   </div>
-
 </div>
 
 <script>
@@ -140,6 +135,7 @@ function renderGrid(){
       const cell=document.createElement('div'); cell.className='cell';
       if(lesson.obstacles.some(o=>o.x===x && o.y===y)) cell.classList.add('obstacle');
       if(lesson.key && lesson.key.x===x && lesson.key.y===y) cell.classList.add('key');
+      if(lesson.teleport && lesson.teleport.from.x===x && lesson.teleport.from.y===y) cell.classList.add('teleport');
       if(x===lesson.player.x && y===lesson.player.y) cell.classList.add('player');
       if(x===lesson.goal.x && y===lesson.goal.y) cell.classList.add('goal');
       lessonGrid.appendChild(cell);
@@ -208,7 +204,6 @@ function generateCertificate(){
   ctx.strokeStyle='#1e3a8a'; ctx.lineWidth=4; ctx.strokeRect(10,10,canvas.width-20,canvas.height-20);
 }
 
-// Init first lesson
 loadLesson(0);
 </script>
 
