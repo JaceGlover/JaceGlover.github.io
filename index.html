@@ -17,7 +17,6 @@
       background: #0b0f19;
       color: white;
       line-height: 1.6;
-      scroll-behavior: smooth;
     }
 
     header {
@@ -28,9 +27,16 @@
       background: #0f1626;
     }
 
-    header h1 {
-      font-size: 1.4rem;
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 20px;
       font-weight: 600;
+      transition: 0.3s ease;
+    }
+
+    nav a:hover {
+      color: #3b82f6;
     }
 
     .hero {
@@ -73,11 +79,6 @@
       background: #111827;
     }
 
-    .section h3 {
-      font-size: 2rem;
-      margin-bottom: 20px;
-    }
-
     .features {
       display: flex;
       flex-wrap: wrap;
@@ -91,32 +92,6 @@
       padding: 30px;
       border-radius: 10px;
       width: 250px;
-      transition: 0.3s ease;
-    }
-
-    .feature-box:hover {
-      transform: translateY(-5px);
-    }
-
-    .feature-box h4 {
-      margin-bottom: 10px;
-      font-size: 1.3rem;
-      color: #3b82f6;
-    }
-
-    .founder {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .founder img {
-      width: 160px;
-      height: 160px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-bottom: 20px;
-      border: 3px solid #3b82f6;
     }
 
     footer {
@@ -126,19 +101,6 @@
       color: #9ca3af;
       font-size: 0.9rem;
     }
-
-    @media (min-width: 768px) {
-      .founder {
-        flex-direction: row;
-        gap: 40px;
-        justify-content: center;
-      }
-
-      .founder-text {
-        max-width: 500px;
-        text-align: left;
-      }
-    }
   </style>
 </head>
 
@@ -146,13 +108,18 @@
 
 <header>
   <h1>AceBlocks</h1>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="lessons.html">Lessons</a>
+    <a href="aceblocks.html">Try AceBlocks</a>
+  </nav>
 </header>
 
 <section class="hero">
   <h2>Build Roblox Scripts Visually</h2>
   <p>AceBlocks is a block-based coding engine designed to help beginners create Roblox scripts without typing complex code.</p>
-  <a href="#lessons" class="button">Try AceBlocks</a>
-  <a href="#join" class="button">Join the Team</a>
+  <a href="aceblocks.html" class="button">Try AceBlocks</a>
+  <a href="lessons.html" class="button">View Lessons</a>
 </section>
 
 <section class="section">
@@ -173,44 +140,10 @@
   </div>
 </section>
 
-<!-- LESSONS SECTION -->
-<section class="section" id="lessons">
-  <h3>Start Learning</h3>
-  <div class="features">
-    <div class="feature-box">
-      <h4>Lesson 1</h4>
-      <p>Print “Hello World” in Roblox using visual blocks.</p>
-      <a href="#" class="button">Start</a>
-    </div>
-
-    <div class="feature-box">
-      <h4>Lesson 2</h4>
-      <p>Create a part that changes color when touched.</p>
-      <a href="#" class="button">Start</a>
-    </div>
-
-    <div class="feature-box">
-      <h4>Lesson 3</h4>
-      <p>Build a speed boost script using block logic.</p>
-      <a href="#" class="button">Start</a>
-    </div>
-  </div>
-</section>
-
 <section class="section">
-  <h3>About the Founder</h3>
-  <div class="founder">
-    <img src="profile.jpg" alt="Jace Glover">
-    <div class="founder-text">
-      <p><strong>Jace Glover</strong> is a creator and developer building innovative tools for beginner coders. AceBlocks was created to make game development more accessible and engaging for students.</p>
-    </div>
-  </div>
-</section>
-
-<section class="section" id="join">
   <h3>Join the Team</h3>
-  <p>Interested in helping develop AceBlocks? Reach out and become part of the project.</p>
-  <p><strong>Email: yourname@email.com</strong></p>
+  <p>Interested in helping develop AceBlocks?</p>
+  <p><strong>Email: je-coding@outlook.com</strong></p>
 </section>
 
 <footer>
