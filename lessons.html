@@ -1,172 +1,53 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>AceBlocks | Lessons</title>
+  <title>AceBlocks | Lesson 1</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/blockly/blockly.min.js"></script>
   <style>
-    body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background: #0b0f19;
-      color: white;
-      text-align: center;
-      padding: 30px 20px;
-    }
-    h1 { margin-bottom: 30px; }
-    .lesson-box {
-      background: #1f2937;
-      padding: 20px;
-      border-radius: 12px;
-      margin: 20px auto;
-      max-width: 800px;
-      transition: 0.3s ease;
-    }
-    .lesson-box.locked { opacity: 0.5; }
-    .lesson-box h3 { margin-bottom: 10px; }
-    .blockly-container { height: 250px; width: 100%; margin-top: 10px; background: #111827; border-radius:8px; }
-    .button {
-      display: inline-block;
-      padding: 10px 20px;
-      margin: 10px 5px 0 0;
-      background: #3b82f6;
-      color: white;
-      text-decoration: none;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-    }
-    .button:hover { background: #2563eb; }
-    #certificateSection {
-      display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#0b0f19; color:white; padding:50px; overflow:auto; z-index:999;
-    }
-    #certificateSection canvas {
-      width:100%; max-width:800px; margin:auto; display:block; border:3px solid #3b82f6; border-radius:12px; background:white;
-    }
+    body { font-family: 'Inter', sans-serif; background:#0b0f19; color:white; text-align:center; padding:20px; }
+    #blocklyDiv { height: 300px; width: 100%; max-width: 600px; margin:auto; background:#111827; border-radius:8px; }
+    .button { padding:10px 20px; margin:10px; background:#3b82f6; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:600; }
+    .button:hover { background:#2563eb; }
+    #output { margin-top:20px; background:#1f2937; padding:15px; border-radius:8px; min-height:50px; }
   </style>
 </head>
 <body>
 
-<h1>AceBlocks Lessons</h1>
-<div id="lessonsContainer"></div>
+<h1>Lesson 1: Print "Hello World"</h1>
 
-<div id="certificateSection">
-  <h2>Certificate of Completion</h2>
-  <p id="certName" style="font-size:24px;font-weight:bold;"></p>
-  <canvas id="certificateCanvas" width="800" height="600"></canvas>
-  <div>
-    <button class="button" onclick="printCertificate()">Print Certificate</button>
-    <button class="button" onclick="closeCertificate()">Close</button>
-  </div>
-</div>
+<div id="blocklyDiv"></div>
+<button class="button" id="runBtn">Run</button>
+<pre id="output"></pre>
 
 <script>
-const lessons = [
-  {title:"Lesson 1",desc:"Print 'Hello World'.",solution:"print('Hello World')"},
-  {title:"Lesson 2",desc:"Create a variable x = 10.",solution:"x = 10"},
-  {title:"Lesson 3",desc:"Add two numbers: x + y.",solution:"x + y"},
-  {title:"Lesson 4",desc:"Loop 3 times and print 'Hi'.",solution:"for i = 1,3 do print('Hi') end"},
-  {title:"Lesson 5",desc:"If x > 5 then print 'Yes'.",solution:"if x > 5 then print('Yes') end"},
-  {title:"Lesson 6",desc:"Combine variables and loop.",solution:"for i = 1,x do print(i) end"}
-];
-
-const container = document.getElementById("lessonsContainer");
-const workspaces = {};
-let completedLessons = 0;
-
-// Create lesson boxes
-lessons.forEach((lesson,index)=>{
-  const div = document.createElement("div");
-  div.className = "lesson-box";
-  if(index > 0) div.classList.add("locked");
-  div.innerHTML = `
-    <h3>${lesson.title}</h3>
-    <p>${lesson.desc}</p>
-    <div id="blockly${index}" class="blockly-container"></div>
-    <button class="button run-btn" data-index="${index}" ${index>0?'disabled':''}>Run</button>
-    <pre id="output${index}"></pre>
-  `;
-  container.appendChild(div);
-
-  workspaces[index] = Blockly.inject(`blockly${index}`,{
-    toolbox:`<xml>
+  // Inject Blockly
+  const workspace = Blockly.inject('blocklyDiv', {
+    toolbox: `<xml>
       <category name="Text" colour="#5C81A6">
         <block type="text"></block>
         <block type="text_print"></block>
       </category>
-      <category name="Math" colour="#5CA65C">
-        <block type="math_number"></block>
-        <block type="math_arithmetic"></block>
-      </category>
-      <category name="Variables" colour="#A65C81">
-        <block type="variables_set"></block>
-        <block type="variables_get"></block>
-      </category>
-      <category name="Logic" colour="#5C68A6">
-        <block type="logic_compare"></block>
-        <block type="logic_boolean"></block>
-      </category>
-      <category name="Loops" colour="#A6745C">
-        <block type="controls_repeat_ext"></block>
-      </category>
     </xml>`,
     trashcan:true
   });
-});
 
-// Check code
-document.querySelectorAll(".run-btn").forEach(btn=>{
-  btn.addEventListener("click",()=>{
-    const idx = Number(btn.dataset.index);
-    const code = Blockly.Lua.workspaceToCode(workspaces[idx]).trim();
-    document.getElementById("output"+idx).textContent = code || "No blocks!";
+  const outputEl = document.getElementById('output');
 
-    if(!code){alert("Add blocks!"); return;}
+  document.getElementById('runBtn').addEventListener('click', () => {
+    // Generate Lua code
+    const code = Blockly.Lua.workspaceToCode(workspace);
+    outputEl.textContent = code;
 
-    // Basic check: does student's Lua code contain solution string
-    if(code.replace(/\s/g,'').includes(lessons[idx].solution.replace(/\s/g,''))){
-      alert("Correct ✅");
-      completedLessons++;
-      btn.disabled=true;
-      btn.textContent="Completed ✅";
-      // Unlock next lesson
-      if(idx+1 < lessons.length){
-        const nextDiv = container.children[idx+1];
-        nextDiv.classList.remove("locked");
-        nextDiv.querySelector(".run-btn").disabled=false;
-      }
-      if(completedLessons===lessons.length){showCertificate();}
+    // Check if correct
+    if (code.replace(/\s/g,'').includes(`print('Hello World')`)) {
+      alert("Correct ✅ Lesson Completed!");
     } else {
-      alert("Not quite right, try again!");
+      alert("Not correct, try again!");
     }
   });
-});
-
-// Certificate functions
-function showCertificate(){
-  const cert = document.getElementById("certificateSection");
-  const name = prompt("Enter your name for the certificate:");
-  if(!name) return;
-  document.getElementById("certName").textContent=name;
-  const canvas = document.getElementById("certificateCanvas");
-  const ctx = canvas.getContext("2d");
-  ctx.fillStyle="white";
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-  ctx.fillStyle="black";
-  ctx.font="40px Arial";
-  ctx.textAlign="center";
-  ctx.fillText("Certificate of Completion",canvas.width/2,150);
-  ctx.font="30px Arial";
-  ctx.fillText(name,canvas.width/2,300);
-  ctx.font="20px Arial";
-  ctx.fillText("Completed all AceBlocks lessons!",canvas.width/2,400);
-  cert.style.display="block";
-}
-function closeCertificate(){document.getElementById("certificateSection").style.display="none";}
-function printCertificate(){window.print();}
 </script>
+
 </body>
 </html>
