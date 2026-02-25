@@ -5,191 +5,93 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/blockly/blockly.min.js"></script>
-
   <style>
-    body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background: #0b0f19;
-      color: white;
-      padding: 20px;
-      text-align: center;
-    }
-
-    h1 { margin-bottom: 40px; }
-
-    .lesson-box {
-      background: #1f2937;
-      border-radius: 12px;
-      margin: 20px auto;
-      max-width: 800px;
-      padding: 20px;
-    }
-
-    .blockly-container {
-      height: 320px;
-      width: 100%;
-      border: 2px solid #3b82f6;
-      border-radius: 8px;
-      margin-bottom: 10px;
-    }
-
-    .run-btn {
-      padding: 10px 20px;
-      background: #3b82f6;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .run-btn:hover { background: #2563eb; }
-
-    #certificateModal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.8);
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
-
-    #certificateCanvas { border-radius: 8px; }
-
-    .certificate-close {
-      position: absolute;
-      top: 20px;
-      right: 40px;
-      color: white;
-      font-size: 30px;
-      cursor: pointer;
-    }
-
-    input {
-      padding: 10px;
-      border-radius: 6px;
-      border: none;
-      margin: 10px;
-      width: 250px;
-    }
+    body {margin:0;font-family:'Inter',sans-serif;background:#0b0f19;color:white;text-align:center;padding:20px;}
+    h1 {margin-bottom:40px;}
+    .lesson-box {background:#1f2937;padding:30px;border-radius:12px;margin:20px auto;max-width:800px;transition:0.3s ease;}
+    .lesson-box:hover {transform:translateY(-5px);}
+    .button {display:inline-block;padding:12px 24px;margin-top:15px;background:#3b82f6;color:white;text-decoration:none;border-radius:8px;font-weight:600;cursor:pointer;border:none;}
+    .button:hover {background:#2563eb;}
+    .blockly-container {height:300px;width:100%;border:2px solid #3b82f6;border-radius:10px;margin-top:15px;}
+    .certificate-section {display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:white;color:black;overflow:auto;z-index:9999;padding:50px;box-sizing:border-box;text-align:center;}
+    .certificate-section h1 {font-size:48px;margin-bottom:40px;}
+    .certificate-section pre {font-size:20px;text-align:left;margin-top:20px;}
+    input {padding:10px;border-radius:6px;border:1px solid #ccc;width:250px;margin-top:20px;}
   </style>
 </head>
-
 <body>
 
-<h1>AceBlocks Lessons</h1>
-
+<h1>Lessons</h1>
 <div id="lessonsContainer"></div>
 
-<div class="lesson-box">
-  <h3>Enter Name for Certificate</h3>
-  <input type="text" id="studentName" placeholder="Your Name">
-  <button class="run-btn" id="generateCert">Generate Certificate</button>
-</div>
-
-<div id="certificateModal">
-  <span class="certificate-close">&times;</span>
-  <canvas id="certificateCanvas"></canvas>
+<div class="certificate-section" id="certificateSection">
+  <h1>Certificate of Completion</h1>
+  <p id="certName"></p>
+  <p>Has successfully completed all AceBlocks lessons!</p>
+  <button class="button" onclick="printCertificate()">Print Certificate 🖨️</button>
+  <button class="button" onclick="closeCertificate()">Close</button>
 </div>
 
 <script>
+  // LESSON DATA
   const lessons = [
-    {title: "Lesson 1", description: 'Print "Hello World" using blocks.'},
-    {title: "Lesson 2", description: "Create a part that changes color when touched."},
-    {title: "Lesson 3", description: "Make a speed boost script."},
-    {title: "Lesson 4", description: "Move a 2D Roblox character to a target location."},
-    {title: "Lesson 5", description: "Use variables to track score or distance."},
-    {title: "Lesson 6", description: "Combine blocks to complete a small challenge!"}
+    {title: "Lesson 1", description: 'Print "Hello World" using blocks.', blocks: `<xml><block type="text_print" x="20" y="20"><value name="TEXT"><block type="text"><field name="TEXT">Hello World</field></block></value></block></xml>`},
+    {title: "Lesson 2", description: "Create a part that changes color when touched.", blocks: `<xml><block type="variables_set" x="20" y="20"><field name="VAR">part</field></block><block type="logic_compare" x="20" y="80"></block><block type="text_print" x="20" y="140"></block></xml>`},
+    {title: "Lesson 3", description: "Make a speed boost script.", blocks: `<xml><block type="variables_set" x="20" y="20"><field name="VAR">speed</field></block><block type="math_number" x="20" y="80"><field name="NUM">50</field></block><block type="text_print" x="20" y="140"></block></xml>`},
+    {title: "Lesson 4", description: "Move a 2D Roblox character to a target location.", blocks: `<xml><block type="variables_set" x="20" y="20"><field name="VAR">character</field></block><block type="variables_set" x="20" y="80"><field name="VAR">target</field></block><block type="math_number" x="20" y="140"><field name="NUM">5</field></block></xml>`},
+    {title: "Lesson 5", description: "Use variables to track score or distance.", blocks: `<xml><block type="variables_set" x="20" y="20"><field name="VAR">score</field></block><block type="math_number" x="20" y="80"><field name="NUM">0</field></block><block type="variables_get" x="20" y="140"><field name="VAR">score</field></block></xml>`},
+    {title: "Lesson 6", description: "Combine blocks to complete a small challenge!", blocks: `<xml><block type="variables_set" x="20" y="20"><field name="VAR">player</field></block><block type="variables_set" x="20" y="80"><field name="VAR">goal</field></block><block type="text_print" x="20" y="140"></block><block type="math_number" x="20" y="200"><field name="NUM">10</field></block></xml>`}
   ];
 
   const lessonsContainer = document.getElementById('lessonsContainer');
   const workspaces = {};
   const completedLessons = new Set();
 
-  // Build lessons dynamically
   lessons.forEach((lesson, i) => {
     const lessonDiv = document.createElement('div');
     lessonDiv.classList.add('lesson-box');
-    lessonDiv.innerHTML = `
-      <h3>${lesson.title}</h3>
-      <p>${lesson.description}</p>
-      <div id="blocklyDiv${i+1}" class="blockly-container"></div>
-      <button class="run-btn">Run</button>
-    `;
+    lessonDiv.innerHTML = `<h3>${lesson.title}</h3><p>${lesson.description}</p><div id="blocklyDiv${i+1}" class="blockly-container"></div><button class="button run-btn">Run</button>`;
     lessonsContainer.appendChild(lessonDiv);
 
-    // Initialize Blockly
     workspaces[i+1] = Blockly.inject('blocklyDiv'+(i+1), {
       toolbox: `<xml>
         <block type="text_print"></block>
         <block type="math_number"></block>
         <block type="variables_set"></block>
         <block type="variables_get"></block>
+        <block type="logic_compare"></block>
       </xml>`,
       grid: {spacing: 20, length: 3, colour: '#888', snap: true},
       trashcan: true
     });
+
+    Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(lesson.blocks), workspaces[i+1]);
   });
 
-  // Run button functionality
-  document.querySelectorAll('.lesson-box .run-btn').forEach((btn, index) => {
-    const lessonNum = index + 1;
+  document.querySelectorAll('.run-btn').forEach((btn, index) => {
+    const lessonNum = index+1;
     btn.addEventListener('click', () => {
       const code = Blockly.Lua.workspaceToCode(workspaces[lessonNum]);
-      if (!code.trim()) { alert("Add some blocks first!"); return; }
-
-      if (!completedLessons.has(lessonNum)) {
-        completedLessons.add(lessonNum);
-        btn.textContent = "Completed ✅";
-        btn.disabled = true;
-      }
+      if(!code.trim()){ alert("Add some blocks first!"); return; }
+      completedLessons.add(lessonNum);
+      btn.textContent = "Completed ✅";
+      btn.disabled = true;
+      if(completedLessons.size===lessons.length){ showCertificate(); }
 
       const codeWindow = window.open("", "_blank", "width=500,height=400,scrollbars=yes");
-      codeWindow.document.write(`<pre style="font-family: monospace; font-size: 16px;">${code}</pre>`);
-      codeWindow.document.title = `Lesson ${lessonNum} Lua Code`;
+      codeWindow.document.write(`<pre style="font-family:monospace;font-size:16px;">${code}</pre>`);
+      codeWindow.document.title = `${lessons[lessonNum-1].title} Lua Code`;
     });
   });
 
-  // Certificate logic
-  const generateBtn = document.getElementById('generateCert');
-  const certificateModal = document.getElementById('certificateModal');
-  const closeModal = document.querySelector('.certificate-close');
-  const canvas = document.getElementById('certificateCanvas');
-  const ctx = canvas.getContext('2d');
-
-  generateBtn.addEventListener('click', () => {
-    const name = document.getElementById('studentName').value;
-
-    if (completedLessons.size < lessons.length) {
-      alert('Complete all lessons first!');
-      return;
-    }
-    if (!name) { alert('Enter your name!'); return; }
-
-    certificateModal.style.display = 'flex';
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = '#000';
-    ctx.textAlign = 'center';
-    ctx.font = '60px Inter';
-    ctx.fillText('AceBlocks Certificate', canvas.width / 2, 150);
-    ctx.font = '40px Inter';
-    ctx.fillText('Awarded to', canvas.width / 2, 250);
-    ctx.font = '80px Inter';
-    ctx.fillText(name, canvas.width / 2, 360);
-    ctx.font = '35px Inter';
-    ctx.fillText('For completing all AceBlocks lessons', canvas.width / 2, 480);
-    ctx.fillText('Signed: Jace Glover', canvas.width / 2, 580);
-  });
-
-  closeModal.addEventListener('click', () => { certificateModal.style.display = 'none'; });
+  function showCertificate(){
+    const cert = document.getElementById('certificateSection');
+    const name = prompt("Enter your name for the certificate:");
+    document.getElementById('certName').textContent = name;
+    cert.style.display = "block";
+  }
+  function closeCertificate(){document.getElementById('certificateSection').style.display='none';}
+  function printCertificate(){window.print();}
 </script>
 </body>
 </html>
