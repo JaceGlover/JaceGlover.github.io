@@ -13,23 +13,24 @@
       background: #0b0f19;
       color: white;
       text-align: center;
-      padding: 50px 20px;
+      padding: 30px 20px;
     }
-
-    h1 { margin-bottom: 40px; }
-
+    h1 { margin-bottom: 30px; }
     .lesson-box {
       background: #1f2937;
       padding: 20px;
       border-radius: 12px;
       margin: 20px auto;
       max-width: 800px;
+      transition: 0.3s ease;
     }
-
+    .lesson-box.locked { opacity: 0.5; }
+    .lesson-box h3 { margin-bottom: 10px; }
+    .blockly-container { height: 250px; width: 100%; margin-top: 10px; background: #111827; border-radius:8px; }
     .button {
       display: inline-block;
-      padding: 12px 24px;
-      margin-top: 10px;
+      padding: 10px 20px;
+      margin: 10px 5px 0 0;
       background: #3b82f6;
       color: white;
       text-decoration: none;
@@ -38,42 +39,12 @@
       cursor: pointer;
       border: none;
     }
-
     .button:hover { background: #2563eb; }
-
-    .blockly-container { height: 300px; width: 100%; margin-top: 10px; background: #111827; border-radius:8px; }
-
-    pre {
-      background:#111827;
-      color:#3b82f6;
-      padding:10px;
-      margin-top:10px;
-      border-radius:8px;
-      text-align:left;
-      white-space:pre-wrap;
-      max-height:200px;
-      overflow:auto;
-    }
-
     #certificateSection {
-      display:none;
-      position:fixed;
-      top:0; left:0; width:100%; height:100%;
-      background:#0b0f19;
-      color:white;
-      padding:50px;
-      overflow:auto;
-      z-index:999;
+      display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#0b0f19; color:white; padding:50px; overflow:auto; z-index:999;
     }
-
     #certificateSection canvas {
-      width:100%;
-      max-width:800px;
-      margin:auto;
-      display:block;
-      border:3px solid #3b82f6;
-      border-radius:12px;
-      background:white;
+      width:100%; max-width:800px; margin:auto; display:block; border:3px solid #3b82f6; border-radius:12px; background:white;
     }
   </style>
 </head>
@@ -82,12 +53,11 @@
 <h1>AceBlocks Lessons</h1>
 <div id="lessonsContainer"></div>
 
-<!-- Certificate Section -->
 <div id="certificateSection">
   <h2>Certificate of Completion</h2>
   <p id="certName" style="font-size:24px;font-weight:bold;"></p>
   <canvas id="certificateCanvas" width="800" height="600"></canvas>
-  <div class="cert-btns">
+  <div>
     <button class="button" onclick="printCertificate()">Print Certificate</button>
     <button class="button" onclick="closeCertificate()">Close</button>
   </div>
@@ -95,33 +65,34 @@
 
 <script>
 const lessons = [
-  {title:"Lesson 1",desc:"Print 'Hello World'.",blocks:`<xml><block type="text_print" x="20" y="20"><value name="TEXT"><block type="text"><field name="TEXT">Hello World</field></block></value></block></xml>`},
-  {title:"Lesson 2",desc:"Change part color on touch.",blocks:`<xml><block type="variables_set" x="20" y="20"><field name="VAR">part</field></block></xml>`},
-  {title:"Lesson 3",desc:"Speed boost script.",blocks:`<xml><block type="variables_set" x="20" y="20"><field name="VAR">speed</field></block></xml>`},
-  {title:"Lesson 4",desc:"Move a 2D Roblox character.",blocks:`<xml><block type="variables_set" x="20" y="20"><field name="VAR">character</field></block></xml>`},
-  {title:"Lesson 5",desc:"Use variables to track score.",blocks:`<xml><block type="variables_set" x="20" y="20"><field name="VAR">score</field></block></xml>`},
-  {title:"Lesson 6",desc:"Combine blocks for a challenge.",blocks:`<xml><block type="variables_set" x="20" y="20"><field name="VAR">player</field></block></xml>`}
+  {title:"Lesson 1",desc:"Print 'Hello World'.",solution:"print('Hello World')"},
+  {title:"Lesson 2",desc:"Create a variable x = 10.",solution:"x = 10"},
+  {title:"Lesson 3",desc:"Add two numbers: x + y.",solution:"x + y"},
+  {title:"Lesson 4",desc:"Loop 3 times and print 'Hi'.",solution:"for i = 1,3 do print('Hi') end"},
+  {title:"Lesson 5",desc:"If x > 5 then print 'Yes'.",solution:"if x > 5 then print('Yes') end"},
+  {title:"Lesson 6",desc:"Combine variables and loop.",solution:"for i = 1,x do print(i) end"}
 ];
 
 const container = document.getElementById("lessonsContainer");
 const workspaces = {};
-const completed = new Set();
+let completedLessons = 0;
 
-// Generate lessons and Blockly workspaces
+// Create lesson boxes
 lessons.forEach((lesson,index)=>{
   const div = document.createElement("div");
-  div.className="lesson-box";
+  div.className = "lesson-box";
+  if(index > 0) div.classList.add("locked");
   div.innerHTML = `
     <h3>${lesson.title}</h3>
     <p>${lesson.desc}</p>
     <div id="blockly${index}" class="blockly-container"></div>
-    <button class="button run-btn" data-index="${index}">Run</button>
+    <button class="button run-btn" data-index="${index}" ${index>0?'disabled':''}>Run</button>
     <pre id="output${index}"></pre>
   `;
   container.appendChild(div);
 
   workspaces[index] = Blockly.inject(`blockly${index}`,{
-    toolbox: `<xml>
+    toolbox:`<xml>
       <category name="Text" colour="#5C81A6">
         <block type="text"></block>
         <block type="text_print"></block>
@@ -142,23 +113,35 @@ lessons.forEach((lesson,index)=>{
         <block type="controls_repeat_ext"></block>
       </category>
     </xml>`,
-    trashcan: true
+    trashcan:true
   });
-
-  Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(lesson.blocks), workspaces[index]);
 });
 
-// Attach run buttons
+// Check code
 document.querySelectorAll(".run-btn").forEach(btn=>{
   btn.addEventListener("click",()=>{
-    const idx = btn.getAttribute("data-index");
-    const code = Blockly.Lua.workspaceToCode(workspaces[idx]);
-    if(!code.trim()){alert("Add some blocks first!"); return;}
-    document.getElementById("output"+idx).textContent = code;
-    completed.add(Number(idx));
-    btn.textContent="Completed ✅";
-    btn.disabled=true;
-    if(completed.size === lessons.length){showCertificate();}
+    const idx = Number(btn.dataset.index);
+    const code = Blockly.Lua.workspaceToCode(workspaces[idx]).trim();
+    document.getElementById("output"+idx).textContent = code || "No blocks!";
+
+    if(!code){alert("Add blocks!"); return;}
+
+    // Basic check: does student's Lua code contain solution string
+    if(code.replace(/\s/g,'').includes(lessons[idx].solution.replace(/\s/g,''))){
+      alert("Correct ✅");
+      completedLessons++;
+      btn.disabled=true;
+      btn.textContent="Completed ✅";
+      // Unlock next lesson
+      if(idx+1 < lessons.length){
+        const nextDiv = container.children[idx+1];
+        nextDiv.classList.remove("locked");
+        nextDiv.querySelector(".run-btn").disabled=false;
+      }
+      if(completedLessons===lessons.length){showCertificate();}
+    } else {
+      alert("Not quite right, try again!");
+    }
   });
 });
 
