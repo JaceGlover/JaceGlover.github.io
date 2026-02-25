@@ -2,21 +2,84 @@
 <html>
 <head>
   <title>AceBlocks | Lessons</title>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/blockly/blockly.min.js"></script>
   <style>
-    body {margin:0;font-family:'Inter',sans-serif;background:#0b0f19;color:white;text-align:center;padding:20px;}
-    h1 {margin-bottom:40px;}
-    .lesson-box {background:#1f2937;padding:30px;border-radius:12px;margin:20px auto;max-width:800px;transition:0.3s;}
-    .lesson-box:hover {transform:translateY(-5px);}
-    .button {display:inline-block;padding:12px 24px;margin-top:15px;background:#3b82f6;color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;}
-    .button:hover {background:#2563eb;}
-    .blockly-container {height:300px;width:100%;border:2px solid #3b82f6;border-radius:10px;margin-top:15px;}
-    .certificate-section {display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:white;color:black;overflow:auto;z-index:9999;padding:50px;box-sizing:border-box;text-align:center;}
-    .certificate-section h1 {font-size:48px;margin-bottom:40px;}
-    .certificate-section pre {font-size:20px;text-align:left;margin-top:20px;}
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: #0b0f19;
+      color: white;
+      text-align: center;
+      padding: 50px 20px;
+    }
+
+    h1 { margin-bottom: 40px; }
+
+    .lesson-box {
+      background: #1f2937;
+      padding: 20px;
+      border-radius: 12px;
+      margin: 20px auto;
+      max-width: 800px;
+      transition: 0.3s ease;
+    }
+
+    .lesson-box:hover { transform: translateY(-5px); }
+
+    .button {
+      display: inline-block;
+      padding: 12px 24px;
+      margin-top: 10px;
+      background: #3b82f6;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+    }
+
+    .button:hover { background: #2563eb; }
+
+    .blockly-container { height: 300px; width: 100%; margin-top: 10px; background: #111827; border-radius:8px; }
+
+    pre {
+      background:#111827;
+      color:#3b82f6;
+      padding:10px;
+      margin-top:10px;
+      border-radius:8px;
+      text-align:left;
+      white-space:pre-wrap;
+      max-height:200px;
+      overflow:auto;
+    }
+
+    #certificateSection {
+      display:none;
+      position:fixed;
+      top:0; left:0; width:100%; height:100%;
+      background:#0b0f19;
+      color:white;
+      padding:50px;
+      overflow:auto;
+      z-index:999;
+    }
+
+    #certificateSection canvas {
+      width:100%;
+      max-width:800px;
+      margin:auto;
+      display:block;
+      border:3px solid #3b82f6;
+      border-radius:12px;
+      background:white;
+    }
+
+    .cert-btns { margin-top:20px; }
   </style>
 </head>
 <body>
@@ -24,12 +87,15 @@
 <h1>AceBlocks Lessons</h1>
 <div id="lessonsContainer"></div>
 
-<div class="certificate-section" id="certificateSection">
-  <h1>Certificate of Completion</h1>
-  <p id="certName"></p>
-  <p>Has successfully completed all AceBlocks lessons!</p>
-  <button class="button" onclick="printCertificate()">Print Certificate 🖨️</button>
-  <button class="button" onclick="closeCertificate()">Close</button>
+<!-- Certificate Section -->
+<div id="certificateSection">
+  <h2>Certificate of Completion</h2>
+  <p id="certName" style="font-size:24px;font-weight:bold;"></p>
+  <canvas id="certificateCanvas" width="800" height="600"></canvas>
+  <div class="cert-btns">
+    <button class="button" onclick="printCertificate()">Print Certificate</button>
+    <button class="button" onclick="closeCertificate()">Close</button>
+  </div>
 </div>
 
 <script>
@@ -49,7 +115,10 @@ const completed = new Set();
 lessons.forEach((l,i)=>{
   const div = document.createElement("div");
   div.className="lesson-box";
-  div.innerHTML=`<h3>${l.title}</h3><p>${l.desc}</p><div id="blockly${i}" class="blockly-container"></div><button class="button run-btn">Run</button>`;
+  div.innerHTML=`<h3>${l.title}</h3><p>${l.desc}</p>
+                 <div id="blockly${i}" class="blockly-container"></div>
+                 <button class="button run-btn">Run</button>
+                 <pre id="output${i}"></pre>`;
   container.appendChild(div);
 
   workspaces[i] = Blockly.inject("blockly"+i,{
@@ -92,14 +161,12 @@ lessons.forEach((l,i)=>{
 document.querySelectorAll(".run-btn").forEach((btn,index)=>{
   btn.addEventListener("click",()=>{
     const code=Blockly.Lua.workspaceToCode(workspaces[index]);
-    if(!code.trim()){alert("Add some blocks first!");return;}
+    if(!code.trim()){alert("Add some blocks first!"); return;}
+    document.getElementById("output"+index).textContent = code;
     completed.add(index);
     btn.textContent="Completed ✅";
     btn.disabled=true;
     if(completed.size===lessons.length){showCertificate();}
-    const win=window.open("","_blank","width=500,height=400,scrollbars=yes");
-    win.document.write(`<pre style="font-family:monospace;font-size:16px;">${code}</pre>`);
-    win.document.title=`${lessons[index].title} Lua Code`;
   });
 });
 
@@ -108,11 +175,23 @@ function showCertificate(){
   const name=prompt("Enter your name for the certificate:");
   if(!name) return;
   document.getElementById("certName").textContent=name;
+  const canvas=document.getElementById("certificateCanvas");
+  const ctx=canvas.getContext("2d");
+  ctx.fillStyle="white";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle="black";
+  ctx.font="40px Arial";
+  ctx.textAlign="center";
+  ctx.fillText("Certificate of Completion",canvas.width/2,150);
+  ctx.font="30px Arial";
+  ctx.fillText(name,canvas.width/2,300);
+  ctx.font="20px Arial";
+  ctx.fillText("Completed all AceBlocks lessons!",canvas.width/2,400);
   cert.style.display="block";
 }
+
 function closeCertificate(){document.getElementById("certificateSection").style.display="none";}
 function printCertificate(){window.print();}
 </script>
-
 </body>
 </html>
