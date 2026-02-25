@@ -1,118 +1,180 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>AceBlocks | Lesson 1</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AceBlocks Lessons</title>
+<script src="https://unpkg.com/blockly/blockly.min.js"></script>
 
-  <!-- ✅ STABLE BLOCKLY BUILD -->
-  <script src="https://cdn.jsdelivr.net/npm/blockly@10.3.1/blockly_compressed.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/blockly@10.3.1/blocks_compressed.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/blockly@10.3.1/lua_compressed.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/blockly@10.3.1/msg/en.js"></script>
+<style>
+body {
+  font-family: Arial;
+  margin: 0;
+  background: #f4f6fa;
+}
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0b0f19;
-      color: white;
-      text-align: center;
-      padding: 30px 20px;
-    }
+#lessonTitle {
+  background: #1f73ff;
+  color: white;
+  padding: 15px;
+  font-size: 20px;
+}
 
-    h1 {
-      margin-bottom: 20px;
-    }
+#blocklyDiv {
+  height: 400px;
+  width: 100%;
+}
 
-    #blocklyDiv {
-      height: 350px;
-      width: 100%;
-      max-width: 700px;
-      margin: auto;
-      background: #111827;
-      border-radius: 10px;
-    }
+#controls {
+  padding: 15px;
+}
 
-    button {
-      padding: 12px 24px;
-      margin-top: 20px;
-      background: #3b82f6;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 16px;
-    }
+button {
+  padding: 10px 20px;
+  background: #1f73ff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-right: 10px;
+}
 
-    button:hover {
-      background: #2563eb;
-    }
+button:hover {
+  background: #155edb;
+}
 
-    #output {
-      margin-top: 20px;
-      background: #1f2937;
-      padding: 15px;
-      border-radius: 8px;
-      min-height: 60px;
-      text-align: left;
-      max-width: 700px;
-      margin-left: auto;
-      margin-right: auto;
-      white-space: pre-wrap;
-    }
-  </style>
+#output {
+  background: black;
+  color: lime;
+  padding: 10px;
+  height: 100px;
+  overflow: auto;
+}
+
+#certificateScreen {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: white;
+  text-align: center;
+  padding-top: 100px;
+}
+
+#certificateScreen h1 {
+  font-size: 50px;
+}
+
+#certificateScreen p {
+  font-size: 24px;
+}
+</style>
 </head>
+
 <body>
 
-<h1>Lesson 1: Print "Hello World"</h1>
+<div id="lessonTitle">Lesson 1: Print "Hello World"</div>
 
 <div id="blocklyDiv"></div>
 
-<button id="runBtn">Run</button>
+<div id="controls">
+<button onclick="runCode()">Run</button>
+<button onclick="nextLesson()">Next</button>
+</div>
 
 <div id="output"></div>
 
+<div id="certificateScreen">
+<h1>Certificate of Completion</h1>
+<p id="certName"></p>
+<p>Has successfully completed AceBlocks Coding Course</p>
+<button onclick="window.print()">Print</button>
+</div>
+
+<xml id="toolbox" style="display:none">
+  <block type="text_print"></block>
+  <block type="text"></block>
+  <block type="math_number"></block>
+  <block type="math_arithmetic"></block>
+</xml>
+
 <script>
-  // Inject workspace
-  const workspace = Blockly.inject('blocklyDiv', {
-    toolbox: `
-      <xml>
-        <category name="Text" colour="#5C81A6">
-          <block type="text_print"></block>
-          <block type="text"></block>
-        </category>
-      </xml>
-    `,
-    trashcan: true
-  });
 
-  const output = document.getElementById("output");
+let currentLesson = 1;
+let workspace = Blockly.inject('blocklyDiv',
+  { toolbox: document.getElementById('toolbox') });
 
-  document.getElementById("runBtn").addEventListener("click", function () {
+const lessons = {
+1: {
+title: 'Lesson 1: Print "Hello World"',
+check: code => code.includes('Hello World')
+},
+2: {
+title: 'Lesson 2: Print Your Name',
+check: code => code.includes('Jace')
+},
+3: {
+title: 'Lesson 3: Print a Number (5)',
+check: code => code.includes('5')
+},
+4: {
+title: 'Lesson 4: Add 2 + 3',
+check: code => code.includes('2 + 3')
+},
+5: {
+title: 'Lesson 5: Print Two Things',
+check: code => code.split('print').length > 2
+},
+6: {
+title: 'Lesson 6: Final Challenge - Print "I Love Coding"',
+check: code => code.includes('I Love Coding')
+}
+};
 
-    const code = Blockly.Lua.workspaceToCode(workspace);
+function runCode() {
+  let code = Blockly.JavaScript.workspaceToCode(workspace);
+  document.getElementById('output').innerHTML = "";
 
-    output.textContent = code || "Add blocks first!";
+  try {
+    let output = "";
+    const originalLog = console.log;
+    console.log = function(text) {
+      output += text + "<br>";
+    };
 
-    if (!code) {
-      alert("Add blocks first!");
-      return;
-    }
+    eval(code);
 
-    const cleanCode = code.replace(/\s/g, "");
+    console.log = originalLog;
 
-    if (
-      cleanCode.includes("print(\"HelloWorld\")") ||
-      cleanCode.includes("print('HelloWorld')")
-    ) {
-      alert("Correct ✅ Lesson Complete!");
+    document.getElementById('output').innerHTML = output;
+
+    if (lessons[currentLesson].check(code)) {
+      alert("Lesson Complete! Click Next!");
     } else {
-      alert("Not quite right. Make sure you're printing Hello World exactly.");
+      alert("Not quite right! Try again.");
     }
 
-  });
+  } catch (e) {
+    alert("Error in code!");
+  }
+}
+
+function nextLesson() {
+  if (currentLesson < 6) {
+    currentLesson++;
+    workspace.clear();
+    document.getElementById('lessonTitle').innerText =
+      lessons[currentLesson].title;
+  } else {
+    generateCertificate();
+  }
+}
+
+function generateCertificate() {
+  let name = prompt("Enter your name for the certificate:");
+  document.getElementById('certName').innerText = name;
+  document.getElementById('certificateScreen').style.display = "block";
+}
+
 </script>
 
 </body>
