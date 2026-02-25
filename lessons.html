@@ -1,435 +1,208 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>AceBlocks Lua Academy</title>
-<title>AceBlocks - Lua Academy</title>
-
+<title>AceBlocks | Interactive Lessons</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-body{
-margin:0;
-  font-family:'Segoe UI',sans-serif;
-  background:#eef2f7;
-  display:flex;
-  height:100vh;
-  overflow:hidden;
-}
-
-/* SIDEBAR */
-#sidebar{
-  width:250px;
-  background:#1f2937;
-  color:white;
-  padding:20px;
-  overflow-y:auto;
-}
-
-.lessonBtn{
-  padding:10px;
-  margin:6px 0;
-  background:#374151;
-  border-radius:8px;
-  cursor:pointer;
-  transition:0.2s;
-}
-
-.lessonBtn:hover{
-  background:#4f46e5;
-}
-
-/* MAIN */
-#main{
-  flex:1;
-  font-family:'Comic Sans MS',sans-serif;
-  background:#cfe8ff;
-display:flex;
-flex-direction:column;
-}
-
-/* TOP */
-#topbar{
-  background:white;
-  padding:15px 25px;
-  box-shadow:0 2px 6px rgba(0,0,0,0.1);
-  display:flex;
-  justify-content:space-between;
-align-items:center;
-}
-
-#progressBar{
-  width:200px;
-  height:10px;
-  background:#ddd;
-  border-radius:5px;
-  overflow:hidden;
-h1{
-  margin-top:20px;
-  color:#333;
-}
-
-#progressFill{
-  height:100%;
-  width:0%;
-  background:#10b981;
-  transition:0.5s;
-}
-
-/* CONTENT */
-#content{
-  flex:1;
-  display:flex;
-#objectiveBox{
-  background:white;
-padding:20px;
-  gap:20px;
-  border-radius:20px;
-  width:80%;
-  max-width:600px;
-  text-align:center;
-  font-size:18px;
-  margin-bottom:20px;
-  box-shadow:0 6px 15px rgba(0,0,0,0.1);
-}
-
-/* PANELS */
-.panel{
-  flex:1;
-#blocks, #workspace{
-  width:80%;
-  max-width:600px;
-  min-height:120px;
-background:white;
-  border-radius:12px;
-  border-radius:20px;
-padding:15px;
-  box-shadow:0 8px 20px rgba(0,0,0,0.08);
-  display:flex;
-  flex-direction:column;
-}
-
-#blocks, #workspace{
-  flex:1;
-  overflow:auto;
-  padding:10px;
-  margin-bottom:20px;
-  box-shadow:0 6px 15px rgba(0,0,0,0.1);
-}
-
-.block{
-  background:#facc15;
-  padding:10px;
-  border-radius:10px;
-  margin-bottom:8px;
-  background:#ffcc66;
-  padding:12px;
-  border-radius:15px;
-  margin:8px 0;
-  font-size:16px;
-cursor:grab;
-  font-weight:bold;
-transition:0.2s;
-}
-
-.block:hover{
-  transform:scale(1.03);
-  box-shadow:0 4px 10px rgba(0,0,0,0.2);
-}
-
-.block:active{
-  cursor:grabbing;
-  transform:scale(1.05);
-}
-
-#workspace{
-  border:2px dashed #cbd5e1;
-  background:#f8fafc;
-  border-radius:10px;
-button{
-  padding:10px 20px;
-  border:none;
-  border-radius:20px;
-  background:#4caf50;
-  color:white;
-  font-size:16px;
-  cursor:pointer;
-}
-
-#character{
-width:60px;
-height:60px;
-  background:#6366f1;
-  background:#ff66aa;
-border-radius:50%;
-  margin:auto;
-  margin:10px;
-  position:relative;
-animation:bounce 2s infinite;
-}
-
-@keyframes bounce{
-  0%,100%{transform:translateY(0);}
-  50%{transform:translateY(-10px);}
-#eyes{
-  position:absolute;
-  top:18px;
-  left:15px;
-}
-
-#output{
-  margin-top:10px;
-  min-height:40px;
-  padding:8px;
-  border-radius:8px;
-  font-weight:bold;
-.eye{
-  width:8px;
-  height:8px;
-  background:black;
-  border-radius:50%;
-  display:inline-block;
-  margin-right:12px;
-}
-
-.success{
-  background:#d1fae5;
-  color:#065f46;
-@keyframes bounce{
-  0%,100%{transform:translateY(0);}
-  50%{transform:translateY(-10px);}
-}
-
-.fail{
-  background:#fee2e2;
-  color:#991b1b;
-#stars{
-  font-size:24px;
-  margin-bottom:10px;
-}
-
-button{
-  padding:10px;
-  margin-top:10px;
-  border:none;
-  border-radius:8px;
-  background:#4f46e5;
-  color:white;
-  cursor:pointer;
-#message{
-  font-size:18px;
-  margin-bottom:20px;
-}
+body {margin:0; font-family:'Inter', sans-serif; background:#0b0f19; color:white; text-align:center;}
+h1,h2,h3 {margin:10px 0;}
+.container {padding:20px; max-width:900px; margin:auto;}
+.lessonsList {display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom:20px;}
+.lesson-btn {padding:10px 16px; border:none; border-radius:8px; cursor:pointer; font-weight:600; color:white; background:#3b82f6; transition:0.3s;}
+.lesson-btn.completed {background:#10b981;}
+.lesson-btn.current {background:#facc15; color:#111827;}
+.lesson-btn:disabled {opacity:0.5; cursor:not-allowed;}
+.grid {display:grid; gap:2px; margin:20px 0; background:#1f2937; justify-content:center;}
+.cell {width:50px; height:50px; display:flex; justify-content:center; align-items:center; border-radius:6px; font-size:18px; color:#111827;}
+.player {background:#3b82f6; width:40px; height:40px; border-radius:5px;}
+.goal {background:#f59e0b; width:40px; height:40px; border-radius:5px;}
+.obstacle {background:#ef4444; width:40px; height:40px; border-radius:5px;}
+.key {border:2px solid #fbbf24; width:40px; height:40px; border-radius:5px;}
+.teleport {border:2px dashed #a855f7; width:40px; height:40px; border-radius:5px;}
+.blocks {display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom:10px;}
+.block {padding:12px 16px; background:#10b981; border-radius:6px; cursor:grab; user-select:none; font-weight:600; color:white; min-width:60px; text-align:center;}
+.block:hover {background:#059669;}
+.workspace {background:#111827; min-height:80px; padding:10px; border-radius:8px; max-width:400px; margin:0 auto 10px; display:flex; flex-wrap:wrap; gap:5px;}
+.workspace .block {cursor:default;}
+button {padding:10px 20px; border:none; border-radius:6px; cursor:pointer; background:#3b82f6; color:white; font-weight:600; margin-top:10px;}
+button:hover {background:#2563eb;}
+#feedback {margin-top:10px; font-weight:600;}
+#certificateSection {display:none; margin-top:40px; padding:30px; background:#1f2937; border-radius:12px;}
+input {padding:10px; border-radius:6px; border:none; margin:10px; width:200px;}
+canvas {margin-top:20px; border-radius:10px; background:#fef3c7;}
 </style>
 </head>
 <body>
+<div class="container">
+<h1>AceBlocks Interactive Lessons</h1>
+<div class="lessonsList" id="lessonSidebar"></div>
+<h2 id="lessonTitle"></h2>
+<div class="grid" id="lessonGrid"></div>
 
-<div id="sidebar">
-<h2>AceBlocks</h2>
-<div id="lessonList"></div>
+<h3>Drag Blocks to Build Your Path</h3>
+<div class="blocks" id="blocksContainer"></div>
+<div id="workspaceContainer" class="workspace" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+
+<h3>Generated Lua Code</h3>
+<pre id="luaCode" style="background:#1f2937;padding:10px;border-radius:8px;min-height:150px;"></pre>
+
+<button onclick="runLesson()">Run Moves</button>
+<div id="feedback"></div>
+
+<div id="certificateSection">
+<h2>🎉 Congratulations!</h2>
+<input type="text" id="studentName" placeholder="Enter your name">
+<button onclick="generateCertificate()">Generate Certificate</button>
+<canvas id="certificateCanvas" width="700" height="400"></canvas>
 </div>
-
-<div id="main">
-<h1>🌟 AceBlocks Lua Academy 🌟</h1>
-
-<div id="topbar">
-<div>
-<strong id="lessonTitle"></strong><br>
-<span id="objective"></span>
 </div>
-<div id="progressBar">
-<div id="progressFill"></div>
-</div>
-</div>
-<div id="stars"></div>
-
-<div id="content">
-<div id="objectiveBox"></div>
-
-<div class="panel">
-<h3>Blocks</h3>
-<div id="blocks"></div>
-</div>
-
-<div class="panel">
-<h3>Workspace</h3>
-<h3>Your Script</h3>
-<div id="workspace"></div>
-<div id="character"></div>
-<button onclick="runCode()">Run Script</button>
-<div id="output"></div>
-</div>
-
-</div>
-<button onclick="checkAnswer()">Run Script</button>
-
-<div id="character">
-  <div id="eyes">
-    <div class="eye"></div>
-    <div class="eye"></div>
-  </div>
-</div>
-
-<div id="message"></div>
 
 <script>
-let currentLesson=0;
-let studentName="";
-
-const lessons=[
-{
-title:"Movement Script",
-objective:"Create a WalkSpeed boost script.",
-answer:["local player","player.Character","Humanoid","WalkSpeed"]
-objective:"Make the player faster by setting WalkSpeed to 20.",
-blocks:["local player = game.Players.LocalPlayer",
-"player.Character.Humanoid.WalkSpeed = 20"],
-answer:["WalkSpeed"]
-},
-{
-title:"Conditional Jump",
-objective:"If JumpPower > 50 print 'High Jump'",
-answer:["if","JumpPower",">","50","then","print","end"]
-objective:"Print 'Hello!' in the output.",
-blocks:["print('Hello!')"],
-answer:["print"]
-},
-{
-title:"Loop Counter",
-objective:"Loop 1 to 5 printing numbers.",
-answer:["for","1,5","do","print","end"]
-},
-{
-title:"Function System",
-objective:"Create function boost() and call it.",
-answer:["function","boost","end","boost()"]
-objective:"Create a loop that prints numbers 1 to 3.",
-blocks:["for i = 1,3 do",
-"print(i)",
-"end"],
-answer:["for","print","end"]
-}
+const lessonsData=[
+  {title:'Lesson 1: Reach the Goal', gridSize:5, player:{x:0,y:4}, goal:{x:4,y:0}, obstacles:[], minMoves:8},
+  {title:'Lesson 2: Avoid Obstacles', gridSize:5, player:{x:0,y:4}, goal:{x:4,y:0}, obstacles:[{x:2,y:2},{x:3,y:1}], minMoves:9},
+  {title:'Lesson 3: Collect Key', gridSize:5, player:{x:0,y:4}, goal:{x:4,y:0}, obstacles:[{x:1,y:2}], key:{x:2,y:2}, minMoves:10},
+  {title:'Lesson 4: Multiple Goals', gridSize:6, player:{x:0,y:5}, goal:{x:5,y:0}, obstacles:[{x:3,y:3}], minMoves:12},
+  {title:'Lesson 5: Teleport Tile', gridSize:6, player:{x:0,y:5}, goal:{x:5,y:0}, obstacles:[{x:2,y:2}], teleport:{from:{x:1,y:1},to:{x:4,y:4}}, minMoves:10},
+  {title:'Lesson 6: Complex Path', gridSize:7, player:{x:0,y:6}, goal:{x:6,y:0}, obstacles:[{x:2,y:3},{x:3,y:3},{x:4,y:2}], minMoves:14}
 ];
 
-function buildSidebar(){
-let list=document.getElementById("lessonList");
-list.innerHTML="";
-lessons.forEach((l,i)=>{
-let div=document.createElement("div");
-div.className="lessonBtn";
-div.innerText="Lesson "+(i+1);
-div.onclick=()=>{currentLesson=i;loadLesson();};
-list.appendChild(div);
-});
+let currentLesson=0;
+let lessonProgress=Array(lessonsData.length).fill(false);
+let sequence=[];
+
+const lessonSidebar=document.getElementById('lessonSidebar');
+const lessonTitle=document.getElementById('lessonTitle');
+const lessonGrid=document.getElementById('lessonGrid');
+const blocksContainer=document.getElementById('blocksContainer');
+const workspaceContainer=document.getElementById('workspaceContainer');
+const feedback=document.getElementById('feedback');
+const certificateSection=document.getElementById('certificateSection');
+const luaCodeEl=document.getElementById('luaCode');
+
+function renderSidebar(){
+  lessonSidebar.innerHTML='';
+  lessonsData.forEach((lesson,i)=>{
+    const btn=document.createElement('button');
+    btn.textContent=`Lesson ${i+1}`;
+    btn.className='lesson-btn';
+    if(i===currentLesson) btn.classList.add('current');
+    if(lessonProgress[i]) btn.classList.add('completed');
+    if(i>0 && !lessonProgress[i-1]) btn.disabled=true;
+    btn.onclick=()=>{if(!btn.disabled) loadLesson(i);}
+    lessonSidebar.appendChild(btn);
+  });
 }
 
-function loadLesson(){
-let l=lessons[currentLesson];
-document.getElementById("lessonTitle").innerText=l.title;
-document.getElementById("objective").innerText=l.objective;
-document.getElementById("workspace").innerHTML="";
-document.getElementById("output").innerHTML="";
-document.getElementById("output").className="";
-let lesson=lessons[currentLesson];
-document.getElementById("objectiveBox").innerText=lesson.objective;
-document.getElementById("blocks").innerHTML="";
-l.answer.forEach(word=>{
-document.getElementById("workspace").innerHTML="";
-document.getElementById("message").innerText="";
-
-lesson.blocks.forEach(text=>{
-let div=document.createElement("div");
-div.className="block";
-div.innerText=word;
-div.innerText=text;
-div.draggable=true;
-div.ondragstart=e=>e.dataTransfer.setData("text",word);
-div.ondragstart=e=>e.dataTransfer.setData("text",text);
-document.getElementById("blocks").appendChild(div);
-});
-updateProgress();
-
-updateStars();
+function loadLesson(index){
+  currentLesson=index;
+  sequence=[];
+  workspaceContainer.innerHTML='';
+  luaCodeEl.textContent='';
+  feedback.textContent='';
+  renderSidebar();
+  const lesson=lessonsData[index];
+  lessonTitle.textContent=lesson.title;
+  renderBlocks();
+  renderGrid();
 }
 
-document.getElementById("workspace").ondragover=e=>e.preventDefault();
-@@ -269,63 +187,45 @@ <h3>Workspace</h3>
-document.getElementById("workspace").appendChild(div);
-};
-
-function runCode(){
-function checkAnswer(){
-let blocks=document.querySelectorAll("#workspace .block");
-let placed=[...blocks].map(b=>b.innerText);
-let required=lessons[currentLesson].answer;
-let text="";
-blocks.forEach(b=>text+=b.innerText);
-
-let success=required.every(r=>placed.includes(r));
-
-let out=document.getElementById("output");
-let success=lessons[currentLesson].answer.every(word=>text.includes(word));
-
-if(success){
-out.innerText="Correct Script!";
-out.className="success";
-animateSuccess();
-document.getElementById("message").innerText="🎉 Great job!";
-currentLesson++;
-if(currentLesson<lessons.length){
-setTimeout(loadLesson,1500);
-setTimeout(loadLesson,1200);
-}else{
-generateCertificate();
-showCertificate();
-}
-}else{
-out.innerText="Script Incorrect!";
-out.className="fail";
-animateFail();
-document.getElementById("message").innerText="Oops! Try again 😊";
-}
+function renderBlocks(){
+  blocksContainer.innerHTML='';
+  ['up','down','left','right'].forEach(cmd=>{
+    const blk=document.createElement('div');
+    blk.className='block';
+    blk.setAttribute('draggable','true');
+    blk.setAttribute('data-code',cmd);
+    blk.textContent=cmd.charAt(0).toUpperCase()+cmd.slice(1);
+    blk.addEventListener('dragstart',e=>{e.dataTransfer.setData('text',cmd);});
+    blocksContainer.appendChild(blk);
+  });
 }
 
-function animateSuccess(){
-let c=document.getElementById("character");
-c.style.background="#10b981";
-c.style.transform="scale(1.2)";
-setTimeout(()=>{c.style.background="#6366f1";c.style.transform="scale(1)";},600);
-function updateStars(){
-let stars="";
-for(let i=0;i<currentLesson;i++){
-stars+="⭐";
+function allowDrop(ev){ ev.preventDefault(); }
+function drop(ev){ ev.preventDefault(); const cmd=ev.dataTransfer.getData('text'); sequence.push(cmd); const el=document.createElement('div'); el.className='block'; el.textContent=cmd; workspaceContainer.appendChild(el); }
+
+function renderGrid(){
+  const lesson=lessonsData[currentLesson];
+  lessonGrid.style.gridTemplateColumns=`repeat(${lesson.gridSize},50px)`;
+  lessonGrid.style.gridTemplateRows=`repeat(${lesson.gridSize},50px)`;
+  lessonGrid.innerHTML='';
+  for(let y=0;y<lesson.gridSize;y++){
+    for(let x=0;x<lesson.gridSize;x++){
+      const cell=document.createElement('div'); cell.className='cell';
+      if(lesson.obstacles.some(o=>o.x===x && o.y===y)) cell.classList.add('obstacle');
+      if(lesson.key && lesson.key.x===x && lesson.key.y===y) cell.classList.add('key');
+      if(lesson.teleport && lesson.teleport.from.x===x && lesson.teleport.from.y===y) cell.classList.add('teleport');
+      if(x===lesson.player.x && y===lesson.player.y) cell.classList.add('player');
+      if(x===lesson.goal.x && y===lesson.goal.y) cell.classList.add('goal');
+      lessonGrid.appendChild(cell);
+    }
+  }
 }
 
-function animateFail(){
-let c=document.getElementById("character");
-c.style.background="#ef4444";
-c.style.transform="rotate(15deg)";
-setTimeout(()=>{c.style.background="#6366f1";c.style.transform="rotate(0deg)";},600);
-document.getElementById("stars").innerText=stars;
+function generateLua(){
+  let lua="-- Roblox Lua generated from AceBlocks\nlocal player = game.Players.LocalPlayer\nlocal pos = Vector3.new(0,0,0)\n";
+  sequence.forEach(cmd=>{
+    if(cmd==='up') lua+="pos = pos + Vector3.new(0,0,1)\n";
+    if(cmd==='down') lua+="pos = pos + Vector3.new(0,0,-1)\n";
+    if(cmd==='left') lua+="pos = pos + Vector3.new(-1,0,0)\n";
+    if(cmd==='right') lua+="pos = pos + Vector3.new(1,0,0)\n";
+  });
+  lua+="-- Total moves: "..sequence.length;
+  luaCodeEl.textContent=lua;
+}
+
+function runLesson(){
+  const lesson=lessonsData[currentLesson];
+  let playerPos={...lesson.player};
+  let moves=0;
+  let collectedKey=!lesson.key;
+  sequence.forEach(cmd=>{
+    moves++;
+    if(cmd==='up' && playerPos.y>0) playerPos.y--;
+    if(cmd==='down' && playerPos.y<lesson.gridSize-1) playerPos.y++;
+    if(cmd==='left' && playerPos.x>0) playerPos.x--;
+    if(cmd==='right' && playerPos.x<lesson.gridSize-1) playerPos.x++;
+    if(lesson.obstacles.some(o=>o.x===playerPos.x && o.y===playerPos.y)) moves+=100;
+    if(lesson.key && playerPos.x===lesson.key.x && playerPos.y===lesson.key.y) collectedKey=true;
+    if(lesson.teleport && playerPos.x===lesson.teleport.from.x && playerPos.y===lesson.teleport.from.y) playerPos={...lesson.teleport.to};
+  });
+  renderGrid();
+  generateLua();
+  if(playerPos.x===lesson.goal.x && playerPos.y===lesson.goal.y && collectedKey){
+    feedback.textContent=`✅ Lesson Completed! Moves: ${moves} (Min: ${lesson.minMoves})`;
+    lessonProgress[currentLesson]=true;
+    renderSidebar();
+    if(currentLesson<lessonsData.length-1) loadLesson(currentLesson+1);
+    else certificateSection.style.display='block';
+  } else feedback.textContent='❌ Try again!';
 }
 
 function generateCertificate(){
-studentName=prompt("Enter your name for certificate:");
-function showCertificate(){
-let name=prompt("What is your name?");
-document.body.innerHTML=
-"<div style='text-align:center;padding:50px;font-family:serif'>"+
-"<h1>Certificate of Completion</h1>"+
-"<h2>"+studentName+"</h2>"+
-"<p>Has completed the AceBlocks Lua Academy</p>"+
-"<p>Date: "+new Date().toLocaleDateString()+"</p>"+
-"<div style='text-align:center;padding:50px;font-family:Comic Sans MS'>"+
-"<h1>🌟 Certificate of Completion 🌟</h1>"+
-"<h2>"+name+"</h2>"+
-"<p>Has completed AceBlocks Lua Academy!</p>"+
-"<p>"+new Date().toLocaleDateString()+"</p>"+
-"</div>";
+  const name=document.getElementById('studentName').value.trim();
+  if(!name){ alert('Enter your name!'); return; }
+  const canvas=document.getElementById('certificateCanvas');
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle='#fef3c7'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle='#1e3a8a'; ctx.font='bold 30px "Inter", sans-serif'; ctx.textAlign='center';
+  ctx.fillText('Certificate of Achievement', canvas.width/2,60);
+  ctx.font='18px Inter, sans-serif'; ctx.fillStyle='#111827';
+  ctx.fillText('Presented to', canvas.width/2,120);
+  ctx.font='bold 28px Inter, sans-serif'; ctx.fillStyle='#1e3a8a';
+  ctx.fillText(name, canvas.width/2,170);
+  ctx.font='16px Inter, sans-serif'; ctx.fillStyle='#111827';
+  ctx.fillText('for completing all AceBlocks lessons!', canvas.width/2,210);
+  ctx.font='28px "Great Vibes", cursive'; ctx.fillStyle='#1e3a8a'; ctx.textAlign='right';
+  ctx.fillText('Jace Glover', canvas.width-60,canvas.height-60);
+  ctx.font='14px Inter, sans-serif'; ctx.fillText('Founder of AceBlocks', canvas.width-60,canvas.height-40);
+  ctx.strokeStyle='#1e3a8a'; ctx.lineWidth=4; ctx.strokeRect(10,10,canvas.width-20,canvas.height-20);
 }
 
-function updateProgress(){
-let percent=(currentLesson/lessons.length)*100;
-document.getElementById("progressFill").style.width=percent+"%";
-}
-
-buildSidebar();
-loadLesson();
+loadLesson(0);
 </script>
+</body>
+</html>
