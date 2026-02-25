@@ -73,10 +73,6 @@
       border: 3px solid #3b82f6;
     }
 
-    .lesson-box:hover {
-      transform: translateY(-5px);
-    }
-
     .lesson-box h3 {
       margin-bottom: 10px;
       color: #3b82f6;
@@ -104,29 +100,40 @@
       background: #2563eb;
     }
 
-    .certificate-section {
-      max-width: 700px;
+    .block-area {
       background: #111827;
-      margin: 40px auto;
-      padding: 40px;
-      border-radius: 12px;
-      text-align: center;
-    }
-
-    input {
-      padding: 10px;
-      border-radius: 6px;
-      border: none;
-      margin: 10px;
-      width: 250px;
-    }
-
-    canvas {
-      margin-top: 20px;
-      width: 100%;
+      padding: 15px;
+      margin-top: 10px;
       border-radius: 10px;
-      background: white;
+      min-height: 80px;
     }
+
+    #certificateModal {
+      display: none;
+      position: fixed;
+      top:0; left:0; right:0; bottom:0;
+      background: white;
+      z-index: 9999;
+    }
+
+    #certificateModal canvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    .certificate-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 20px;
+      background: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 15px;
+      cursor: pointer;
+    }
+
   </style>
 </head>
 <body>
@@ -142,96 +149,138 @@
 
 <section class="hero">
   <h1>Lessons</h1>
-  <p>Follow these step-by-step lessons to build Roblox scripts visually. Complete all 6 lessons to earn your certificate!</p>
+  <p>Complete the lessons below by arranging the blocks correctly. Finish all 6 lessons to unlock your printable certificate!</p>
 </section>
 
 <div class="lessons-container">
+  <!-- Lesson Template -->
   <div class="lesson-box" data-lesson="1">
     <h3>Lesson 1: Hello World</h3>
-    <p>Print "Hello World" in Roblox using blocks.</p>
-    <button class="button">Complete Lesson</button>
+    <p>Drag the print block to output "Hello World" in Lua.</p>
+    <div class="block-area" data-answer="print('Hello World')">
+      <!-- Kids will drag blocks here -->
+    </div>
+    <button class="button complete-btn">Check Lesson</button>
   </div>
 
   <div class="lesson-box" data-lesson="2">
     <h3>Lesson 2: Color Part</h3>
-    <p>Create a part that changes color when touched.</p>
-    <button class="button">Complete Lesson</button>
+    <p>Drag blocks to make a part change color when touched.</p>
+    <div class="block-area" data-answer="part.Touched:Connect(function() part.Color = Color3.new(1,0,0) end)">
+    </div>
+    <button class="button complete-btn">Check Lesson</button>
   </div>
 
   <div class="lesson-box" data-lesson="3">
     <h3>Lesson 3: Speed Boost</h3>
-    <p>Build a speed boost script using blocks.</p>
-    <button class="button">Complete Lesson</button>
+    <p>Make a player get a speed boost with blocks.</p>
+    <div class="block-area" data-answer="player.Humanoid.WalkSpeed = 50">
+    </div>
+    <button class="button complete-btn">Check Lesson</button>
   </div>
 
   <div class="lesson-box" data-lesson="4">
     <h3>Lesson 4: 2D Character Move</h3>
-    <p>Move a 2D Roblox character across platforms using minimum steps.</p>
-    <button class="button">Complete Lesson</button>
+    <p>Move a 2D character across the platforms using minimum steps.</p>
+    <div class="block-area" data-answer="character:MoveTo(goal)">
+    </div>
+    <button class="button complete-btn">Check Lesson</button>
   </div>
 
   <div class="lesson-box" data-lesson="5">
     <h3>Lesson 5: Collect Items</h3>
-    <p>Make a script that collects coins when the player touches them.</p>
-    <button class="button">Complete Lesson</button>
+    <p>Make a player collect coins on touch.</p>
+    <div class="block-area" data-answer="coin.Touched:Connect(function() collect() end)">
+    </div>
+    <button class="button complete-btn">Check Lesson</button>
   </div>
 
   <div class="lesson-box" data-lesson="6">
-    <h3>Lesson 6: Simple Game Logic</h3>
-    <p>Combine previous lessons to make a small interactive game.</p>
-    <button class="button">Complete Lesson</button>
+    <h3>Lesson 6: Small Game Logic</h3>
+    <p>Combine all previous lessons to create a mini-game.</p>
+    <div class="block-area" data-answer="gameLogicCompleted = true">
+    </div>
+    <button class="button complete-btn">Check Lesson</button>
   </div>
 </div>
 
-<section class="certificate-section">
-  <h3>Certificate Generator</h3>
-  <p>Enter your name to unlock your AceBlocks certificate once all lessons are completed:</p>
+<div class="certificate-section">
   <input type="text" id="studentName" placeholder="Your Name">
   <button class="button" id="generateCert">Generate Certificate</button>
-  <canvas id="certificateCanvas" height="400"></canvas>
-</section>
+</div>
+
+<!-- Certificate Modal -->
+<div id="certificateModal">
+  <button class="certificate-close">Close</button>
+  <canvas id="certificateCanvas"></canvas>
+</div>
 
 <script>
   const lessons = document.querySelectorAll('.lesson-box');
   const generateBtn = document.getElementById('generateCert');
+  const certificateModal = document.getElementById('certificateModal');
+  const closeModal = document.querySelector('.certificate-close');
   const canvas = document.getElementById('certificateCanvas');
   const ctx = canvas.getContext('2d');
 
   let completedLessons = 0;
 
+  // Check lesson logic
   lessons.forEach(lesson => {
-    lesson.querySelector('button').addEventListener('click', () => {
-      if(!lesson.classList.contains('completed')) {
-        lesson.classList.add('completed');
-        completedLessons++;
+    const btn = lesson.querySelector('.complete-btn');
+    btn.addEventListener('click', () => {
+      const blockArea = lesson.querySelector('.block-area');
+      const answer = blockArea.getAttribute('data-answer');
+
+      // Simulate checking blocks (replace with drag-drop later)
+      const userAnswer = prompt(`Enter the Lua code for this lesson:`);
+
+      if(userAnswer === answer){
+        if(!lesson.classList.contains('completed')){
+          lesson.classList.add('completed');
+          completedLessons++;
+          alert('Correct! Lesson completed.');
+        }
+      } else {
+        alert('Try again! Make sure your blocks are correct.');
       }
     });
   });
 
   generateBtn.addEventListener('click', () => {
     const name = document.getElementById('studentName').value;
-    if(completedLessons < 6) {
-      alert(`Complete all 6 lessons before generating your certificate!`);
+    if(completedLessons < 6){
+      alert('Complete all 6 lessons before generating your certificate!');
       return;
     }
-    if(!name) { alert('Please enter your name.'); return; }
+    if(!name){
+      alert('Please enter your name.');
+      return;
+    }
 
-    // Certificate
-    canvas.width = 700;
-    canvas.height = 400;
+    // Show modal
+    certificateModal.style.display = 'block';
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Draw certificate
     ctx.fillStyle = '#fff';
     ctx.fillRect(0,0,canvas.width,canvas.height);
     ctx.fillStyle = '#000';
-    ctx.font = '30px Inter';
     ctx.textAlign = 'center';
-    ctx.fillText('AceBlocks Certificate', canvas.width/2, 80);
-    ctx.font = '20px Inter';
-    ctx.fillText(`This certificate is proudly awarded to`, canvas.width/2, 150);
-    ctx.font = '28px Inter';
-    ctx.fillText(name, canvas.width/2, 200);
-    ctx.font = '20px Inter';
-    ctx.fillText(`For completing all AceBlocks lessons`, canvas.width/2, 250);
-    ctx.fillText(`Signed: Jace Glover`, canvas.width/2, 320);
+    ctx.font = '60px Inter';
+    ctx.fillText('AceBlocks Certificate', canvas.width/2, 150);
+    ctx.font = '40px Inter';
+    ctx.fillText(`Awarded to`, canvas.width/2, 250);
+    ctx.font = '80px Inter';
+    ctx.fillText(name, canvas.width/2, 360);
+    ctx.font = '35px Inter';
+    ctx.fillText(`For completing all AceBlocks lessons`, canvas.width/2, 480);
+    ctx.fillText(`Signed: Jace Glover`, canvas.width/2, 580);
+  });
+
+  closeModal.addEventListener('click', () => {
+    certificateModal.style.display = 'none';
   });
 </script>
 
