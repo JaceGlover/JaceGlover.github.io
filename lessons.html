@@ -1,160 +1,179 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>AceBlocks | Lessons</title>
+  <title>AceBlocks | Interactive Lessons</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Playfair+Display:wght@700&family=Great+Vibes&display=swap" rel="stylesheet">
-
   <style>
-    body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background: #0b0f19;
-      color: white;
-      text-align: center;
-      padding: 50px 20px;
-    }
-
-    h1 {
-      margin-bottom: 40px;
-    }
-
-    .lesson-box {
-      background: #1f2937;
-      padding: 30px;
-      border-radius: 12px;
-      margin: 20px auto;
-      max-width: 600px;
-      transition: 0.3s ease;
-    }
-
-    .lesson-box:hover {
-      transform: translateY(-5px);
-    }
-
-    .button {
-      display: inline-block;
-      padding: 12px 24px;
-      margin-top: 15px;
-      background: #3b82f6;
-      color: white;
-      text-decoration: none;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-    }
-
-    .button:hover {
-      background: #2563eb;
-    }
-
-    .certificate-section {
-      margin-top: 80px;
-      padding: 40px;
-      background: #111827;
-      border-radius: 12px;
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    input {
-      padding: 10px;
-      border-radius: 6px;
-      border: none;
-      margin: 10px;
-      width: 250px;
-    }
-
-    canvas {
-      margin-top: 30px;
-      background: white;
-      border-radius: 10px;
-    }
-
-    a {
-      color: #3b82f6;
-      text-decoration: none;
-    }
+    body { margin:0; font-family:'Inter', sans-serif; background:#0b0f19; color:white; text-align:center; padding:30px 10px; }
+    h1{ margin-bottom:25px; }
+    .lesson-box { background:#1f2937; padding:15px; border-radius:12px; margin:20px auto; max-width:720px; transition:0.3s ease; }
+    .lesson-box.completed { border:3px solid #10b981; }
+    .grid { display:grid; grid-template-columns:repeat(5,50px); grid-template-rows:repeat(5,50px); gap:2px; margin:10px auto; }
+    .cell { width:50px; height:50px; background:#111827; display:flex; justify-content:center; align-items:center; font-size:18px; }
+    .player { background:#3b82f6; width:40px; height:40px; border-radius:5px; }
+    .goal { background:#f59e0b; width:40px; height:40px; border-radius:5px; }
+    .obstacle { background:#ef4444; width:40px; height:40px; border-radius:5px; }
+    .block { display:inline-block; padding:8px 12px; margin:5px; background:#10b981; border-radius:6px; cursor:grab; user-select:none; }
+    .block:hover { background:#059669; }
+    .workspace { background:#111827; padding:10px; min-height:50px; margin:10px auto; max-width:400px; text-align:left; }
+    button { padding:10px 20px; margin:10px; border:none; border-radius:6px; background:#3b82f6; cursor:pointer; color:white; font-weight:600; }
+    #certificateSection { display:none; margin-top:50px; padding:30px; background:#1f2937; border-radius:12px; max-width:800px; margin-left:auto; margin-right:auto; }
+    input { padding:10px; border-radius:6px; border:none; margin:10px; width:250px; }
+    canvas { margin-top:20px; background:white; border-radius:10px; }
   </style>
 </head>
 <body>
 
-<h1>AceBlocks Lessons</h1>
+<h1>AceBlocks Interactive Lessons</h1>
+<p>Complete all 6 lessons. Each lesson has a goal for the character. Use minimal moves to unlock the certificate!</p>
 
-<div class="lesson-box">
-  <h3>Lesson 1</h3>
-  <p>Print "Hello World" in Roblox using visual blocks.</p>
+<div id="lessonsContainer"></div>
+
+<!-- Certificate Section -->
+<div id="certificateSection">
+  <h2>🎉 Congratulations! Generate Your Certificate</h2>
+  <p>Enter your name to create a certificate for completing all lessons.</p>
+  <input type="text" id="studentName" placeholder="Your Name Here">
+  <button onclick="generateCertificate()">Generate Certificate</button>
+  <canvas id="certificateCanvas" width="700" height="400"></canvas>
 </div>
 
-<div class="lesson-box">
-  <h3>Lesson 2</h3>
-  <p>Create a part that changes color when touched.</p>
-</div>
-
-<div class="lesson-box">
-  <h3>Lesson 3</h3>
-  <p>Build a speed boost script using block logic.</p>
-</div>
-
-<!-- CERTIFICATE GENERATOR -->
-<div class="certificate-section">
-  <h2>🎓 Generate Your Completion Certificate</h2>
-
-  <p>Enter your name to generate your AceBlocks certificate.</p>
-
-  <input type="text" id="studentName" placeholder="Enter your full name">
-  <br>
-  <button class="button" onclick="generateCertificate()">Generate Certificate</button>
-  <button class="button" onclick="downloadCertificate()">Download</button>
-
-  <canvas id="certificateCanvas" width="800" height="500"></canvas>
-</div>
-
-<p style="margin-top:40px;"><a href="index.html">← Back to Home</a></p>
+<p><a href="index.html" style="color:#3b82f6;">← Back to Home</a></p>
 
 <script>
-  const canvas = document.getElementById("certificateCanvas");
-  const ctx = canvas.getContext("2d");
+  const lessonsData = [
+    {title:'Lesson 1: Reach the Goal', gridSize:5, player:{x:0,y:4}, goal:{x:4,y:0}, obstacles:[], minMoves:8},
+    {title:'Lesson 2: Avoid Obstacles', gridSize:5, player:{x:0,y:4}, goal:{x:4,y:0}, obstacles:[{x:2,y:2},{x:3,y:1}], minMoves:9},
+    {title:'Lesson 3: Collect Key', gridSize:5, player:{x:0,y:4}, goal:{x:4,y:0}, obstacles:[{x:1,y:2}], key:{x:2,y:2}, minMoves:10},
+    {title:'Lesson 4: Multiple Goals', gridSize:6, player:{x:0,y:5}, goal:{x:5,y:0}, obstacles:[{x:3,y:3}], minMoves:12},
+    {title:'Lesson 5: Teleport Tile', gridSize:6, player:{x:0,y:5}, goal:{x:5,y:0}, obstacles:[{x:2,y:2}], teleport:{from:{x:1,y:1},to:{x:4,y:4}}, minMoves:10},
+    {title:'Lesson 6: Complex Path', gridSize:7, player:{x:0,y:6}, goal:{x:6,y:0}, obstacles:[{x:2,y:3},{x:3,y:3},{x:4,y:2}], minMoves:14}
+  ];
 
-  function generateCertificate() {
-    const name = document.getElementById("studentName").value;
+  const lessonsContainer = document.getElementById('lessonsContainer');
+  let lessonProgress = Array(lessonsData.length).fill(false);
+  let sequences = Array(lessonsData.length).fill(null).map(()=>[]);
 
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  // --- Create Lesson Boxes ---
+  lessonsData.forEach((lesson,index)=>{
+    const box = document.createElement('div');
+    box.classList.add('lesson-box');
+    box.id='lesson'+index;
+    box.innerHTML=`
+      <h3>${lesson.title}</h3>
+      <div class="grid" id="grid${index}"></div>
+      <h4>Blocks</h4>
+      <div id="blocks${index}"></div>
+      <h4>Workspace</h4>
+      <div id="workspace${index}" class="workspace" ondrop="drop(event,${index})" ondragover="allowDrop(event)"></div>
+      <button onclick="runLesson(${index})">Run Moves</button>
+      <div id="feedback${index}" style="margin-top:10px;"></div>
+    `;
+    lessonsContainer.appendChild(box);
 
-    ctx.fillStyle = "#111827";
-    ctx.textAlign = "center";
+    // Create draggable blocks
+    const blocksDiv = document.getElementById('blocks'+index);
+    ['up','down','left','right'].forEach(cmd=>{
+      const blk = document.createElement('div');
+      blk.classList.add('block');
+      blk.setAttribute('draggable',true);
+      blk.setAttribute('data-code',cmd);
+      blk.textContent='Move '+cmd.charAt(0).toUpperCase()+cmd.slice(1);
+      blk.addEventListener('dragstart',e=>{ e.dataTransfer.setData('text',cmd); });
+      blocksDiv.appendChild(blk);
+    });
+  });
 
-    ctx.font = "700 36px Playfair Display";
-    ctx.fillText("Certificate of Completion", 400, 100);
-
-    ctx.font = "20px Inter";
-    ctx.fillText("This certificate is proudly presented to", 400, 180);
-
-    ctx.font = "700 40px Playfair Display";
-    ctx.fillText(name, 400, 240);
-
-    ctx.font = "20px Inter";
-    ctx.fillText("For successfully completing the AceBlocks Beginner Course", 400, 300);
-
-    ctx.font = "18px Inter";
-    ctx.fillText("AceBlocks | 2026", 400, 350);
-
-    // Signature
-    ctx.font = "40px Great Vibes";
-    ctx.fillText("Jace Glover", 600, 420);
-
-    ctx.font = "16px Inter";
-    ctx.fillText("Founder, AceBlocks", 600, 450);
+  // --- Drag & Drop ---
+  function allowDrop(ev){ ev.preventDefault(); }
+  function drop(ev,lessonIndex){
+    ev.preventDefault();
+    const cmd = ev.dataTransfer.getData('text');
+    sequences[lessonIndex].push(cmd);
+    const el = document.createElement('div'); el.textContent=cmd; document.getElementById('workspace'+lessonIndex).appendChild(el);
   }
 
-  function downloadCertificate() {
-    const link = document.createElement("a");
-    link.download = "AceBlocks_Certificate.png";
-    link.href = canvas.toDataURL();
-    link.click();
+  // --- Run Lesson ---
+  function runLesson(index){
+    const lesson = lessonsData[index];
+    let playerPos = {...lesson.player};
+    const feedback = document.getElementById('feedback'+index);
+    const gridEl = document.getElementById('grid'+index);
+    let moves = 0;
+
+    // --- Render Grid ---
+    function renderGrid(){
+      gridEl.innerHTML='';
+      for(let y=0;y<lesson.gridSize;y++){
+        for(let x=0;x<lesson.gridSize;x++){
+          const cell=document.createElement('div'); cell.classList.add('cell');
+          // obstacles
+          if(lesson.obstacles.some(o=>o.x===x && o.y===y)) cell.classList.add('obstacle');
+          if(lesson.teleport && lesson.teleport.from.x===x && lesson.teleport.from.y===y) cell.style.background='#a78bfa';
+          if(lesson.key && lesson.key.x===x && lesson.key.y===y) cell.style.border='2px solid #fbbf24';
+          // player & goal
+          if(playerPos.x===x && playerPos.y===y) cell.classList.add('player');
+          if(lesson.goal.x===x && lesson.goal.y===y) cell.classList.add('goal');
+          gridEl.appendChild(cell);
+        }
+      }
+    }
+
+    // --- Execute Sequence ---
+    let collectedKey = !lesson.key; // if no key, already true
+    sequences[index].forEach(cmd=>{
+      moves++;
+      if(cmd==='up' && playerPos.y>0) playerPos.y--;
+      if(cmd==='down' && playerPos.y<lesson.gridSize-1) playerPos.y++;
+      if(cmd==='left' && playerPos.x>0) playerPos.x--;
+      if(cmd==='right' && playerPos.x<lesson.gridSize-1) playerPos.x++;
+      // check obstacles
+      if(lesson.obstacles.some(o=>o.x===playerPos.x && o.y===playerPos.y)) moves+=100; // penalize
+      // check key
+      if(lesson.key && playerPos.x===lesson.key.x && playerPos.y===lesson.key.y) collectedKey=true;
+      // check teleport
+      if(lesson.teleport && playerPos.x===lesson.teleport.from.x && playerPos.y===lesson.teleport.from.y){
+        playerPos={...lesson.teleport.to};
+      }
+    });
+
+    renderGrid();
+
+    if(playerPos.x===lesson.goal.x && playerPos.y===lesson.goal.y && collectedKey){
+      if(moves<=lesson.minMoves) feedback.textContent=`✅ Well done! Goal reached in ${moves} moves.`;
+      else feedback.textContent=`⚠️ Goal reached but try to use fewer moves. You used ${moves}.`;
+      lessonProgress[index]=true;
+      document.getElementById('lesson'+index).classList.add('completed');
+      checkAllCompleted();
+    } else feedback.textContent='❌ Goal not reached or key missing. Try again!';
+  }
+
+  // --- Check All Completed ---
+  function checkAllCompleted(){
+    if(lessonProgress.every(v=>v)) document.getElementById('certificateSection').style.display='block';
+  }
+
+  // --- Certificate Generator ---
+  function generateCertificate(){
+    const name=document.getElementById('studentName').value.trim();
+    if(!name){ alert('Enter your name!'); return; }
+    const canvas=document.getElementById('certificateCanvas');
+    const ctx=canvas.getContext('2d');
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle='#fef3c7'; ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle='#1e3a8a'; ctx.font='bold 30px "Playfair Display", serif'; ctx.textAlign='center';
+    ctx.fillText('Certificate of Achievement', canvas.width/2,60);
+    ctx.font='18px Inter, sans-serif'; ctx.fillStyle='#111827';
+    ctx.fillText('This certificate is proudly presented to', canvas.width/2,120);
+    ctx.font='bold 28px Inter, sans-serif'; ctx.fillStyle='#1e3a8a';
+    ctx.fillText(name, canvas.width/2,170);
+    ctx.font='16px Inter, sans-serif'; ctx.fillStyle='#111827';
+    ctx.fillText('for completing all AceBlocks interactive lessons and demonstrating coding excellence.', canvas.width/2,210);
+    ctx.font='28px "Great Vibes", cursive'; ctx.fillStyle='#1e3a8a'; ctx.textAlign='right';
+    ctx.fillText('Jace Glover', canvas.width-60,canvas.height-60);
+    ctx.font='14px Inter, sans-serif'; ctx.fillText('Founder of AceBlocks', canvas.width-60,canvas.height-40);
+    ctx.strokeStyle='#1e3a8a'; ctx.lineWidth=4; ctx.strokeRect(10,10,canvas.width-20,canvas.height-20);
   }
 </script>
 
