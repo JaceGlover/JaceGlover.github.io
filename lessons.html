@@ -19,6 +19,7 @@
     .player { background:#3b82f6; width:40px; height:40px; border-radius:5px; }
     .goal { background:#f59e0b; width:40px; height:40px; border-radius:5px; }
     .obstacle { background:#ef4444; width:40px; height:40px; border-radius:5px; }
+    .key { border:2px solid #fbbf24; width:40px; height:40px; border-radius:5px; }
     .block { display:inline-block; padding:8px 12px; margin:5px; background:#10b981; border-radius:6px; cursor:grab; user-select:none; }
     .block:hover { background:#059669; }
     .workspace { background:#111827; padding:10px; min-height:50px; margin:10px 0; max-width:400px; text-align:left; }
@@ -26,6 +27,9 @@
     #certificateSection { display:none; margin-top:50px; padding:30px; background:#1f2937; border-radius:12px; max-width:800px; margin-left:auto; margin-right:auto; text-align:center; }
     input { padding:10px; border-radius:6px; border:none; margin:10px; width:250px; }
     canvas { margin-top:20px; background:white; border-radius:10px; }
+    @media (min-width:600px){
+      .flex-row { display:flex; gap:20px; }
+    }
   </style>
 </head>
 <body>
@@ -37,14 +41,26 @@
   <div class="main" id="lessonMain">
     <h2 id="lessonTitle"></h2>
     <div class="grid" id="lessonGrid"></div>
+
     <h3>Blocks</h3>
     <div id="blocksContainer"></div>
-    <h3>Workspace</h3>
-    <div id="workspaceContainer" class="workspace" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+
+    <div class="flex-row">
+      <div style="flex:1;">
+        <h3>Workspace</h3>
+        <div id="workspaceContainer" class="workspace" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+      </div>
+      <div style="flex:1;">
+        <h3>Generated Lua Code</h3>
+        <pre id="luaCode" style="background:#1f2937; padding:10px; border-radius:8px; min-height:150px;"></pre>
+      </div>
+    </div>
+
     <div>
       <button onclick="runLesson()">Run Moves</button>
       <div id="feedback" style="margin-top:10px;"></div>
     </div>
+
     <div id="certificateSection">
       <h2>🎉 Congratulations! Generate Your Certificate</h2>
       <input type="text" id="studentName" placeholder="Your Name Here">
@@ -75,6 +91,7 @@ const blocksContainer = document.getElementById('blocksContainer');
 const workspaceContainer = document.getElementById('workspaceContainer');
 const feedback = document.getElementById('feedback');
 const certificateSection = document.getElementById('certificateSection');
+const luaCodeEl = document.getElementById('luaCode');
 
 // --- Sidebar ---
 function renderSidebar(){
@@ -96,6 +113,7 @@ function loadLesson(index){
   currentLesson=index;
   sequence=[];
   workspaceContainer.innerHTML='';
+  luaCodeEl.textContent='';
   feedback.textContent='';
   renderSidebar();
   const lesson=lessonsData[index];
@@ -131,18 +149,32 @@ function drop(ev){
 // --- Render Grid ---
 function renderGrid(){
   const lesson=lessonsData[currentLesson];
-  const playerPos={...lesson.player};
+  lessonGrid.style.gridTemplateColumns=`repeat(${lesson.gridSize},50px)`;
+  lessonGrid.style.gridTemplateRows=`repeat(${lesson.gridSize},50px)`;
   lessonGrid.innerHTML='';
   for(let y=0;y<lesson.gridSize;y++){
     for(let x=0;x<lesson.gridSize;x++){
       const cell=document.createElement('div'); cell.className='cell';
       if(lesson.obstacles.some(o=>o.x===x && o.y===y)) cell.classList.add('obstacle');
-      if(lesson.key && lesson.key.x===x && lesson.key.y===y) cell.style.border='2px solid #fbbf24';
-      if(playerPos.x===x && playerPos.y===y) cell.classList.add('player');
-      if(lesson.goal.x===x && lesson.goal.y===y) cell.classList.add('goal');
+      if(lesson.key && lesson.key.x===x && lesson.key.y===y) cell.classList.add('key');
+      if(x===lesson.player.x && y===lesson.player.y) cell.classList.add('player');
+      if(x===lesson.goal.x && y===lesson.goal.y) cell.classList.add('goal');
       lessonGrid.appendChild(cell);
     }
   }
+}
+
+// --- Generate Lua ---
+function generateLua(){
+  let lua = "-- Roblox Lua generated from AceBlocks\nlocal player = game.Players.LocalPlayer\nlocal pos = Vector3.new(0,0,0)\n";
+  sequence.forEach(cmd=>{
+    if(cmd==='up') lua += "pos = pos + Vector3.new(0,0,1)\n";
+    if(cmd==='down') lua += "pos = pos + Vector3.new(0,0,-1)\n";
+    if(cmd==='left') lua += "pos = pos + Vector3.new(-1,0,0)\n";
+    if(cmd==='right') lua += "pos = pos + Vector3.new(1,0,0)\n";
+  });
+  lua += "-- Player final position: "..sequence.length+" moves";
+  luaCodeEl.textContent = lua;
 }
 
 // --- Run Lesson ---
@@ -164,6 +196,7 @@ function runLesson(){
     }
   });
   renderGrid();
+  generateLua();
   if(playerPos.x===lesson.goal.x && playerPos.y===lesson.goal.y && collectedKey){
     feedback.textContent=`✅ Lesson Completed! Moves: ${moves} (Min: ${lesson.minMoves})`;
     lessonProgress[currentLesson]=true;
@@ -173,7 +206,7 @@ function runLesson(){
   } else feedback.textContent='❌ Goal not reached or key missing. Try again!';
 }
 
-// --- Certificate Generator ---
+// --- Certificate ---
 function generateCertificate(){
   const name=document.getElementById('studentName').value.trim();
   if(!name){ alert('Enter your name!'); return; }
@@ -195,7 +228,7 @@ function generateCertificate(){
   ctx.strokeStyle='#1e3a8a'; ctx.lineWidth=4; ctx.strokeRect(10,10,canvas.width-20,canvas.height-20);
 }
 
-// --- Initialize ---
+// --- Init ---
 loadLesson(0);
 </script>
 
