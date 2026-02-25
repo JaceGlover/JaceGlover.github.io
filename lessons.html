@@ -1,93 +1,104 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8">
 <title>AceBlocks Lessons</title>
+
 <script src="https://unpkg.com/blockly/blockly.min.js"></script>
 
 <style>
-body {
-  font-family: Arial;
-  margin: 0;
-  background: #f4f6fa;
+body{
+margin:0;
+font-family:Arial;
+background:#111827;
+color:white;
+text-align:center;
 }
 
-#lessonTitle {
-  background: #1f73ff;
-  color: white;
-  padding: 15px;
-  font-size: 20px;
+header{
+background:#1f2937;
+padding:20px;
+font-size:24px;
+font-weight:bold;
 }
 
-#blocklyDiv {
-  height: 400px;
-  width: 100%;
+#lessonTitle{
+margin-top:20px;
+font-size:22px;
 }
 
-#controls {
-  padding: 15px;
+#blocklyDiv{
+height:400px;
+width:90%;
+margin:20px auto;
+background:white;
+border-radius:10px;
 }
 
-button {
-  padding: 10px 20px;
-  background: #1f73ff;
-  color: white;
-  border: none;
-  cursor: pointer;
-  margin-right: 10px;
+button{
+padding:10px 20px;
+margin:10px;
+border:none;
+border-radius:6px;
+background:#3b82f6;
+color:white;
+font-weight:bold;
+cursor:pointer;
 }
 
-button:hover {
-  background: #155edb;
+button:hover{
+background:#2563eb;
 }
 
-#output {
-  background: black;
-  color: lime;
-  padding: 10px;
-  height: 100px;
-  overflow: auto;
+#output{
+margin-top:10px;
+color:#10b981;
+font-weight:bold;
 }
 
-#certificateScreen {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: white;
-  text-align: center;
-  padding-top: 100px;
+#certificate{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:white;
+color:black;
+justify-content:center;
+align-items:center;
+flex-direction:column;
 }
 
-#certificateScreen h1 {
-  font-size: 50px;
+#certificate h1{
+font-size:48px;
 }
 
-#certificateScreen p {
-  font-size: 24px;
+#printBtn{
+margin-top:20px;
+background:black;
 }
 </style>
 </head>
 
 <body>
 
-<div id="lessonTitle">Lesson 1: Print "Hello World"</div>
+<header>AceBlocks Lessons</header>
+
+<div id="lessonTitle"></div>
 
 <div id="blocklyDiv"></div>
 
-<div id="controls">
-<button onclick="runCode()">Run</button>
-<button onclick="nextLesson()">Next</button>
-</div>
+<button id="runBtn">Run Code</button>
 
 <div id="output"></div>
 
-<div id="certificateScreen">
+<div id="certificate">
 <h1>Certificate of Completion</h1>
-<p id="certName"></p>
-<p>Has successfully completed AceBlocks Coding Course</p>
-<button onclick="window.print()">Print</button>
+<p>This certifies that</p>
+<h2 id="certName"></h2>
+<p>has successfully completed AceBlocks Coding Lessons.</p>
+<button id="printBtn" onclick="window.print()">Print Certificate</button>
 </div>
 
 <xml id="toolbox" style="display:none">
@@ -98,83 +109,79 @@ button:hover {
 </xml>
 
 <script>
+const workspace = Blockly.inject('blocklyDiv',{
+toolbox:document.getElementById('toolbox')
+});
+
+Blockly.JavaScript['text_print'] = function(block){
+const msg = Blockly.JavaScript.valueToCode(block,'TEXT',Blockly.JavaScript.ORDER_NONE) || '""';
+return 'console.log('+msg+');\n';
+};
 
 let currentLesson = 1;
-let workspace = Blockly.inject('blocklyDiv',
-  { toolbox: document.getElementById('toolbox') });
 
 const lessons = {
-1: {
-title: 'Lesson 1: Print "Hello World"',
-check: code => code.includes('Hello World')
+1:{
+title:'Lesson 1: Print "Hello World"',
+check:code=>code.includes('Hello World')
 },
-2: {
-title: 'Lesson 2: Print Your Name',
-check: code => code.includes('Jace')
+2:{
+title:'Lesson 2: Print Your Name',
+check:code=>{
+return /console\.log\(["'][A-Za-z ]+["']\)/.test(code);
+}
 },
-3: {
-title: 'Lesson 3: Print a Number (5)',
-check: code => code.includes('5')
+3:{
+title:'Lesson 3: Print the Number 5',
+check:code=>code.includes('5')
 },
-4: {
-title: 'Lesson 4: Add 2 + 3',
-check: code => code.includes('2 + 3')
+4:{
+title:'Lesson 4: Add 2 + 3',
+check:code=>code.includes('2 + 3')
 },
-5: {
-title: 'Lesson 5: Print Two Things',
-check: code => code.split('print').length > 2
+5:{
+title:'Lesson 5: Print Two Things',
+check:code=>(code.match(/console\.log/g)||[]).length>=2
 },
-6: {
-title: 'Lesson 6: Final Challenge - Print "I Love Coding"',
-check: code => code.includes('I Love Coding')
+6:{
+title:'Lesson 6: Print "I Love Coding"',
+check:code=>code.includes('I Love Coding')
 }
 };
 
-function runCode() {
-  let code = Blockly.JavaScript.workspaceToCode(workspace);
-  document.getElementById('output').innerHTML = "";
-
-  try {
-    let output = "";
-    const originalLog = console.log;
-    console.log = function(text) {
-      output += text + "<br>";
-    };
-
-    eval(code);
-
-    console.log = originalLog;
-
-    document.getElementById('output').innerHTML = output;
-
-    if (lessons[currentLesson].check(code)) {
-      alert("Lesson Complete! Click Next!");
-    } else {
-      alert("Not quite right! Try again.");
-    }
-
-  } catch (e) {
-    alert("Error in code!");
-  }
+function loadLesson(){
+workspace.clear();
+document.getElementById('lessonTitle').innerText = lessons[currentLesson].title;
+document.getElementById('output').innerText='';
 }
 
-function nextLesson() {
-  if (currentLesson < 6) {
-    currentLesson++;
-    workspace.clear();
-    document.getElementById('lessonTitle').innerText =
-      lessons[currentLesson].title;
-  } else {
-    generateCertificate();
-  }
+document.getElementById('runBtn').addEventListener('click',function(){
+const code = Blockly.JavaScript.workspaceToCode(workspace);
+console.log(code);
+
+if(lessons[currentLesson].check(code)){
+document.getElementById('output').innerText="Correct! Moving to next lesson...";
+
+currentLesson++;
+
+if(currentLesson>6){
+showCertificate();
+}else{
+setTimeout(loadLesson,1000);
 }
 
-function generateCertificate() {
-  let name = prompt("Enter your name for the certificate:");
-  document.getElementById('certName').innerText = name;
-  document.getElementById('certificateScreen').style.display = "block";
+}else{
+document.getElementById('output').innerText="Not quite right. Try again!";
+}
+});
+
+function showCertificate(){
+document.getElementById('certificate').style.display='flex';
+let name = prompt("Enter your name for the certificate:");
+document.getElementById('certName').innerText = name || "Student";
 }
 
+loadLesson();
 </script>
 
 </body>
