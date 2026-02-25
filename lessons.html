@@ -5,49 +5,62 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Blockly -->
-  <script src="https://unpkg.com/blockly/blockly.min.js"></script>
-  <script src="https://unpkg.com/blockly/lua.min.js"></script>
+  <!-- ✅ STABLE BLOCKLY BUILD -->
+  <script src="https://cdn.jsdelivr.net/npm/blockly@10.3.1/blockly_compressed.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/blockly@10.3.1/blocks_compressed.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/blockly@10.3.1/lua_compressed.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/blockly@10.3.1/msg/en.js"></script>
 
   <style>
     body {
-      font-family: Arial;
-      background:#0b0f19;
-      color:white;
-      text-align:center;
-      padding:20px;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0b0f19;
+      color: white;
+      text-align: center;
+      padding: 30px 20px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
     }
 
     #blocklyDiv {
-      height: 300px;
+      height: 350px;
       width: 100%;
-      max-width: 600px;
+      max-width: 700px;
       margin: auto;
-      background:#111827;
-      border-radius:8px;
+      background: #111827;
+      border-radius: 10px;
     }
 
     button {
-      padding:10px 20px;
-      margin-top:15px;
-      background:#3b82f6;
-      color:white;
-      border:none;
-      border-radius:8px;
-      cursor:pointer;
-      font-weight:bold;
+      padding: 12px 24px;
+      margin-top: 20px;
+      background: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 16px;
     }
 
     button:hover {
-      background:#2563eb;
+      background: #2563eb;
     }
 
     #output {
-      margin-top:20px;
-      background:#1f2937;
-      padding:15px;
-      border-radius:8px;
-      min-height:50px;
+      margin-top: 20px;
+      background: #1f2937;
+      padding: 15px;
+      border-radius: 8px;
+      min-height: 60px;
+      text-align: left;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      white-space: pre-wrap;
     }
   </style>
 </head>
@@ -56,32 +69,49 @@
 <h1>Lesson 1: Print "Hello World"</h1>
 
 <div id="blocklyDiv"></div>
+
 <button id="runBtn">Run</button>
 
-<pre id="output"></pre>
+<div id="output"></div>
 
 <script>
+  // Inject workspace
   const workspace = Blockly.inject('blocklyDiv', {
     toolbox: `
       <xml>
         <category name="Text" colour="#5C81A6">
-          <block type="text"></block>
           <block type="text_print"></block>
+          <block type="text"></block>
         </category>
       </xml>
     `,
     trashcan: true
   });
 
-  document.getElementById("runBtn").addEventListener("click", function() {
-    const code = Blockly.Lua.workspaceToCode(workspace);
-    document.getElementById("output").textContent = code;
+  const output = document.getElementById("output");
 
-    if(code.replace(/\s/g,'').includes("print('Hello World')")){
-      alert("Correct ✅");
-    } else {
-      alert("Not quite right!");
+  document.getElementById("runBtn").addEventListener("click", function () {
+
+    const code = Blockly.Lua.workspaceToCode(workspace);
+
+    output.textContent = code || "Add blocks first!";
+
+    if (!code) {
+      alert("Add blocks first!");
+      return;
     }
+
+    const cleanCode = code.replace(/\s/g, "");
+
+    if (
+      cleanCode.includes("print(\"HelloWorld\")") ||
+      cleanCode.includes("print('HelloWorld')")
+    ) {
+      alert("Correct ✅ Lesson Complete!");
+    } else {
+      alert("Not quite right. Make sure you're printing Hello World exactly.");
+    }
+
   });
 </script>
 
