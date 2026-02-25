@@ -17,6 +17,7 @@
       background: #0b0f19;
       color: white;
       line-height: 1.6;
+      scroll-behavior: smooth;
     }
 
     header {
@@ -63,6 +64,7 @@
 
     .button:hover {
       background: #2563eb;
+      transform: translateY(-2px);
     }
 
     .section {
@@ -89,10 +91,17 @@
       padding: 30px;
       border-radius: 10px;
       width: 250px;
+      transition: 0.3s ease;
+    }
+
+    .feature-box:hover {
+      transform: translateY(-5px);
     }
 
     .feature-box h4 {
       margin-bottom: 10px;
+      font-size: 1.3rem;
+      color: #3b82f6;
     }
 
     .founder {
@@ -142,7 +151,7 @@
 <section class="hero">
   <h2>Build Roblox Scripts Visually</h2>
   <p>AceBlocks is a block-based coding engine designed to help beginners create Roblox scripts without typing complex code.</p>
-  <a href="#" class="button">Try AceBlocks</a>
+  <a href="#lessons" class="button">Try AceBlocks</a>
   <a href="#join" class="button">Join the Team</a>
 </section>
 
@@ -160,6 +169,30 @@
     <div class="feature-box">
       <h4>Visual Learning</h4>
       <p>Understand coding logic in a more interactive way.</p>
+    </div>
+  </div>
+</section>
+
+<!-- LESSONS SECTION -->
+<section class="section" id="lessons">
+  <h3>Start Learning</h3>
+  <div class="features">
+    <div class="feature-box">
+      <h4>Lesson 1</h4>
+      <p>Print “Hello World” in Roblox using visual blocks.</p>
+      <a href="#" class="button">Start</a>
+    </div>
+
+    <div class="feature-box">
+      <h4>Lesson 2</h4>
+      <p>Create a part that changes color when touched.</p>
+      <a href="#" class="button">Start</a>
+    </div>
+
+    <div class="feature-box">
+      <h4>Lesson 3</h4>
+      <p>Build a speed boost script using block logic.</p>
+      <a href="#" class="button">Start</a>
     </div>
   </div>
 </section>
