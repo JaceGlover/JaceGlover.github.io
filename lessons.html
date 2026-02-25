@@ -24,10 +24,7 @@
       border-radius: 12px;
       margin: 20px auto;
       max-width: 800px;
-      transition: 0.3s ease;
     }
-
-    .lesson-box:hover { transform: translateY(-5px); }
 
     .button {
       display: inline-block;
@@ -78,8 +75,6 @@
       border-radius:12px;
       background:white;
     }
-
-    .cert-btns { margin-top:20px; }
   </style>
 </head>
 <body>
@@ -112,17 +107,21 @@ const container = document.getElementById("lessonsContainer");
 const workspaces = {};
 const completed = new Set();
 
-lessons.forEach((l,i)=>{
+// Generate lessons and Blockly workspaces
+lessons.forEach((lesson,index)=>{
   const div = document.createElement("div");
   div.className="lesson-box";
-  div.innerHTML=`<h3>${l.title}</h3><p>${l.desc}</p>
-                 <div id="blockly${i}" class="blockly-container"></div>
-                 <button class="button run-btn">Run</button>
-                 <pre id="output${i}"></pre>`;
+  div.innerHTML = `
+    <h3>${lesson.title}</h3>
+    <p>${lesson.desc}</p>
+    <div id="blockly${index}" class="blockly-container"></div>
+    <button class="button run-btn" data-index="${index}">Run</button>
+    <pre id="output${index}"></pre>
+  `;
   container.appendChild(div);
 
-  workspaces[i] = Blockly.inject("blockly"+i,{
-    toolbox:`<xml>
+  workspaces[index] = Blockly.inject(`blockly${index}`,{
+    toolbox: `<xml>
       <category name="Text" colour="#5C81A6">
         <block type="text"></block>
         <block type="text_print"></block>
@@ -137,46 +136,40 @@ lessons.forEach((l,i)=>{
       </category>
       <category name="Logic" colour="#5C68A6">
         <block type="logic_compare"></block>
-        <block type="logic_operation"></block>
         <block type="logic_boolean"></block>
       </category>
       <category name="Loops" colour="#A6745C">
         <block type="controls_repeat_ext"></block>
-        <block type="controls_whileUntil"></block>
-      </category>
-      <category name="Functions" colour="#A6A65C">
-        <block type="procedures_defnoreturn"></block>
-        <block type="procedures_defreturn"></block>
-        <block type="procedures_callnoreturn"></block>
-        <block type="procedures_callreturn"></block>
       </category>
     </xml>`,
-    grid:{spacing:20,length:3,colour:'#888',snap:true},
-    trashcan:true
+    trashcan: true
   });
 
-  Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(l.blocks),workspaces[i]);
+  Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(lesson.blocks), workspaces[index]);
 });
 
-document.querySelectorAll(".run-btn").forEach((btn,index)=>{
+// Attach run buttons
+document.querySelectorAll(".run-btn").forEach(btn=>{
   btn.addEventListener("click",()=>{
-    const code=Blockly.Lua.workspaceToCode(workspaces[index]);
+    const idx = btn.getAttribute("data-index");
+    const code = Blockly.Lua.workspaceToCode(workspaces[idx]);
     if(!code.trim()){alert("Add some blocks first!"); return;}
-    document.getElementById("output"+index).textContent = code;
-    completed.add(index);
+    document.getElementById("output"+idx).textContent = code;
+    completed.add(Number(idx));
     btn.textContent="Completed ✅";
     btn.disabled=true;
-    if(completed.size===lessons.length){showCertificate();}
+    if(completed.size === lessons.length){showCertificate();}
   });
 });
 
+// Certificate functions
 function showCertificate(){
-  const cert=document.getElementById("certificateSection");
-  const name=prompt("Enter your name for the certificate:");
+  const cert = document.getElementById("certificateSection");
+  const name = prompt("Enter your name for the certificate:");
   if(!name) return;
   document.getElementById("certName").textContent=name;
-  const canvas=document.getElementById("certificateCanvas");
-  const ctx=canvas.getContext("2d");
+  const canvas = document.getElementById("certificateCanvas");
+  const ctx = canvas.getContext("2d");
   ctx.fillStyle="white";
   ctx.fillRect(0,0,canvas.width,canvas.height);
   ctx.fillStyle="black";
@@ -189,7 +182,6 @@ function showCertificate(){
   ctx.fillText("Completed all AceBlocks lessons!",canvas.width/2,400);
   cert.style.display="block";
 }
-
 function closeCertificate(){document.getElementById("certificateSection").style.display="none";}
 function printCertificate(){window.print();}
 </script>
