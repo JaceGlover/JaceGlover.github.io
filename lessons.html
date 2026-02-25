@@ -4,13 +4,51 @@
   <title>AceBlocks | Lesson 1</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Blockly -->
   <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+  <script src="https://unpkg.com/blockly/lua.min.js"></script>
+
   <style>
-    body { font-family: 'Inter', sans-serif; background:#0b0f19; color:white; text-align:center; padding:20px; }
-    #blocklyDiv { height: 300px; width: 100%; max-width: 600px; margin:auto; background:#111827; border-radius:8px; }
-    .button { padding:10px 20px; margin:10px; background:#3b82f6; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:600; }
-    .button:hover { background:#2563eb; }
-    #output { margin-top:20px; background:#1f2937; padding:15px; border-radius:8px; min-height:50px; }
+    body {
+      font-family: Arial;
+      background:#0b0f19;
+      color:white;
+      text-align:center;
+      padding:20px;
+    }
+
+    #blocklyDiv {
+      height: 300px;
+      width: 100%;
+      max-width: 600px;
+      margin: auto;
+      background:#111827;
+      border-radius:8px;
+    }
+
+    button {
+      padding:10px 20px;
+      margin-top:15px;
+      background:#3b82f6;
+      color:white;
+      border:none;
+      border-radius:8px;
+      cursor:pointer;
+      font-weight:bold;
+    }
+
+    button:hover {
+      background:#2563eb;
+    }
+
+    #output {
+      margin-top:20px;
+      background:#1f2937;
+      padding:15px;
+      border-radius:8px;
+      min-height:50px;
+    }
   </style>
 </head>
 <body>
@@ -18,33 +56,31 @@
 <h1>Lesson 1: Print "Hello World"</h1>
 
 <div id="blocklyDiv"></div>
-<button class="button" id="runBtn">Run</button>
+<button id="runBtn">Run</button>
+
 <pre id="output"></pre>
 
 <script>
-  // Inject Blockly
   const workspace = Blockly.inject('blocklyDiv', {
-    toolbox: `<xml>
-      <category name="Text" colour="#5C81A6">
-        <block type="text"></block>
-        <block type="text_print"></block>
-      </category>
-    </xml>`,
-    trashcan:true
+    toolbox: `
+      <xml>
+        <category name="Text" colour="#5C81A6">
+          <block type="text"></block>
+          <block type="text_print"></block>
+        </category>
+      </xml>
+    `,
+    trashcan: true
   });
 
-  const outputEl = document.getElementById('output');
-
-  document.getElementById('runBtn').addEventListener('click', () => {
-    // Generate Lua code
+  document.getElementById("runBtn").addEventListener("click", function() {
     const code = Blockly.Lua.workspaceToCode(workspace);
-    outputEl.textContent = code;
+    document.getElementById("output").textContent = code;
 
-    // Check if correct
-    if (code.replace(/\s/g,'').includes(`print('Hello World')`)) {
-      alert("Correct ✅ Lesson Completed!");
+    if(code.replace(/\s/g,'').includes("print('Hello World')")){
+      alert("Correct ✅");
     } else {
-      alert("Not correct, try again!");
+      alert("Not quite right!");
     }
   });
 </script>
