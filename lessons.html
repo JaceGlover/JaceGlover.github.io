@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>AceBlocks Lessons</title>
 
-<!-- Stable Blockly Version -->
+<!-- Stable Blockly -->
 <script src="https://cdn.jsdelivr.net/npm/blockly@10.3.1/blockly_compressed.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/blockly@10.3.1/blocks_compressed.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/blockly@10.3.1/javascript_compressed.js"></script>
@@ -56,9 +56,10 @@ button:hover{
 
 #output{
   margin-top:10px;
-  color:#10b981;
   font-weight:bold;
 }
+
+/* CERTIFICATE */
 
 #certificate{
   display:none;
@@ -71,17 +72,80 @@ button:hover{
   color:black;
   justify-content:center;
   align-items:center;
-  flex-direction:column;
   z-index:999;
 }
 
-#certificate h1{
+.cert-box{
+  width:80%;
+  max-width:900px;
+  padding:60px;
+  text-align:center;
+  border:8px solid #3b82f6;
+  border-radius:20px;
+}
+
+.cert-box h1{
   font-size:48px;
+  margin-bottom:10px;
+}
+
+.sub{
+  font-size:20px;
+  margin-bottom:40px;
+  color:#555;
+}
+
+.small{
+  font-size:18px;
+  margin:15px 0;
+}
+
+#certName{
+  font-size:42px;
+  margin:20px 0;
+  color:#3b82f6;
+}
+
+.signature-area{
+  display:flex;
+  justify-content:space-between;
+  margin-top:60px;
+}
+
+.signature{
+  font-family:cursive;
+  font-size:28px;
+  margin-bottom:5px;
+}
+
+hr{
+  width:200px;
 }
 
 #printBtn{
-  margin-top:20px;
+  margin-top:40px;
+  padding:12px 24px;
   background:black;
+  color:white;
+  border:none;
+  cursor:pointer;
+}
+
+@media print{
+  body *{
+    visibility:hidden;
+  }
+  #certificate, #certificate *{
+    visibility:visible;
+  }
+  #certificate{
+    position:absolute;
+    left:0;
+    top:0;
+  }
+  #printBtn{
+    display:none;
+  }
 }
 </style>
 </head>
@@ -98,15 +162,39 @@ button:hover{
 
 <div id="output"></div>
 
+<!-- CERTIFICATE -->
 <div id="certificate">
-  <h1>Certificate of Completion</h1>
-  <p>This certifies that</p>
-  <h2 id="certName"></h2>
-  <p>has successfully completed all AceBlocks Coding Lessons.</p>
-  <button id="printBtn" onclick="window.print()">Print Certificate</button>
+  <div class="cert-box">
+    <h1>Certificate of Completion</h1>
+    <p class="sub">AceBlocks Visual Coding Program</p>
+
+    <p class="small">This certifies that</p>
+    <h2 id="certName"></h2>
+
+    <p class="small">
+      has successfully completed all six AceBlocks coding lessons
+      and demonstrated understanding of block-based scripting.
+    </p>
+
+    <div class="signature-area">
+      <div>
+        <p class="signature">Jace Glover</p>
+        <hr>
+        <p class="small">Founder, AceBlocks</p>
+      </div>
+
+      <div>
+        <p id="certDate"></p>
+        <hr>
+        <p class="small">Date</p>
+      </div>
+    </div>
+
+    <button id="printBtn" onclick="window.print()">Print Certificate</button>
+  </div>
 </div>
 
-<!-- Toolbox -->
+<!-- TOOLBOX -->
 <xml id="toolbox" style="display:none">
   <block type="text_print"></block>
   <block type="text"></block>
@@ -116,12 +204,12 @@ button:hover{
 
 <script>
 
-// Create workspace
+// WORKSPACE
 const workspace = Blockly.inject('blocklyDiv',{
   toolbox:document.getElementById('toolbox')
 });
 
-// Make print block generate console.log
+// Custom print generator
 Blockly.JavaScript['text_print'] = function(block){
   const msg = Blockly.JavaScript.valueToCode(block,'TEXT',Blockly.JavaScript.ORDER_NONE) || '""';
   return 'console.log('+msg+');\n';
@@ -129,16 +217,12 @@ Blockly.JavaScript['text_print'] = function(block){
 
 let currentLesson = 1;
 
-// ===== Helper Functions =====
-
-// Check if a print block has something plugged into it
+// HELPERS
 function hasPrintWithValue(){
   const blocks = workspace.getAllBlocks(false);
-
   for(let block of blocks){
-    if(block.type === "text_print"){
-      const input = block.getInputTargetBlock("TEXT");
-      if(input){
+    if(block.type==="text_print"){
+      if(block.getInputTargetBlock("TEXT")){
         return true;
       }
     }
@@ -146,13 +230,11 @@ function hasPrintWithValue(){
   return false;
 }
 
-// Count print blocks with values
 function countValidPrints(){
   const blocks = workspace.getAllBlocks(false);
-  let count = 0;
-
+  let count=0;
   for(let block of blocks){
-    if(block.type === "text_print"){
+    if(block.type==="text_print"){
       if(block.getInputTargetBlock("TEXT")){
         count++;
       }
@@ -161,18 +243,17 @@ function countValidPrints(){
   return count;
 }
 
-// ===== Lessons =====
-
-const lessons = {
+// LESSONS
+const lessons={
 1:{
   title:'Lesson 1: Print "Hello World"',
   check:()=>{
-    const code = Blockly.JavaScript.workspaceToCode(workspace);
+    const code=Blockly.JavaScript.workspaceToCode(workspace);
     return code.includes("Hello World");
   }
 },
 2:{
-  title:'Lesson 2: Print Anything (Must Not Be Blank)',
+  title:'Lesson 2: Print Anything (Not Blank)',
   check:()=>{
     return hasPrintWithValue();
   }
@@ -180,45 +261,44 @@ const lessons = {
 3:{
   title:'Lesson 3: Print the Number 5',
   check:()=>{
-    const code = Blockly.JavaScript.workspaceToCode(workspace);
+    const code=Blockly.JavaScript.workspaceToCode(workspace);
     return code.includes("5");
   }
 },
 4:{
   title:'Lesson 4: Add 2 + 3',
   check:()=>{
-    const code = Blockly.JavaScript.workspaceToCode(workspace);
+    const code=Blockly.JavaScript.workspaceToCode(workspace);
     return code.includes("2 + 3");
   }
 },
 5:{
   title:'Lesson 5: Print Two Things',
   check:()=>{
-    return countValidPrints() >= 2;
+    return countValidPrints()>=2;
   }
 },
 6:{
   title:'Lesson 6: Print "I Love Coding"',
   check:()=>{
-    const code = Blockly.JavaScript.workspaceToCode(workspace);
+    const code=Blockly.JavaScript.workspaceToCode(workspace);
     return code.includes("I Love Coding");
   }
 }
 };
 
-// ===== Load Lesson =====
-
+// LOAD LESSON
 function loadLesson(){
   workspace.clear();
-  document.getElementById('lessonTitle').innerText = lessons[currentLesson].title;
+  document.getElementById('lessonTitle').innerText=lessons[currentLesson].title;
   document.getElementById('output').innerText='';
 }
 
-// ===== Run Button =====
-
+// RUN BUTTON
 document.getElementById('runBtn').addEventListener('click',function(){
 
   if(lessons[currentLesson].check()){
+    document.getElementById('output').style.color="#10b981";
     document.getElementById('output').innerText="Correct!";
     currentLesson++;
 
@@ -229,16 +309,20 @@ document.getElementById('runBtn').addEventListener('click',function(){
     }
 
   }else{
+    document.getElementById('output').style.color="#ef4444";
     document.getElementById('output').innerText="Not correct. Try again.";
   }
 });
 
-// ===== Certificate =====
-
+// CERTIFICATE
 function showCertificate(){
   document.getElementById('certificate').style.display='flex';
-  let name = prompt("Enter your name for the certificate:");
-  document.getElementById('certName').innerText = name || "Student";
+
+  let name=prompt("Enter your name for the certificate:");
+  document.getElementById('certName').innerText=name||"Student";
+
+  const today=new Date();
+  document.getElementById('certDate').innerText=today.toLocaleDateString();
 }
 
 loadLesson();
