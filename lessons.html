@@ -102,15 +102,18 @@ button:hover{
   color:#3b82f6;
 }
 
+/* FIXED SIGNATURE SECTION */
 .signature-area{
   position:absolute;
-  bottom:100px;
-  right:120px;
+  bottom:120px;
+  left:50%;
+  transform:translateX(-50%);
   text-align:center;
 }
 
 .signature-img{
-  width:220px;
+  width:180px;
+  height:auto;
   display:block;
   margin:0 auto 8px auto;
 }
@@ -204,12 +207,10 @@ button:hover{
 
 <script>
 
-// WORKSPACE
 const workspace = Blockly.inject('blocklyDiv',{
   toolbox:document.getElementById('toolbox')
 });
 
-// Custom print generator
 Blockly.JavaScript['text_print'] = function(block){
   const msg = Blockly.JavaScript.valueToCode(block,'TEXT',Blockly.JavaScript.ORDER_NONE) || '""';
   return 'console.log('+msg+');\n';
@@ -217,7 +218,6 @@ Blockly.JavaScript['text_print'] = function(block){
 
 let currentLesson = 1;
 
-// HELPERS
 function hasPrintWithValue(){
   const blocks = workspace.getAllBlocks(false);
   for(let block of blocks){
@@ -243,7 +243,6 @@ function countValidPrints(){
   return count;
 }
 
-// LESSONS
 const lessons={
 1:{
   title:'Lesson 1: Print "Hello World"',
@@ -283,14 +282,12 @@ const lessons={
 }
 };
 
-// LOAD LESSON
 function loadLesson(){
   workspace.clear();
   document.getElementById('lessonTitle').innerText=lessons[currentLesson].title;
   document.getElementById('output').innerText='';
 }
 
-// RUN BUTTON
 document.getElementById('runBtn').addEventListener('click',function(){
 
   if(lessons[currentLesson].check()){
@@ -310,7 +307,6 @@ document.getElementById('runBtn').addEventListener('click',function(){
   }
 });
 
-// NEW CERTIFICATE FUNCTION
 function showCertificate(){
   document.getElementById('certificate').style.display='block';
 
