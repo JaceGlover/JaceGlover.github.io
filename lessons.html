@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <title>AceBlocks Lessons</title>
-
 <script src="https://unpkg.com/blockly/blockly.min.js"></script>
 
 <style>
@@ -17,6 +16,12 @@ text-align:center;
 
 h1{
 padding:20px;
+}
+
+#objective{
+font-size:18px;
+margin-bottom:10px;
+color:#93c5fd;
 }
 
 #blocklyDiv{
@@ -47,6 +52,8 @@ font-weight:bold;
 min-height:20px;
 }
 
+/* CERTIFICATE */
+
 #certificate{
 display:none;
 position:fixed;
@@ -74,10 +81,6 @@ margin-bottom:30px;
 .cert-content h2{
 font-size:36px;
 margin:25px 0;
-}
-
-.cert-content p{
-font-size:20px;
 }
 
 .signature-area{
@@ -120,6 +123,7 @@ top:0;
 <body>
 
 <h1>AceBlocks Coding Lessons</h1>
+<div id="objective"></div>
 
 <div id="blocklyDiv"></div>
 
@@ -146,13 +150,23 @@ top:0;
 <p class="founder-name">Jace Glover</p>
 <p class="founder-title">Founder, AceBlocks</p>
 </div>
-
 </div>
 </div>
 
 <script>
 
 let currentLesson = 1;
+
+const objectives = [
+"Lesson 1: Print exactly 'Hello World'",
+"Lesson 2: Print your name",
+"Lesson 3: Print 'I love coding'",
+"Lesson 4: Print a sentence with more than 3 words",
+"Lesson 5: Print something with at least 10 characters",
+"Lesson 6: Print any final message to complete the course"
+];
+
+document.getElementById("objective").innerText = objectives[0];
 
 const workspace = Blockly.inject('blocklyDiv',{
 toolbox:`
@@ -174,98 +188,53 @@ const oldLog = console.log;
 console.log = function(msg){
 printedText = msg;
 };
-
 eval(code);
-
 console.log = oldLog;
 }catch(e){
 document.getElementById("output").innerText = "Error in blocks!";
 return;
 }
 
-if(currentLesson === 1){
+if(checkLesson(printedText)){
+document.getElementById("output").innerText = "Lesson Complete!";
+currentLesson++;
 
-if(printedText.toLowerCase() === "hello world"){
-document.getElementById("output").innerText = "Lesson 1 Complete!";
-currentLesson = 2;
 workspace.clear();
-alert("Lesson 2: Print ANY name you want!");
-}
-else{
-document.getElementById("output").innerText = "Print exactly: Hello World";
-}
 
-}
-
-else if(currentLesson === 2){
-
-if(printedText.trim() !== ""){
-document.getElementById("output").innerText = "Lesson 2 Complete!";
-currentLesson = 3;
-workspace.clear();
-alert("Lesson 3: Print anything you want!");
-}
-else{
-document.getElementById("output").innerText = "Print something!";
-}
-
-}
-
-else if(currentLesson === 3){
-
-if(printedText.trim() !== ""){
-document.getElementById("output").innerText = "Lesson 3 Complete!";
-currentLesson = 4;
-workspace.clear();
-alert("Lesson 4: Print something again!");
-}
-else{
-document.getElementById("output").innerText = "Print something!";
-}
-
-}
-
-else if(currentLesson === 4){
-
-if(printedText.trim() !== ""){
-document.getElementById("output").innerText = "Lesson 4 Complete!";
-currentLesson = 5;
-workspace.clear();
-alert("Lesson 5: Print something!");
-}
-else{
-document.getElementById("output").innerText = "Print something!";
-}
-
-}
-
-else if(currentLesson === 5){
-
-if(printedText.trim() !== ""){
-document.getElementById("output").innerText = "Lesson 5 Complete!";
-currentLesson = 6;
-workspace.clear();
-alert("Final Lesson: Print anything to finish!");
-}
-else{
-document.getElementById("output").innerText = "Print something!";
-}
-
-}
-
-else if(currentLesson === 6){
-
-if(printedText.trim() !== ""){
-document.getElementById("output").innerText = "All Lessons Complete!";
+if(currentLesson <= 6){
+document.getElementById("objective").innerText = objectives[currentLesson-1];
+}else{
+document.getElementById("objective").innerText = "All Lessons Complete!";
 document.getElementById("nextSection").style.display = "block";
-workspace.clear();
 }
-else{
-document.getElementById("output").innerText = "Print something!";
-}
-
+}else{
+document.getElementById("output").innerText = "Not quite! Try again.";
 }
 
+}
+
+function checkLesson(text){
+
+if(currentLesson === 1){
+return text === "Hello World";
+}
+if(currentLesson === 2){
+return text.trim().length > 0;
+}
+if(currentLesson === 3){
+return text === "I love coding";
+}
+if(currentLesson === 4){
+return text.split(" ").length > 3;
+}
+if(currentLesson === 5){
+return text.length >= 10;
+}
+if(currentLesson === 6){
+return text.trim().length > 0;
+}
+
+return false;
 }
 
 function generateCertificate(){
