@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>AceBlocks Lessons</title>
 
-<!-- SAFE BLOCKLY VERSION -->
+<!-- Stable Blockly Version -->
 <script src="https://cdn.jsdelivr.net/npm/blockly@10.3.1/blockly_compressed.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/blockly@10.3.1/blocks_compressed.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/blockly@10.3.1/javascript_compressed.js"></script>
@@ -12,76 +12,76 @@
 
 <style>
 body{
-margin:0;
-font-family:Arial;
-background:#111827;
-color:white;
-text-align:center;
+  margin:0;
+  font-family:Arial;
+  background:#111827;
+  color:white;
+  text-align:center;
 }
 
 header{
-background:#1f2937;
-padding:20px;
-font-size:24px;
-font-weight:bold;
+  background:#1f2937;
+  padding:20px;
+  font-size:24px;
+  font-weight:bold;
 }
 
 #lessonTitle{
-margin-top:20px;
-font-size:22px;
+  margin-top:20px;
+  font-size:22px;
 }
 
 #blocklyDiv{
-height:400px;
-width:90%;
-margin:20px auto;
-background:white;
-border-radius:10px;
+  height:400px;
+  width:90%;
+  margin:20px auto;
+  background:white;
+  border-radius:10px;
 }
 
 button{
-padding:10px 20px;
-margin:10px;
-border:none;
-border-radius:6px;
-background:#3b82f6;
-color:white;
-font-weight:bold;
-cursor:pointer;
+  padding:10px 20px;
+  margin:10px;
+  border:none;
+  border-radius:6px;
+  background:#3b82f6;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
 }
 
 button:hover{
-background:#2563eb;
+  background:#2563eb;
 }
 
 #output{
-margin-top:10px;
-color:#10b981;
-font-weight:bold;
+  margin-top:10px;
+  color:#10b981;
+  font-weight:bold;
 }
 
 #certificate{
-display:none;
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:white;
-color:black;
-justify-content:center;
-align-items:center;
-flex-direction:column;
-z-index:999;
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:white;
+  color:black;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  z-index:999;
 }
 
 #certificate h1{
-font-size:48px;
+  font-size:48px;
 }
 
 #printBtn{
-margin-top:20px;
-background:black;
+  margin-top:20px;
+  background:black;
 }
 </style>
 </head>
@@ -99,13 +99,14 @@ background:black;
 <div id="output"></div>
 
 <div id="certificate">
-<h1>Certificate of Completion</h1>
-<p>This certifies that</p>
-<h2 id="certName"></h2>
-<p>has successfully completed all AceBlocks Coding Lessons.</p>
-<button id="printBtn" onclick="window.print()">Print Certificate</button>
+  <h1>Certificate of Completion</h1>
+  <p>This certifies that</p>
+  <h2 id="certName"></h2>
+  <p>has successfully completed all AceBlocks Coding Lessons.</p>
+  <button id="printBtn" onclick="window.print()">Print Certificate</button>
 </div>
 
+<!-- Blockly Toolbox -->
 <xml id="toolbox" style="display:none">
   <block type="text_print"></block>
   <block type="text"></block>
@@ -114,74 +115,81 @@ background:black;
 </xml>
 
 <script>
+// Create workspace
 const workspace = Blockly.inject('blocklyDiv',{
-toolbox:document.getElementById('toolbox')
+  toolbox:document.getElementById('toolbox')
 });
 
-// Make print work
+// Make print block generate JS console.log
 Blockly.JavaScript['text_print'] = function(block){
-const msg = Blockly.JavaScript.valueToCode(block,'TEXT',Blockly.JavaScript.ORDER_NONE) || '""';
-return 'console.log('+msg+');\n';
+  const msg = Blockly.JavaScript.valueToCode(block,'TEXT',Blockly.JavaScript.ORDER_NONE) || '""';
+  return 'console.log('+msg+');\n';
 };
 
 let currentLesson = 1;
 
 const lessons = {
 1:{
-title:'Lesson 1: Print "Hello World"',
-check:code=>code.includes('Hello World')
+  title:'Lesson 1: Print "Hello World"',
+  check:code =>
+    code.includes('"Hello World"') || code.includes("'Hello World'")
 },
 2:{
-title:'Lesson 2: Print Anything',
-check:code=>code.includes('console.log')
+  title:'Lesson 2: Print Anything (Must Not Be Blank)',
+  check:code=>{
+    if(!code.includes('console.log')) return false;
+    if(code.includes('console.log("")')) return false;
+    if(code.includes("console.log('')")) return false;
+    return true;
+  }
 },
 3:{
-title:'Lesson 3: Print the Number 5',
-check:code=>code.includes('5')
+  title:'Lesson 3: Print the Number 5',
+  check:code=>code.includes('5')
 },
 4:{
-title:'Lesson 4: Add 2 + 3',
-check:code=>code.includes('2 + 3')
+  title:'Lesson 4: Add 2 + 3',
+  check:code=>code.includes('2 + 3')
 },
 5:{
-title:'Lesson 5: Print Two Things',
-check:code=>(code.match(/console\.log/g)||[]).length>=2
+  title:'Lesson 5: Print Two Things',
+  check:code=>(code.match(/console\.log/g)||[]).length>=2
 },
 6:{
-title:'Lesson 6: Print "I Love Coding"',
-check:code=>code.includes('I Love Coding')
+  title:'Lesson 6: Print "I Love Coding"',
+  check:code =>
+    code.includes('"I Love Coding"') || code.includes("'I Love Coding'")
 }
 };
 
 function loadLesson(){
-workspace.clear();
-document.getElementById('lessonTitle').innerText = lessons[currentLesson].title;
-document.getElementById('output').innerText='';
+  workspace.clear();
+  document.getElementById('lessonTitle').innerText = lessons[currentLesson].title;
+  document.getElementById('output').innerText='';
 }
 
 document.getElementById('runBtn').addEventListener('click',function(){
-const code = Blockly.JavaScript.workspaceToCode(workspace);
+  const code = Blockly.JavaScript.workspaceToCode(workspace);
 
-if(lessons[currentLesson].check(code)){
-document.getElementById('output').innerText="Correct!";
+  if(lessons[currentLesson].check(code)){
+    document.getElementById('output').innerText="Correct!";
+    currentLesson++;
 
-currentLesson++;
+    if(currentLesson>6){
+      showCertificate();
+    }else{
+      setTimeout(loadLesson,800);
+    }
 
-if(currentLesson>6){
-showCertificate();
-}else{
-setTimeout(loadLesson,800);
-}
-
-}else{
-document.getElementById('output').innerText="Not correct. Try again.";
-}
+  }else{
+    document.getElementById('output').innerText="Not correct. Try again.";
+  }
 });
 
 function showCertificate(){
-document.getElementById('certificate').style.display='flex';
-let name = prompt("Enter your name for the certificate:");
-document.getElementById('certName').innerText = name || "Student";
+  document.getElementById('certificate').style.display='flex';
+  let name = prompt("Enter your name for the certificate:");
+  document.getElementById('certName').innerText = name || "Student";
 }
 
 loadLesson();
