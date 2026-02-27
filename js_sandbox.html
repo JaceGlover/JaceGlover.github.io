@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <title>AceBlocks JS Sandbox Beta</title>
 <style>
-  body { font-family: sans-serif; display:flex; margin:0; }
-  #blocklyDiv { height: 600px; width: 40%; border:2px solid #000; }
-  #gameDiv { width: 60%; height: 600px; border:2px solid #000; background:#88c0ff; display:flex; flex-direction:column; align-items:center; }
+  body { margin:0; font-family:sans-serif; display:flex; height:100vh; }
+  #blocklyDiv { width:40%; height:100%; border:2px solid #000; }
+  #gameDiv { width:60%; height:100%; border:2px solid #000; display:flex; flex-direction:column; align-items:center; background:#88c0ff; }
   canvas { border:1px solid #000; background:#a0d0ff; margin-top:10px; }
   #runBtn { margin-top:10px; padding:5px 10px; font-size:16px; cursor:pointer; }
 </style>
@@ -21,7 +21,7 @@
 </div>
 
 <script>
-  // ====== 1. Game Engine ======
+  // ===== 1️⃣ Game Engine =====
   const canvas = document.getElementById('gameCanvas');
   const ctx = canvas.getContext('2d');
   let sprites = [];
@@ -52,7 +52,11 @@
   }
   gameLoop();
 
-  // ====== 2. Blockly Setup ======
+  // ===== 2️⃣ Example Sprites =====
+  createSprite(100,100,'https://i.imgur.com/4ai0FfE.png');
+  createSprite(300,300,'https://i.imgur.com/9I8c3aZ.png');
+
+  // ===== 3️⃣ Blockly Setup =====
   const workspace = Blockly.inject('blocklyDiv', {
     toolbox: `
       <xml xmlns="https://developers.google.com/blockly/xml">
@@ -108,16 +112,12 @@
     return `if(sprites[${i}]) sprites[${i}].move(${dx},${dy});\n`;
   };
 
-  // ====== 3. Run Button ======
+  // ===== 4️⃣ Run Button =====
   document.getElementById('runBtn').addEventListener('click', ()=>{
     const code = Blockly.JavaScript.workspaceToCode(workspace);
     try { eval(code); }
     catch(e){ alert("Error in block code: "+e); console.error(e); }
   });
-
-  // ====== 4. Example Sprites ======
-  createSprite(100,100,'https://i.imgur.com/4ai0FfE.png');
-  createSprite(300,300,'https://i.imgur.com/9I8c3aZ.png');
 </script>
 </body>
 </html>
