@@ -2,122 +2,142 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>AceBlocks JS Sandbox Fixed</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AceBlocks Sandbox</title>
+
+<!-- Blockly -->
+<script src="https://cdn.jsdelivr.net/npm/blockly@10.3.1/blockly_compressed.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blockly@10.3.1/blocks_compressed.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/blockly@10.3.1/javascript_compressed.js"></script>
+
 <style>
-  body { margin:0; font-family:sans-serif; display:flex; height:100vh; }
-  #blocklyDiv { width:40%; height:100%; border:2px solid #000; }
-  #gameDiv { width:60%; height:100%; border:2px solid #000; display:flex; flex-direction:column; align-items:center; background:#88c0ff; }
-  canvas { border:1px solid #000; background:#a0d0ff; margin-top:10px; }
-  #runBtn { margin-top:10px; padding:5px 10px; font-size:16px; cursor:pointer; }
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #1e293b;
+    color: white;
+}
+
+header {
+    padding: 15px;
+    background: #0f172a;
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+#main {
+    display: flex;
+    height: calc(100vh - 60px);
+}
+
+#blocklyDiv {
+    width: 70%;
+    height: 100%;
+    background: white;
+}
+
+#rightPanel {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    background: #0f172a;
+}
+
+button {
+    padding: 12px;
+    background: #2563eb;
+    border: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1d4ed8;
+}
+
+#output {
+    flex: 1;
+    background: black;
+    padding: 10px;
+    overflow-y: auto;
+    font-family: monospace;
+    font-size: 14px;
+}
 </style>
-<script src="https://unpkg.com/blockly/blockly.min.js"></script>
 </head>
+
 <body>
 
-<div id="blocklyDiv"></div>
-<div id="gameDiv">
-  <button id="runBtn">Run Code</button>
-  <canvas id="gameCanvas" width="800" height="550"></canvas>
+<header>AceBlocks JavaScript Sandbox</header>
+
+<div id="main">
+    <div id="blocklyDiv"></div>
+
+    <div id="rightPanel">
+        <button onclick="runCode()">▶ Run Code</button>
+        <div id="output"></div>
+    </div>
 </div>
 
+<!-- Toolbox -->
+<xml id="toolbox" style="display:none">
+    <category name="Logic" colour="210">
+        <block type="controls_if"></block>
+        <block type="logic_compare"></block>
+    </category>
+
+    <category name="Loops" colour="120">
+        <block type="controls_repeat_ext"></block>
+        <block type="controls_whileUntil"></block>
+    </category>
+
+    <category name="Math" colour="230">
+        <block type="math_number"></block>
+        <block type="math_arithmetic"></block>
+    </category>
+
+    <category name="Text" colour="160">
+        <block type="text"></block>
+        <block type="text_print"></block>
+    </category>
+
+    <category name="Variables" custom="VARIABLE" colour="330"></category>
+    <category name="Functions" custom="PROCEDURE" colour="290"></category>
+</xml>
+
 <script>
-  // ===== GAME ENGINE =====
-  const canvas = document.getElementById('gameCanvas');
-  const ctx = canvas.getContext('2d');
-  let sprites = [];
+document.addEventListener("DOMContentLoaded", function () {
 
-  class Sprite {
-    constructor(x, y, src) {
-      this.x = x;
-      this.y = y;
-      this.width = 50;
-      this.height = 50;
-      this.image = new Image();
-      this.image.src = src;
-    }
-    draw() { ctx.drawImage(this.image, this.x, this.y, this.width, this.height); }
-    move(dx, dy) { this.x += dx; this.y += dy; }
-  }
+    window.workspace = Blockly.inject('blocklyDiv', {
+        toolbox: document.getElementById('toolbox'),
+        scrollbars: true,
+        trashcan: true
+    });
 
-  function createSprite(x, y, src) {
-    const s = new Sprite(x, y, src);
-    sprites.push(s);
-    return s;
-  }
+});
 
-  function gameLoop() {
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    sprites.forEach(s => s.draw());
-    requestAnimationFrame(gameLoop);
-  }
-  gameLoop();
+function runCode() {
 
-  // ===== EXAMPLE SPRITES =====
-  createSprite(100,100,'https://i.imgur.com/4ai0FfE.png');
-  createSprite(300,300,'https://i.imgur.com/9I8c3aZ.png');
+    const outputDiv = document.getElementById("output");
+    outputDiv.innerHTML = "";
 
-  // ===== BLOCKLY SETUP =====
-  const workspace = Blockly.inject('blocklyDiv', {
-    toolbox: `
-      <xml xmlns="https://developers.google.com/blockly/xml">
-        <block type="create_sprite"></block>
-        <block type="move_sprite"></block>
-      </xml>
-    `,
-    scrollbars:true
-  });
-
-  // ----- CUSTOM BLOCKS -----
-  Blockly.Blocks['create_sprite'] = {
-    init: function() {
-      this.appendDummyInput()
-        .appendField("create sprite at x")
-        .appendField(new Blockly.FieldNumber(0),"X")
-        .appendField("y")
-        .appendField(new Blockly.FieldNumber(0),"Y")
-        .appendField("image URL")
-        .appendField(new Blockly.FieldTextInput("https://i.imgur.com/4ai0FfE.png"),"SRC");
-      this.setPreviousStatement(true,null);
-      this.setNextStatement(true,null);
-      this.setColour(230);
-    }
-  };
-
-  Blockly.JavaScript['create_sprite'] = function(block){
-    const x = block.getFieldValue('X');
-    const y = block.getFieldValue('Y');
-    const src = block.getFieldValue('SRC');
-    return `createSprite(${x},${y},"${src}");\n`;
-  };
-
-  Blockly.Blocks['move_sprite'] = {
-    init: function() {
-      this.appendDummyInput()
-        .appendField("move sprite index")
-        .appendField(new Blockly.FieldNumber(0),"INDEX")
-        .appendField("dx")
-        .appendField(new Blockly.FieldNumber(0),"DX")
-        .appendField("dy")
-        .appendField(new Blockly.FieldNumber(0),"DY");
-      this.setPreviousStatement(true,null);
-      this.setNextStatement(true,null);
-      this.setColour(120);
-    }
-  };
-
-  Blockly.JavaScript['move_sprite'] = function(block){
-    const i = block.getFieldValue('INDEX');
-    const dx = block.getFieldValue('DX');
-    const dy = block.getFieldValue('DY');
-    return `if(sprites[${i}]) sprites[${i}].move(${dx},${dy});\n`;
-  };
-
-  // ===== RUN CODE BUTTON =====
-  document.getElementById('runBtn').addEventListener('click',()=>{
     const code = Blockly.JavaScript.workspaceToCode(workspace);
-    try { eval(code); }
-    catch(e){ alert("Error in block code: "+e); console.error(e); }
-  });
+
+    // Custom console.log override
+    const customConsole = {
+        log: function(message) {
+            outputDiv.innerHTML += message + "<br>";
+        }
+    };
+
+    try {
+        new Function("console", code)(customConsole);
+    } catch (error) {
+        outputDiv.innerHTML += "<span style='color:red;'>Error: " + error.message + "</span>";
+    }
+}
 </script>
 
 </body>
