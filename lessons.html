@@ -116,11 +116,12 @@ button:hover{
 
 /* FIXED SIGNATURE SECTION */
 .signature-area{
+  display:flex;
+  justify-content:center;
+  gap:60px;
   position:absolute;
   bottom:120px;
-  left:50%;
-  transform:translateX(-50%);
-  text-align:center;
+  width:100%;
 }
 
 .signature-img{
@@ -208,10 +209,21 @@ button:hover{
 
     <p id="certDate" style="margin-top:30px;"></p>
 
+    <!-- ================= SIGNATURES ================= -->
     <div class="signature-area">
-      <img src="signature_fixed_transparent.png" class="signature-img">
-      <p class="founder-name">Jace Glover</p>
-      <p class="founder-title">Founder, AceBlocks</p>
+      <!-- Founder Signature -->
+      <div style="text-align:center;">
+        <img src="signature_fixed_transparent.png" class="signature-img">
+        <p class="founder-name">Jace Glover</p>
+        <p class="founder-title">Founder, AceBlocks</p>
+      </div>
+
+      <!-- Employee Signature -->
+      <div style="text-align:center;">
+        <img src="signature_fixed_transparent.png" class="signature-img">
+        <p class="founder-name">Liam Cooper</p>
+        <p class="founder-title">Coder</p>
+      </div>
     </div>
 
     <button id="printBtn" onclick="window.print()">Print Certificate</button>
