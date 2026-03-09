@@ -31,6 +31,12 @@ header{
   font-size:22px;
 }
 
+#lessonIntro{
+  margin:20px auto;
+  width:90%;
+  text-align:center;
+}
+
 #blocklyDiv{
   height:400px;
   width:90%;
@@ -164,9 +170,17 @@ button:hover{
 
 <header>AceBlocks Lessons</header>
 
+<!-- ================= INTRODUCTION ================= -->
+<div id="lessonIntro">
+  <h2>Welcome to AceBlocks Lessons!</h2>
+  <p>In these lessons, you'll learn the basics of visual coding using AceBlocks.</p>
+  <p>You'll practice printing messages, numbers, and doing simple math with blocks.</p>
+  <button id="startBtn">Start Lessons</button>
+</div>
+
 <div id="lessonTitle"></div>
-<div id="blocklyDiv"></div>
-<button id="runBtn">Run Code</button>
+<div id="blocklyDiv" style="display:none;"></div>
+<button id="runBtn" style="display:none;">Run Code</button>
 <div id="output"></div>
 
 <!-- ================= CERTIFICATE ================= -->
@@ -246,10 +260,7 @@ function countValidPrints(){
 const lessons={
 1:{
   title:'Lesson 1: Print "Hello World"',
-  check:()=>{
-    const code=Blockly.JavaScript.workspaceToCode(workspace);
-    return code.includes("Hello World");
-  }
+  check:()=>{ const code=Blockly.JavaScript.workspaceToCode(workspace); return code.includes("Hello World"); }
 },
 2:{
   title:'Lesson 2: Print Anything (Not Blank)',
@@ -257,17 +268,11 @@ const lessons={
 },
 3:{
   title:'Lesson 3: Print the Number 5',
-  check:()=>{
-    const code=Blockly.JavaScript.workspaceToCode(workspace);
-    return code.includes("5");
-  }
+  check:()=>{ const code=Blockly.JavaScript.workspaceToCode(workspace); return code.includes("5"); }
 },
 4:{
   title:'Lesson 4: Add 2 + 3',
-  check:()=>{
-    const code=Blockly.JavaScript.workspaceToCode(workspace);
-    return code.includes("2 + 3");
-  }
+  check:()=>{ const code=Blockly.JavaScript.workspaceToCode(workspace); return code.includes("2 + 3"); }
 },
 5:{
   title:'Lesson 5: Print Two Things',
@@ -275,10 +280,7 @@ const lessons={
 },
 6:{
   title:'Lesson 6: Print "I Love Coding"',
-  check:()=>{
-    const code=Blockly.JavaScript.workspaceToCode(workspace);
-    return code.includes("I Love Coding");
-  }
+  check:()=>{ const code=Blockly.JavaScript.workspaceToCode(workspace); return code.includes("I Love Coding"); }
 }
 };
 
@@ -288,8 +290,15 @@ function loadLesson(){
   document.getElementById('output').innerText='';
 }
 
-document.getElementById('runBtn').addEventListener('click',function(){
+// ================= START LESSONS BUTTON =================
+document.getElementById('startBtn').addEventListener('click', () => {
+  document.getElementById('lessonIntro').style.display = 'none';
+  document.getElementById('blocklyDiv').style.display = 'block';
+  document.getElementById('runBtn').style.display = 'inline-block';
+  loadLesson(); // Start the first lesson
+});
 
+document.getElementById('runBtn').addEventListener('click',function(){
   if(lessons[currentLesson].check()){
     document.getElementById('output').style.color="#10b981";
     document.getElementById('output').innerText="Correct!";
@@ -318,8 +327,7 @@ function showCertificate(){
     "Date: " + today.toLocaleDateString();
 }
 
-loadLesson();
-
+// Initial state is intro screen
 </script>
 
 </body>
