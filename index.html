@@ -4,90 +4,281 @@
   <title>AceBlocks | Visual Roblox Script Builder</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="AceBlocks is a visual block-based coding engine that helps beginners build Roblox scripts without typing complex code. Created by Jace Glover.">
+
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
   <style>
-    body { margin:0; font-family:'Inter', sans-serif; background:#0b0f19; color:white; line-height:1.6; }
-    header { padding:20px 40px; display:flex; justify-content:space-between; background:#0f1626; align-items:center; }
-    nav a { color:white; text-decoration:none; margin-left:20px; font-weight:600; transition:0.3s; }
-    nav a:hover { color:#3b82f6; }
-    .hero { text-align:center; padding:100px 20px; }
-    .hero h2 { font-size:3rem; font-weight:800; margin-bottom:20px; }
-    .hero p { color:#9ca3af; max-width:650px; margin:0 auto 30px; }
-    .button { display:inline-block; padding:14px 28px; margin:10px; background:#3b82f6; color:white; border-radius:8px; font-weight:600; text-decoration:none; transition:0.3s; }
-    .button:hover { background:#2563eb; transform:translateY(-2px); }
-    .section { padding:80px 20px; text-align:center; background:#111827; }
-    .section h3 { font-size:2rem; margin-bottom:30px; }
-    .features { display:flex; flex-wrap:wrap; justify-content:center; gap:40px; }
-    .feature-box { background:#1f2937; padding:30px; border-radius:12px; width:260px; transition:0.3s; }
-    .feature-box:hover { transform:translateY(-6px); }
-    .feature-box h4 { margin-bottom:10px; color:#3b82f6; }
-    .founder-section { display:flex; flex-direction:column; align-items:center; gap:30px; }
-    .founder-section img { width:170px; height:170px; border-radius:50%; object-fit:cover; border:3px solid #3b82f6; }
-    .founder-text { max-width:600px; color:#d1d5db; }
-    footer { text-align:center; padding:30px; background:#0f1626; color:#9ca3af; font-size:0.9rem; }
-    @media(min-width:768px){ .founder-section{flex-direction:row; justify-content:center; text-align:left;} }
+
+    body{
+      margin:0;
+      font-family:'Inter', sans-serif;
+      background:#0b0f19;
+      color:white;
+      line-height:1.6;
+    }
+
+    header{
+      padding:20px 40px;
+      display:flex;
+      justify-content:space-between;
+      background:#0f1626;
+      align-items:center;
+    }
+
+    header small{
+      color:#9ca3af;
+      font-size:0.8rem;
+    }
+
+    nav a{
+      color:white;
+      text-decoration:none;
+      margin-left:20px;
+      font-weight:600;
+      transition:0.3s;
+    }
+
+    nav a:hover{
+      color:#3b82f6;
+    }
+
+    .hero{
+      text-align:center;
+      padding:110px 20px;
+    }
+
+    .hero h2{
+      font-size:3rem;
+      font-weight:800;
+      margin-bottom:20px;
+      text-shadow:0 0 20px rgba(59,130,246,0.5);
+    }
+
+    .hero p{
+      color:#9ca3af;
+      max-width:650px;
+      margin:0 auto 30px;
+      font-size:1.05rem;
+    }
+
+    .button{
+      display:inline-block;
+      padding:14px 28px;
+      margin:10px;
+      background:#3b82f6;
+      color:white;
+      border-radius:8px;
+      font-weight:600;
+      text-decoration:none;
+      transition:0.3s;
+    }
+
+    .button:hover{
+      background:#2563eb;
+      transform:translateY(-2px);
+    }
+
+    .section{
+      padding:80px 20px;
+      text-align:center;
+      background:#111827;
+    }
+
+    .section h3{
+      font-size:2rem;
+      margin-bottom:30px;
+    }
+
+    .features{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:40px;
+    }
+
+    .feature-box{
+      background:#1f2937;
+      padding:30px;
+      border-radius:12px;
+      width:260px;
+      transition:0.3s;
+    }
+
+    .feature-box:hover{
+      transform:translateY(-6px);
+      box-shadow:0 10px 30px rgba(0,0,0,0.4);
+    }
+
+    .feature-box h4{
+      margin-bottom:10px;
+      color:#3b82f6;
+    }
+
+    .mission{
+      max-width:700px;
+      margin:auto;
+      color:#d1d5db;
+      font-size:1.05rem;
+    }
+
+    .founder-section{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:30px;
+    }
+
+    .founder-section img{
+      width:170px;
+      height:170px;
+      border-radius:50%;
+      object-fit:cover;
+      border:3px solid #3b82f6;
+    }
+
+    .founder-text{
+      max-width:600px;
+      color:#d1d5db;
+    }
+
+    footer{
+      text-align:center;
+      padding:30px;
+      background:#0f1626;
+      color:#9ca3af;
+      font-size:0.9rem;
+    }
+
+    @media(min-width:768px){
+      .founder-section{
+        flex-direction:row;
+        justify-content:center;
+        text-align:left;
+      }
+    }
+
   </style>
 </head>
+
 <body>
 
 <header>
-  <h1>AceBlocks</h1>
+  <div>
+    <h1>AceBlocks</h1>
+    <small>Coding for the Future</small>
+  </div>
+
   <nav>
     <a href="index.html">Home</a>
     <a href="lessons.html">Lessons</a>
-    <a href="js_sandbox.html">Try AceBlocks</a>
   </nav>
 </header>
 
+
 <section class="hero">
+
   <h2>Build Roblox Scripts Visually</h2>
-  <p>AceBlocks is a kid-friendly visual scripting engine for Roblox. Drag-and-drop blocks to create scripts — no typing required!</p>
-  <a href="js_sandbox.html" class="button">Try AceBlocks</a>
+
+  <p>
+  AceBlocks is a beginner-friendly visual scripting engine for Roblox.  
+  Drag and drop blocks to create scripts and automatically generate real Lua code.
+  </p>
+
+  <p style="color:#3b82f6;font-weight:600;">Coding for the Future</p>
+
   <a href="lessons.html" class="button">Start Learning</a>
   <a href="mailto:je-coding@outlook.com" class="button">Join the Team</a>
+
 </section>
 
+
 <section class="section">
+
   <h3>Core Features</h3>
+
   <div class="features">
+
     <div class="feature-box">
       <h4>Drag & Drop Blocks</h4>
       <p>Create Roblox scripts visually without memorising Lua syntax.</p>
     </div>
+
     <div class="feature-box">
       <h4>Auto Lua Generator</h4>
       <p>Convert your visual blocks into clean Roblox Lua code instantly.</p>
     </div>
+
     <div class="feature-box">
       <h4>Beginner Lessons</h4>
-      <p>Step-by-step lessons that help kids learn Roblox scripting while having fun.</p>
+      <p>Step-by-step lessons that help students learn Roblox scripting while building real examples.</p>
     </div>
+
     <div class="feature-box">
       <h4>Future Multiplayer Projects</h4>
-      <p>Collaborate with other students and creators in upcoming updates.</p>
+      <p>Collaborate with other learners and creators in upcoming AceBlocks updates.</p>
     </div>
+
   </div>
+
 </section>
 
+
 <section class="section">
+
+  <h3>AceBlocks Mission</h3>
+
+  <p class="mission">
+  AceBlocks exists to make coding accessible for the next generation of creators.
+  By combining visual scripting with real Roblox Lua output, students can learn
+  programming concepts faster and start building games with confidence.
+  </p>
+
+</section>
+
+
+<section class="section">
+
   <h3>Join the Team</h3>
-  <p>Want to help develop AceBlocks? Get in touch!</p>
+
+  <p>Want to help develop AceBlocks?</p>
   <p><strong>Email: je-coding@outlook.com</strong></p>
+
 </section>
 
+
 <section class="section">
+
   <h3>About the Founder</h3>
+
   <div class="founder-section">
+
     <img src="profile.jpg" alt="Jace Glover">
+
     <div class="founder-text">
-      <p><strong>Jace Glover</strong> is a young developer making coding more accessible for students. AceBlocks is visual, interactive, and beginner-friendly.</p>
-      <p>His goal is to help the next generation of creators start building games faster and with confidence.</p>
+
+      <p>
+      <strong>Jace Glover</strong> is a young developer building tools that make coding
+      easier for beginners. AceBlocks focuses on visual learning, experimentation,
+      and helping students start building their own games sooner.
+      </p>
+
+      <p>
+      His goal is to help the next generation of creators learn programming and
+      build the future of games.
+      </p>
+
     </div>
+
   </div>
+
 </section>
+
 
 <footer>
-  © 2026 AceBlocks. Created by Jace Glover.
+
+© 2026 AceBlocks — Coding for the Future  
+Created by Jace Glover.
+
 </footer>
 
 </body>
