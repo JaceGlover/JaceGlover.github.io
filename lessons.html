@@ -340,10 +340,19 @@ function showCertificate(){
   document.getElementById('certDate').innerText=
     "Date: " + today.toLocaleDateString();
 }
-</script>
-// ================= DEV CHEAT =================
+
+// ================= DEV CHEAT CODE =================
 window.aceblocksSkipToCertificate = function(){
   showCertificate();
 }
+
+// Optional: CTRL + SHIFT + C shortcut
+document.addEventListener('keydown', function(e){
+  if(e.ctrlKey && e.shiftKey && e.code === 'KeyC'){
+    showCertificate();
+  }
+});
+</script>
+
 </body>
 </html>
