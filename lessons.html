@@ -31,6 +31,12 @@ header{
   font-size:22px;
 }
 
+#lessonObjective{
+  font-size:18px;
+  color:#a5b4fc;
+  margin-bottom:10px;
+}
+
 #lessonIntro{
   margin:20px auto;
   width:90%;
@@ -178,7 +184,9 @@ button:hover{
   <button id="startBtn">Start Lessons</button>
 </div>
 
+<!-- ================= LESSONS ================= -->
 <div id="lessonTitle"></div>
+<div id="lessonObjective"></div>
 <div id="blocklyDiv" style="display:none;"></div>
 <button id="runBtn" style="display:none;">Run Code</button>
 <div id="output"></div>
@@ -220,18 +228,10 @@ button:hover{
 </xml>
 
 <script>
-
-const workspace = Blockly.inject('blocklyDiv',{
-  toolbox:document.getElementById('toolbox')
-});
-
-Blockly.JavaScript['text_print'] = function(block){
-  const msg = Blockly.JavaScript.valueToCode(block,'TEXT',Blockly.JavaScript.ORDER_NONE) || '""';
-  return 'console.log('+msg+');\n';
-};
-
+let workspace = null;
 let currentLesson = 1;
 
+// ================= LESSON DEFINITIONS =================
 function hasPrintWithValue(){
   const blocks = workspace.getAllBlocks(false);
   for(let block of blocks){
@@ -260,33 +260,41 @@ function countValidPrints(){
 const lessons={
 1:{
   title:'Lesson 1: Print "Hello World"',
+  objective:'Use the print block to show "Hello World" in the console.',
   check:()=>{ const code=Blockly.JavaScript.workspaceToCode(workspace); return code.includes("Hello World"); }
 },
 2:{
   title:'Lesson 2: Print Anything (Not Blank)',
+  objective:'Print any message of your choice using the text print block.',
   check:()=> hasPrintWithValue()
 },
 3:{
   title:'Lesson 3: Print the Number 5',
+  objective:'Use the print block to show the number 5.',
   check:()=>{ const code=Blockly.JavaScript.workspaceToCode(workspace); return code.includes("5"); }
 },
 4:{
   title:'Lesson 4: Add 2 + 3',
+  objective:'Print the result of 2 + 3 using a math arithmetic block.',
   check:()=>{ const code=Blockly.JavaScript.workspaceToCode(workspace); return code.includes("2 + 3"); }
 },
 5:{
   title:'Lesson 5: Print Two Things',
+  objective:'Print at least two different messages or numbers.',
   check:()=> countValidPrints()>=2
 },
 6:{
   title:'Lesson 6: Print "I Love Coding"',
+  objective:'Use the print block to display "I Love Coding".',
   check:()=>{ const code=Blockly.JavaScript.workspaceToCode(workspace); return code.includes("I Love Coding"); }
 }
 };
 
+// ================= LOAD LESSON =================
 function loadLesson(){
   workspace.clear();
   document.getElementById('lessonTitle').innerText=lessons[currentLesson].title;
+  document.getElementById('lessonObjective').innerText=lessons[currentLesson].objective;
   document.getElementById('output').innerText='';
 }
 
@@ -295,9 +303,15 @@ document.getElementById('startBtn').addEventListener('click', () => {
   document.getElementById('lessonIntro').style.display = 'none';
   document.getElementById('blocklyDiv').style.display = 'block';
   document.getElementById('runBtn').style.display = 'inline-block';
-  loadLesson(); // Start the first lesson
+  workspace = Blockly.inject('blocklyDiv',{ toolbox:document.getElementById('toolbox') });
+  Blockly.JavaScript['text_print'] = function(block){
+    const msg = Blockly.JavaScript.valueToCode(block,'TEXT',Blockly.JavaScript.ORDER_NONE) || '""';
+    return 'console.log('+msg+');\n';
+  };
+  loadLesson();
 });
 
+// ================= RUN CODE =================
 document.getElementById('runBtn').addEventListener('click',function(){
   if(lessons[currentLesson].check()){
     document.getElementById('output').style.color="#10b981";
@@ -316,18 +330,15 @@ document.getElementById('runBtn').addEventListener('click',function(){
   }
 });
 
+// ================= SHOW CERTIFICATE =================
 function showCertificate(){
   document.getElementById('certificate').style.display='block';
-
   let name=prompt("Enter your name for the certificate:");
   document.getElementById('certName').innerText=name||"Student";
-
   const today=new Date();
   document.getElementById('certDate').innerText=
     "Date: " + today.toLocaleDateString();
 }
-
-// Initial state is intro screen
 </script>
 
 </body>
