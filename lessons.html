@@ -118,10 +118,10 @@ button:hover{
 .signature-area{
   display:flex;
   justify-content:space-between;
-  padding:0 100px;
   position:absolute;
   bottom:120px;
-  width:100%;
+  width:90%;
+  left:5%;
 }
 
 .founder-name{
@@ -341,6 +341,9 @@ function showCertificate(){
     "Date: " + today.toLocaleDateString();
 }
 </script>
-
+// ================= DEV CHEAT =================
+window.aceblocksSkipToCertificate = function(){
+  showCertificate();
+}
 </body>
 </html>
