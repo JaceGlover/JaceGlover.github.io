@@ -3,26 +3,10 @@
 let workspace = null;
 let currentLesson = 1;
 
-// ================= CODE HELPERS =================
-
-function getCode(){
-  if(!workspace) return "";
-  return Blockly.JavaScript.workspaceToCode(workspace).toLowerCase();
-}
-
-function codeContains(text){
-  return getCode().includes(text.toLowerCase());
-}
-
-
-// ================= BLOCK CHECKERS =================
+// ================= LESSON HELPERS =================
 
 function hasPrintWithValue(){
-
-  if(!workspace) return false;
-
   const blocks = workspace.getAllBlocks(false);
-
   for(let block of blocks){
     if(block.type === "text_print"){
       if(block.getInputTargetBlock("TEXT")){
@@ -30,69 +14,74 @@ function hasPrintWithValue(){
       }
     }
   }
-
   return false;
 }
 
 function countValidPrints(){
-
-  if(!workspace) return 0;
-
   const blocks = workspace.getAllBlocks(false);
   let count = 0;
 
   for(let block of blocks){
-
     if(block.type === "text_print"){
       if(block.getInputTargetBlock("TEXT")){
         count++;
       }
     }
-
   }
 
   return count;
 }
 
-
-// ================= LESSONS =================
+// ================= LESSON DEFINITIONS =================
 
 const lessons = {
 
 1:{
   title:'Lesson 1: Print "Hello World"',
   objective:'Use the print block to show "Hello World" in the console.',
-  check:()=> codeContains("hello world")
+  check:()=>{
+    const code = Blockly.JavaScript.workspaceToCode(workspace).toLowerCase();
+    return code.includes("hello world");
+  }
 },
 
 2:{
   title:'Lesson 2: Print Anything (Not Blank)',
-  objective:'Print any message using the text print block.',
+  objective:'Print any message of your choice using the text print block.',
   check:()=> hasPrintWithValue()
 },
 
 3:{
   title:'Lesson 3: Print the Number 5',
   objective:'Use the print block to show the number 5.',
-  check:()=> codeContains("5")
+  check:()=>{
+    const code = Blockly.JavaScript.workspaceToCode(workspace);
+    return code.includes("5");
+  }
 },
 
 4:{
   title:'Lesson 4: Add 2 + 3',
   objective:'Print the result of 2 + 3 using a math arithmetic block.',
-  check:()=> codeContains("2 + 3")
+  check:()=>{
+    const code = Blockly.JavaScript.workspaceToCode(workspace);
+    return code.includes("2 + 3");
+  }
 },
 
 5:{
   title:'Lesson 5: Print Two Things',
-  objective:'Print at least two messages or numbers.',
+  objective:'Print at least two different messages or numbers.',
   check:()=> countValidPrints() >= 2
 },
 
 6:{
   title:'Lesson 6: Print "I Love Coding"',
   objective:'Use the print block to display "I Love Coding".',
-  check:()=> codeContains("i love coding")
+  check:()=>{
+    const code = Blockly.JavaScript.workspaceToCode(workspace).toLowerCase();
+    return code.includes("i love coding");
+  }
 }
 
 };
@@ -101,8 +90,6 @@ const lessons = {
 // ================= LOAD LESSON =================
 
 function loadLesson(){
-
-  if(!workspace) return;
 
   workspace.clear();
 
@@ -117,15 +104,15 @@ function loadLesson(){
 }
 
 
-// ================= START LESSONS =================
+// ================= START LESSON BUTTON =================
 
-document.getElementById("startBtn").addEventListener("click", function(){
+document.getElementById("startBtn").addEventListener("click", () => {
 
   document.getElementById("lessonIntro").style.display = "none";
   document.getElementById("blocklyDiv").style.display = "block";
   document.getElementById("runBtn").style.display = "inline-block";
 
-  workspace = Blockly.inject("blocklyDiv",{
+  workspace = Blockly.inject("blocklyDiv", {
     toolbox: document.getElementById("toolbox")
   });
 
@@ -137,8 +124,6 @@ document.getElementById("startBtn").addEventListener("click", function(){
 // ================= RUN CODE =================
 
 document.getElementById("runBtn").addEventListener("click", function(){
-
-  if(!workspace) return;
 
   if(lessons[currentLesson].check()){
 
@@ -183,7 +168,7 @@ function showCertificate(){
 }
 
 
-// ================= DEV CHEAT CODE =================
+// ================= DEV CHEAT =================
 
 window.aceblocksSkipToCertificate = function(){
   showCertificate();
@@ -191,7 +176,6 @@ window.aceblocksSkipToCertificate = function(){
 
 
 // CTRL + SHIFT + C shortcut
-
 document.addEventListener("keydown", function(e){
 
   if(e.ctrlKey && e.shiftKey && e.code === "KeyC"){
