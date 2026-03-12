@@ -3,43 +3,59 @@
 let workspace = null;
 let currentLesson = 1;
 
-// ================= HELPER FUNCTIONS =================
+// ================= CODE HELPERS =================
 
-// Check if a print block has something inside it
+function getCode(){
+  if(!workspace) return "";
+  return Blockly.JavaScript.workspaceToCode(workspace).toLowerCase();
+}
+
+function codeContains(text){
+  return getCode().includes(text.toLowerCase());
+}
+
+
+// ================= BLOCK CHECKERS =================
+
 function hasPrintWithValue(){
+
+  if(!workspace) return false;
+
   const blocks = workspace.getAllBlocks(false);
+
   for(let block of blocks){
-    if(block.type==="text_print"){
+    if(block.type === "text_print"){
       if(block.getInputTargetBlock("TEXT")){
         return true;
       }
     }
   }
+
   return false;
 }
 
-// Count valid print blocks
 function countValidPrints(){
+
+  if(!workspace) return 0;
+
   const blocks = workspace.getAllBlocks(false);
   let count = 0;
+
   for(let block of blocks){
-    if(block.type==="text_print"){
+
+    if(block.type === "text_print"){
       if(block.getInputTargetBlock("TEXT")){
         count++;
       }
     }
+
   }
+
   return count;
 }
 
-// Case-insensitive code checker
-function codeContains(text){
-  const code = Blockly.JavaScript.workspaceToCode(workspace).toLowerCase();
-  return code.includes(text.toLowerCase());
-}
 
-
-// ================= LESSON DEFINITIONS =================
+// ================= LESSONS =================
 
 const lessons = {
 
@@ -51,7 +67,7 @@ const lessons = {
 
 2:{
   title:'Lesson 2: Print Anything (Not Blank)',
-  objective:'Print any message of your choice using the text print block.',
+  objective:'Print any message using the text print block.',
   check:()=> hasPrintWithValue()
 },
 
@@ -69,7 +85,7 @@ const lessons = {
 
 5:{
   title:'Lesson 5: Print Two Things',
-  objective:'Print at least two different messages or numbers.',
+  objective:'Print at least two messages or numbers.',
   check:()=> countValidPrints() >= 2
 },
 
@@ -85,59 +101,64 @@ const lessons = {
 // ================= LOAD LESSON =================
 
 function loadLesson(){
+
+  if(!workspace) return;
+
   workspace.clear();
 
-  document.getElementById('lessonTitle').innerText = lessons[currentLesson].title;
-  document.getElementById('lessonObjective').innerText = lessons[currentLesson].objective;
-  document.getElementById('output').innerText = '';
+  document.getElementById("lessonTitle").innerText =
+    lessons[currentLesson].title;
+
+  document.getElementById("lessonObjective").innerText =
+    lessons[currentLesson].objective;
+
+  document.getElementById("output").innerText = "";
+
 }
 
 
 // ================= START LESSONS =================
 
-document.getElementById('startBtn').addEventListener('click', () => {
+document.getElementById("startBtn").addEventListener("click", function(){
 
-  document.getElementById('lessonIntro').style.display = 'none';
-  document.getElementById('blocklyDiv').style.display = 'block';
-  document.getElementById('runBtn').style.display = 'inline-block';
+  document.getElementById("lessonIntro").style.display = "none";
+  document.getElementById("blocklyDiv").style.display = "block";
+  document.getElementById("runBtn").style.display = "inline-block";
 
-  workspace = Blockly.inject('blocklyDiv',{
-    toolbox:document.getElementById('toolbox')
+  workspace = Blockly.inject("blocklyDiv",{
+    toolbox: document.getElementById("toolbox")
   });
 
-  Blockly.JavaScript['text_print'] = function(block){
-    const msg = Blockly.JavaScript.valueToCode(
-      block,'TEXT',Blockly.JavaScript.ORDER_NONE
-    ) || '""';
-
-    return 'console.log('+msg+');\n';
-  };
-
   loadLesson();
+
 });
 
 
 // ================= RUN CODE =================
 
-document.getElementById('runBtn').addEventListener('click',function(){
+document.getElementById("runBtn").addEventListener("click", function(){
+
+  if(!workspace) return;
 
   if(lessons[currentLesson].check()){
 
-    document.getElementById('output').style.color = "#10b981";
-    document.getElementById('output').innerText = "Correct!";
+    document.getElementById("output").style.color = "#10b981";
+    document.getElementById("output").innerText = "Correct!";
 
     currentLesson++;
 
     if(currentLesson > 6){
       showCertificate();
-    }else{
-      setTimeout(loadLesson,800);
+    }
+    else{
+      setTimeout(loadLesson, 800);
     }
 
-  }else{
+  }
+  else{
 
-    document.getElementById('output').style.color = "#ef4444";
-    document.getElementById('output').innerText = "Not correct. Try again.";
+    document.getElementById("output").style.color = "#ef4444";
+    document.getElementById("output").innerText = "Not correct. Try again.";
 
   }
 
@@ -148,15 +169,15 @@ document.getElementById('runBtn').addEventListener('click',function(){
 
 function showCertificate(){
 
-  document.getElementById('certificate').style.display='block';
+  document.getElementById("certificate").style.display = "block";
 
   let name = prompt("Enter your name for the certificate:");
 
-  document.getElementById('certName').innerText = name || "Student";
+  document.getElementById("certName").innerText = name || "Student";
 
   const today = new Date();
 
-  document.getElementById('certDate').innerText =
+  document.getElementById("certDate").innerText =
     "Date: " + today.toLocaleDateString();
 
 }
@@ -171,9 +192,9 @@ window.aceblocksSkipToCertificate = function(){
 
 // CTRL + SHIFT + C shortcut
 
-document.addEventListener('keydown', function(e){
+document.addEventListener("keydown", function(e){
 
-  if(e.ctrlKey && e.shiftKey && e.code === 'KeyC'){
+  if(e.ctrlKey && e.shiftKey && e.code === "KeyC"){
     showCertificate();
   }
 
