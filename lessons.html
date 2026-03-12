@@ -1,35 +1,51 @@
 <script>
+window.addEventListener("DOMContentLoaded", function(){
 
+// ================= GLOBALS =================
 let workspace = null;
-let currentLesson = 1;
+let currentLesson = parseInt(localStorage.getItem("aceblocksLesson")) || 1;
 
-// ================= LESSON HELPERS =================
+// ================= HELPER FUNCTIONS =================
 
-function hasPrintWithValue(){
-  const blocks = workspace.getAllBlocks(false);
-  for(let block of blocks){
-    if(block.type === "text_print"){
-      if(block.getInputTargetBlock("TEXT")){
-        return true;
-      }
-    }
-  }
-  return false;
+// Get code from workspace
+function getCode(){
+  if(!workspace) return "";
+  return Blockly.JavaScript.workspaceToCode(workspace);
 }
 
-function countValidPrints(){
-  const blocks = workspace.getAllBlocks(false);
-  let count = 0;
+// Run code and capture console output
+function runCode(){
+  const outputDiv = document.getElementById("output");
+  outputDiv.innerText = ""; // clear previous output
 
-  for(let block of blocks){
-    if(block.type === "text_print"){
-      if(block.getInputTargetBlock("TEXT")){
-        count++;
-      }
-    }
+  // override console.log
+  const originalConsole = console.log;
+  console.log = function(msg){
+    outputDiv.innerText += msg + "\n";
+    originalConsole(msg);
   }
 
-  return count;
+  try{
+    eval(getCode());
+  }catch(e){
+    outputDiv.innerText += "Error: " + e.message;
+  }
+
+  // restore console.log
+  console.log = originalConsole;
+}
+
+// Check if print block exists with value
+function hasPrintWithValue(){
+  if(!workspace) return false;
+  const blocks = workspace.getAllBlocks(false);
+  return blocks.some(b => b.type === "text_print" && b.getInputTargetBlock("TEXT"));
+}
+
+// Count print blocks with value
+function countValidPrints(){
+  if(!workspace) return 0;
+  return workspace.getAllBlocks(false).filter(b => b.type === "text_print" && b.getInputTargetBlock("TEXT")).length;
 }
 
 // ================= LESSON DEFINITIONS =================
@@ -39,34 +55,25 @@ const lessons = {
 1:{
   title:'Lesson 1: Print "Hello World"',
   objective:'Use the print block to show "Hello World" in the console.',
-  check:()=>{
-    const code = Blockly.JavaScript.workspaceToCode(workspace).toLowerCase();
-    return code.includes("hello world");
-  }
+  check:()=> getCode().toLowerCase().includes("hello world")
 },
 
 2:{
   title:'Lesson 2: Print Anything (Not Blank)',
-  objective:'Print any message of your choice using the text print block.',
+  objective:'Print any message using the text print block.',
   check:()=> hasPrintWithValue()
 },
 
 3:{
   title:'Lesson 3: Print the Number 5',
   objective:'Use the print block to show the number 5.',
-  check:()=>{
-    const code = Blockly.JavaScript.workspaceToCode(workspace);
-    return code.includes("5");
-  }
+  check:()=> getCode().includes("5")
 },
 
 4:{
   title:'Lesson 4: Add 2 + 3',
   objective:'Print the result of 2 + 3 using a math arithmetic block.',
-  check:()=>{
-    const code = Blockly.JavaScript.workspaceToCode(workspace);
-    return code.includes("2 + 3");
-  }
+  check:()=> getCode().includes("2 + 3")
 },
 
 5:{
@@ -78,36 +85,28 @@ const lessons = {
 6:{
   title:'Lesson 6: Print "I Love Coding"',
   objective:'Use the print block to display "I Love Coding".',
-  check:()=>{
-    const code = Blockly.JavaScript.workspaceToCode(workspace).toLowerCase();
-    return code.includes("i love coding");
-  }
+  check:()=> getCode().toLowerCase().includes("i love coding")
 }
 
 };
 
-
 // ================= LOAD LESSON =================
 
 function loadLesson(){
-
+  if(!workspace) return;
   workspace.clear();
 
-  document.getElementById("lessonTitle").innerText =
-    lessons[currentLesson].title;
-
-  document.getElementById("lessonObjective").innerText =
-    lessons[currentLesson].objective;
-
+  document.getElementById("lessonTitle").innerText = lessons[currentLesson].title;
+  document.getElementById("lessonObjective").innerText = lessons[currentLesson].objective;
   document.getElementById("output").innerText = "";
 
+  // Save current lesson to localStorage
+  localStorage.setItem("aceblocksLesson", currentLesson);
 }
 
+// ================= START LESSONS =================
 
-// ================= START LESSON BUTTON =================
-
-document.getElementById("startBtn").addEventListener("click", () => {
-
+document.getElementById("startBtn").addEventListener("click", function(){
   document.getElementById("lessonIntro").style.display = "none";
   document.getElementById("blocklyDiv").style.display = "block";
   document.getElementById("runBtn").style.display = "inline-block";
@@ -116,57 +115,53 @@ document.getElementById("startBtn").addEventListener("click", () => {
     toolbox: document.getElementById("toolbox")
   });
 
+  // Register generator for print block
+  Blockly.JavaScript['text_print'] = function(block){
+    const msg = Blockly.JavaScript.valueToCode(block,'TEXT',Blockly.JavaScript.ORDER_NONE) || '""';
+    return "console.log(" + msg + ");\n";
+  };
+
   loadLesson();
-
 });
-
 
 // ================= RUN CODE =================
 
 document.getElementById("runBtn").addEventListener("click", function(){
+  runCode();
 
   if(lessons[currentLesson].check()){
-
     document.getElementById("output").style.color = "#10b981";
-    document.getElementById("output").innerText = "Correct!";
+    document.getElementById("output").innerText += "\n✅ Correct!";
 
     currentLesson++;
 
     if(currentLesson > 6){
       showCertificate();
-    }
-    else{
+    }else{
       setTimeout(loadLesson, 800);
     }
 
-  }
-  else{
-
+  } else {
     document.getElementById("output").style.color = "#ef4444";
-    document.getElementById("output").innerText = "Not correct. Try again.";
-
+    document.getElementById("output").innerText += "\n❌ Not correct. Try again.";
   }
-
 });
-
 
 // ================= CERTIFICATE =================
 
 function showCertificate(){
-
   document.getElementById("certificate").style.display = "block";
 
   let name = prompt("Enter your name for the certificate:");
-
   document.getElementById("certName").innerText = name || "Student";
 
   const today = new Date();
-
   document.getElementById("certDate").innerText =
     "Date: " + today.toLocaleDateString();
 
+  // clear lesson progress
+  localStorage.removeItem("aceblocksLesson");
 }
-
 
 // ================= DEV CHEAT =================
 
@@ -174,14 +169,13 @@ window.aceblocksSkipToCertificate = function(){
   showCertificate();
 };
 
+// ================= SHORTCUT =================
 
-// CTRL + SHIFT + C shortcut
 document.addEventListener("keydown", function(e){
-
   if(e.ctrlKey && e.shiftKey && e.code === "KeyC"){
     showCertificate();
   }
-
 });
 
+}); // DOMContentLoaded
 </script>
