@@ -3,243 +3,152 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AceBlocks For Schools</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/blockly/blockly.min.js"></script>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
+<title>AceBlocks</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{
-  --navy:#0f172a;
-  --navyLight:#1e293b;
-  --blue:#2563eb;
-  --blueLight:#3b82f6;
-  --bg:#f1f5f9;
-  --card:#ffffff;
-  --border:#e2e8f0;
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
 }
-body{margin:0;font-family:'Inter',sans-serif;background:var(--bg);color:#0f172a;}
-header{background:linear-gradient(90deg,var(--navyLight),var(--blue));color:white;padding:26px;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,0.35);}
-header h1{margin:0;font-size:32px;}
-header p{opacity:.85;margin-top:6px;}
-.container{max-width:1100px;margin:auto;padding:30px 20px;}
-.card{background:var(--card);padding:30px;border-radius:16px;box-shadow:0 8px 25px rgba(0,0,0,0.2);margin-bottom:30px;border:1px solid var(--border);}
-.roleGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:30px;margin-top:25px;}
-.tile{background:linear-gradient(135deg,var(--navyLight),var(--blue));color:white;padding:45px 25px;border-radius:16px;text-align:center;font-size:20px;font-weight:600;cursor:pointer;transition:.25s;box-shadow:0 8px 22px rgba(0,0,0,0.3);}
-.tile:hover{transform:translateY(-5px) scale(1.02);background:linear-gradient(135deg,var(--blue),var(--blueLight));}
-input, select{width:100%;padding:12px 14px;border-radius:8px;border:1px solid var(--border);margin-top:10px;font-size:15px;background:#f8fafc;}
-input:focus, select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 2px rgba(59,130,246,.2);}
-button{background:linear-gradient(90deg,var(--blue),var(--blueLight));border:none;color:white;padding:12px 20px;border-radius:10px;margin-top:14px;cursor:pointer;font-weight:600;letter-spacing:.3px;box-shadow:0 6px 16px rgba(37,99,235,.35);transition:.2s;}
-button:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(37,99,235,.45);}
-.hidden{display:none;}
-.tabs{display:flex;gap:10px;margin-bottom:18px;}
-.tabBtn{background:#e2e8f0;color:#1e293b;box-shadow:none;cursor:pointer;padding:8px 16px;border-radius:8px;font-weight:600;}
-.tabBtn.active{background:var(--blue);color:white;}
-.dashboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin-top:20px;}
-.lessonCard{background:linear-gradient(145deg,#f8fafc,#eef2ff);padding:22px;border-radius:12px;border:1px solid var(--border);transition:.2s;}
-.lessonCard:hover{transform:translateY(-4px);box-shadow:0 8px 22px rgba(0,0,0,.15);}
-.lessonTitle{font-weight:700;margin-bottom:8px;font-size:17px;color:#1e293b;}
-.objective{background:#e0f2fe;padding:14px;border-radius:10px;margin-top:10px;font-size:14px;border:1px solid #bae6fd;}
-#blocklyDiv{height:440px;margin-top:20px;border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.15);}
-#lessonScreen button{margin-top:20px;font-size:15px;}
+header {
+  background-color: #111827;
+  color: #f9fafb;
+  padding: 28px 40px;
+  text-align: left;
+  font-size: 48px;
+  font-weight: 900;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.6);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  letter-spacing: 1.2px;
+}
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 80%;
+  max-width: 1200px;
+  margin-top: 180px;
+}
+.box {
+  background: #fef3c7;
+  color: #1f2937;
+  width: 380px;
+  height: 540px;
+  border: 6px solid #f59e0b;
+  border-radius: 32px;
+  padding: 24px;
+  box-sizing: border-box;
+  font-size: 32px;
+  font-weight: 800;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+.box:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.45);
+}
+.left-box::before, .right-box::before {
+  display: block;
+  text-decoration: underline;
+  font-size: 36px;
+  font-weight: 900;
+  color: #1f2937;
+  margin-bottom: 24px;
+  text-align: center;
+}
+.left-box::before { content: 'Year 7-8'; }
+.right-box::before { content: 'Year 9-11'; }
+.left-box::after, .right-box::after {
+  content: '';
+  display: block;
+  width: 90%;
+  height: 6px;
+  background-color: #f59e0b;
+  border-radius: 4px;
+  margin-bottom: 36px;
+  align-self: center;
+}
+a.square-link {
+  display: block;
+  text-decoration: none;
+  position: relative;
+}
+.middle-square {
+  width: 240px;
+  height: 240px;
+  background: linear-gradient(145deg, #2563eb, #3b82f6);
+  border: 6px solid #1e3a8a;
+  border-radius: 32px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32px;
+  font-weight: 900;
+  color: #fef3c7;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+.middle-square:hover {
+  transform: scale(1.2);
+  box-shadow: 0 20px 50px rgba(37,99,235,0.7);
+  background: linear-gradient(145deg, #3b82f6, #60a5fa);
+}
+.center-content {
+  position: absolute;
+  top: 8%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  font-size: 54px;
+  font-weight: 900;
+  color: #fef3c7;
+  background: linear-gradient(135deg, #f59e0b, #f97316);
+  padding: 36px 72px;
+  border-radius: 32px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+  line-height: 1.3;
+  max-width: 900px;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+  letter-spacing: 1px;
+}
 </style>
 </head>
 <body>
-<header>
-<h1>AceBlocks For Schools</h1>
-<p>Please keep in mind this is a prototype this version isnt 100% Working</p>
-  <p>This page is mostly for developers to work on so have fun on alpha</p>
-</header>
-<div class="container">
-  <div id="roleSelect" class="card">
-    <h2>Select Your Role</h2>
-    <div class="roleGrid">
-      <div class="tile" id="studentTile">👨‍🎓 Student Login / Sign Up</div>
-      <div class="tile" id="teacherTile">👩‍🏫 Teacher Login / Sign Up</div>
+  <header>AceBlocks - Coding for the Future</header>
+
+  <div class="container">
+    <div class="box left-box">
+      <a href="juniorsch.html" class="square-link">
+        <div class="middle-square">Start</div>
+      </a>
+    </div>
+
+    <div class="box right-box">
+      <a href="seniorsch.html" class="square-link">
+        <div class="middle-square">Start</div>
+      </a>
     </div>
   </div>
 
-  <div id="studentAuth" class="card hidden">
-    <h2>Student Access</h2>
-    <select id="studentSchool">
-<option value="">Select Your School</option>
-<option value="St Bernard's College">St Bernard's College</option>
-<option value="Wellington High School">Wellington High School</option>
-<option value="Auckland Grammar School">Auckland Grammar School</option>
-<option value="Christchurch Boys' High">Christchurch Boys' High</option>
-<option value="Other">Other...</option>
-</select>
-    <div class="tabs">
-      <button class="tabBtn active" id="studentLoginTab">Login</button>
-      <button class="tabBtn" id="studentSignupTab">Sign Up</button>
-    </div>
-    <div id="studentLogin">
-      <input id="studentLoginEmail" placeholder="School Email">
-      <input id="studentLoginPass" type="password" placeholder="Password">
-      <input id="studentClassCodeLogin" placeholder="Class Code">
-      <button id="studentLoginBtn">Login</button>
-      <div id="studentGoogleSignIn"></div>
-    </div>
-    <div id="studentSignup" class="hidden">
-      <input id="studentSignupEmail" placeholder="School Email">
-      <input id="studentSignupPass" type="password" placeholder="Password">
-      <input id="studentClassCodeSignup" placeholder="Class Code">
-      <button id="studentSignupBtn">Create Account</button>
-    </div>
-  </div>
-
-  <div id="teacherAuth" class="card hidden">
-    <h2>Teacher Access</h2>
-    <div class="tabs">
-      <button class="tabBtn active" id="teacherLoginTab">Login</button>
-      <button class="tabBtn" id="teacherSignupTab">Sign Up</button>
-    </div>
-    <div id="teacherLogin">
-      <input id="teacherLoginEmail" placeholder="Email">
-      <input id="teacherLoginPass" type="password" placeholder="Password">
-      <button id="teacherLoginBtn">Login</button>
-      <div id="teacherGoogleSignIn"></div>
-    </div>
-    <div id="teacherSignup" class="hidden">
-      <input id="teacherSignupEmail" placeholder="Email">
-      <input id="teacherSignupPass" type="password" placeholder="Password">
-      <button id="teacherSignupBtn">Create Account</button>
-    </div>
-  </div>
-
-  <div id="dashboard" class="card hidden">
-    <h2 id="dashboardTitle">Dashboard</h2>
-    <div id="teacherControls" class="hidden">
-      <h3>Create Class</h3>
-      <input id="newClassName" placeholder="Class Name">
-      <button id="createClassBtn">Create Class</button>
-      <div id="teacherClasses"></div>
-    </div>
-    <div id="studentControls" class="hidden">
-      <h3>My Lessons</h3>
-      <div id="lessonArea" class="dashboard"></div>
-    </div>
-  </div>
-
-  <div id="lessonScreen" class="card hidden">
-    <h2 id="lessonName"></h2>
-    <div class="objective" id="lessonObjective"></div>
-    <div id="blocklyDiv"></div>
-    <button id="runLessonBtn">Run Code</button>
-  </div>
-</div>
-
-<script>
-// LocalStorage helpers
-function getStore(key){try{return JSON.parse(localStorage.getItem(key))||{}}catch{return{}}}
-function setStore(key,val){localStorage.setItem(key,JSON.stringify(val))}
-
-// Current state
-let workspace,currentLesson,currentUser,currentRole,currentClassCode;
-
-// Sample lessons
-const lessons=[
-  {name:"Lesson 1 — Move Forward",objective:"Use the MOVE block to move the character forward.",answer:"move"},
-  {name:"Lesson 2 — Repeat",objective:"Use a REPEAT block to move forward 3 times.",answer:"repeat"},
-  {name:"Lesson 3 — Logic",objective:"Use an IF block to check a condition.",answer:"if"},
-  {name:"Lesson 4 — Variables",objective:"Create a variable and use it.",answer:"variable"},
-  {name:"Lesson 5 — Loops",objective:"Use a loop to repeat actions.",answer:"loop"}
-];
-
-// Event bindings
-window.addEventListener('DOMContentLoaded',()=>{
-  document.getElementById('studentTile').onclick=openStudentAuth;
-  document.getElementById('teacherTile').onclick=openTeacherAuth;
-  document.getElementById('studentLoginTab').onclick=()=>switchTab('student','login');
-  document.getElementById('studentSignupTab').onclick=()=>switchTab('student','signup');
-  document.getElementById('teacherLoginTab').onclick=()=>switchTab('teacher','login');
-  document.getElementById('teacherSignupTab').onclick=()=>switchTab('teacher','signup');
-  document.getElementById('studentSignupBtn').onclick=signupStudent;
-  document.getElementById('studentLoginBtn').onclick=loginStudent;
-  document.getElementById('teacherSignupBtn').onclick=signupTeacher;
-  document.getElementById('teacherLoginBtn').onclick=loginTeacher;
-  document.getElementById('createClassBtn').onclick=createClass;
-  document.getElementById('runLessonBtn').onclick=checkLesson;
-  google.accounts.id.initialize({client_id:'YOUR_CLIENT_ID.apps.googleusercontent.com',callback:handleGoogleSignIn});
-  google.accounts.id.renderButton(document.getElementById('studentGoogleSignIn'),{theme:'outline',size:'large'});
-  google.accounts.id.renderButton(document.getElementById('teacherGoogleSignIn'),{theme:'outline',size:'large'});
-});
-
-function handleGoogleSignIn(response){alert('Google Sign-In token: '+response.credential);}
-function switchTab(role,tab){document.getElementById(`${role}Login`).classList.toggle('hidden',tab!=='login');document.getElementById(`${role}Signup`).classList.toggle('hidden',tab!=='signup');document.getElementById(`${role}LoginTab`).classList.toggle('active',tab==='login');document.getElementById(`${role}SignupTab`).classList.toggle('active',tab==='signup');}
-function openStudentAuth(){document.getElementById('roleSelect').classList.add('hidden');document.getElementById('studentAuth').classList.remove('hidden');switchTab('student','login');}
-function openTeacherAuth(){document.getElementById('roleSelect').classList.add('hidden');document.getElementById('teacherAuth').classList.remove('hidden');switchTab('teacher','login');}
-
-// Student/Teacher Authentication
-function signupStudent(){const email=document.getElementById('studentSignupEmail').value.trim();const pass=document.getElementById('studentSignupPass').value.trim();const classCode=document.getElementById('studentClassCodeSignup').value.trim();const school=document.getElementById('studentSchool').value;if(!email||!pass||!classCode||!school){alert('Fill all fields');return;}let students=getStore('students');if(students[email]){alert('Email already in use');return;}students[email]={password:pass,classCode:classCode,school:school,unlocked:[0]};setStore('students',students);loginStudentDirect(email,pass,classCode);}
-function loginStudent(){const email=document.getElementById('studentLoginEmail').value.trim();const pass=document.getElementById('studentLoginPass').value.trim();const classCode=document.getElementById('studentClassCodeLogin').value.trim();if(!email||!pass||!classCode){alert('Fill all fields');return;}loginStudentDirect(email,pass,classCode);}
-function loginStudentDirect(email,pass,classCode){let students=getStore('students');if(!students[email]){alert('Account not found');return;}if(students[email].password!==pass){alert('Wrong password');return;}currentUser=email;currentRole='student';currentClassCode=classCode;openDashboard(email,'student');}
-function signupTeacher(){const email=document.getElementById('teacherSignupEmail').value.trim();const pass=document.getElementById('teacherSignupPass').value.trim();if(!email||!pass){alert('Fill all fields');return;}let teachers=getStore('teachers');if(teachers[email]){alert('Email already in use');return;}teachers[email]={password:pass,classes:{}};setStore('teachers',teachers);loginTeacherDirect(email,pass);}
-function loginTeacher(){const email=document.getElementById('teacherLoginEmail').value.trim();const pass=document.getElementById('teacherLoginPass').value.trim();if(!email||!pass){alert('Fill all fields');return;}loginTeacherDirect(email,pass);}
-function loginTeacherDirect(email,pass){let teachers=getStore('teachers');if(!teachers[email]){alert('Account not found');return;}if(teachers[email].password!==pass){alert('Wrong password');return;}currentUser=email;currentRole='teacher';openDashboard(email,'teacher');}
-
-// Dashboard and lessons
-function openDashboard(email,role){document.getElementById('studentAuth').classList.add('hidden');document.getElementById('teacherAuth').classList.add('hidden');document.getElementById('dashboard').classList.remove('hidden');document.getElementById('teacherControls').classList.toggle('hidden',role!=='teacher');document.getElementById('studentControls').classList.toggle('hidden',role!=='student');document.getElementById('dashboardTitle').textContent=`Welcome ${email} (${role})`;if(role==='teacher') loadTeacherClasses();if(role==='student') loadStudentLessons();}
-function createClass(){const className=document.getElementById('newClassName').value.trim();if(!className){alert('Enter class name');return;}let teachers=getStore('teachers');let code=Math.random().toString(36).substring(2,8).toUpperCase();teachers[currentUser].classes[code]={name:className,students:[],lessons:[]};setStore('teachers',teachers);loadTeacherClasses();}
-function loadTeacherClasses(){const div=document.getElementById('teacherClasses');div.innerHTML='';let teachers=getStore('teachers');const classes=teachers[currentUser].classes;for(let code in classes){const c=classes[code];const card=document.createElement('div');card.className='lessonCard';card.innerHTML=`<div class="lessonTitle">${c.name}</div><div>Class Code: ${code}</div><button onclick="assignLesson('${code}')">Assign Lesson</button>`;div.appendChild(card);}}
-function assignLesson(classCode){let lessonIndex=prompt('Enter lesson number to assign (1-'+lessons.length+')');lessonIndex=parseInt(lessonIndex)-1;if(lessonIndex<0||lessonIndex>=lessons.length){alert('Invalid lesson');return;}let teachers=getStore('teachers');teachers[currentUser].classes[classCode].lessons.push(lessonIndex);setStore('teachers',teachers);alert('Lesson assigned');}
-
-function loadStudentLessons(){const div=document.getElementById('lessonArea');div.innerHTML='';const students=getStore('students');const s=students[currentUser];if(!s)return;const teachers=getStore('teachers');let assignedLessons=[];for(let tEmail in teachers){const t=teachers[tEmail];for(let code in t.classes){if(code===s.classCode){assignedLessons=t.classes[code].lessons;}}}
-assignedLessons.forEach(i=>{if(!s.unlocked.includes(i)) return;const l=lessons[i];const card=document.createElement('div');card.className='lessonCard';card.innerHTML=`<div class="lessonTitle">${l.name}</div><div>${l.objective}</div><button onclick="startLesson(${i})">Start</button>`;div.appendChild(card);});}
-function startLesson(i){currentLesson=i;document.getElementById('dashboard').classList.add('hidden');document.getElementById('lessonScreen').classList.remove('hidden');const lesson=lessons[i];document.getElementById('lessonName').textContent=lesson.name;document.getElementById('lessonObjective').textContent=lesson.objective;workspace=Blockly.inject('blocklyDiv',{toolbox:`<xml><block type="controls_repeat_ext"></block><block type="controls_if"></block><block type="math_number"></block><block type="variables_set"></block><block type="variables_get"></block></xml>`});}
-function checkLesson(){
-  let code = Blockly.JavaScript.workspaceToCode(workspace);
-  const expected = lessons[currentLesson].answer;
-
-  if(code.includes(expected)){
-    alert('Lesson Complete 🎉');
-
-    let students = getStore('students');
-
-    if(!students[currentUser].unlocked.includes(currentLesson+1) && currentLesson+1 < lessons.length){
-      students[currentUser].unlocked.push(currentLesson+1);
-      setStore('students',students);
-    }
-
-    document.getElementById('lessonScreen').classList.add('hidden');
-    document.getElementById('dashboard').classList.remove('hidden');
-
-    loadStudentLessons();
-
-  } else {
-    alert('Not quite right yet — try again.');
-  }
-}
-// Ensure all DOM elements are loaded first
-window.addEventListener('DOMContentLoaded', () => {
-  // Role selection tiles
-  document.getElementById("studentTile").addEventListener('click', openStudentAuth);
-  document.getElementById("teacherTile").addEventListener('click', openTeacherAuth);
-
-  // Tabs for switching between Login / Sign Up
-  document.getElementById("studentLoginTab").addEventListener('click', () => switchTab('student','login'));
-  document.getElementById("studentSignupTab").addEventListener('click', () => switchTab('student','signup'));
-  document.getElementById("teacherLoginTab").addEventListener('click', () => switchTab('teacher','login'));
-  document.getElementById("teacherSignupTab").addEventListener('click', () => switchTab('teacher','signup'));
-
-  // Login / Sign Up buttons
-  document.getElementById("studentLoginBtn").addEventListener('click', loginStudent);
-  document.getElementById("studentSignupBtn").addEventListener('click', signupStudent);
-  document.getElementById("teacherLoginBtn").addEventListener('click', loginTeacher);
-  document.getElementById("teacherSignupBtn").addEventListener('click', signupTeacher);
-
-  // Run lesson button
-  document.getElementById("runLessonBtn").addEventListener('click', checkLesson);
-
-  // Google Sign-In (replace YOUR_CLIENT_ID with actual client ID)
-  if (google && google.accounts && google.accounts.id) {
-    google.accounts.id.initialize({
-      client_id: 'YOUR_CLIENT_ID.apps.googleusercontent.com',
-      callback: handleGoogleSignIn
-    });
-    google.accounts.id.renderButton(document.getElementById('studentGoogleSignIn'), {theme:'outline', size:'large'});
-    google.accounts.id.renderButton(document.getElementById('teacherGoogleSignIn'), {theme:'outline', size:'large'});
-  }
-});
-</script>
+  <div class="center-content">Learn, Build, Code — Your Future Awaits!</div>
 </body>
 </html>
