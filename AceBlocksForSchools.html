@@ -113,7 +113,7 @@ body{
 }
 
 /* REVEAL */
-.reveal.active{
+.info.active{
   opacity:1;
   transform:translateY(0);
 }
@@ -169,35 +169,37 @@ body{
 <!-- FULL PAGE -->
 <div id="deepSection">
 
-  <section class="info reveal">
+  <section class="info">
     <h2>Why Schools Choose AceBlocks</h2>
     <p>AceBlocks makes coding accessible, engaging, and easy to run in any school environment.</p>
   </section>
 
-  <section class="info reveal">
+  <section class="info">
     <h2>Student-Led Learning</h2>
     <p>Students can learn independently with minimal supervision.</p>
   </section>
 
-  <section class="info reveal">
+  <section class="info">
     <h2>Real Coding Skills</h2>
     <p>Visual blocks help beginners start fast and transition into real programming.</p>
   </section>
 
-  <section class="info reveal">
+  <section class="info">
     <h2>Simple to Run</h2>
     <p>No complex setup. Perfect for clubs or classrooms.</p>
   </section>
 
   <section class="cta">
-    <button class="bigButton">Start Your Journey
-    window.location.href = "aceblfs.html"</button>
+    <button class="bigButton" onclick="startJourney()">
+      Start Your Journey
+    </button>
   </section>
 
 </div>
 
 <script>
-// TYPEWRITER
+
+/* TYPEWRITER */
 const text = "AceBlocks";
 let i = 0;
 
@@ -219,7 +221,7 @@ function typeWriter() {
   }
 }
 
-// 🎬 SLOW CINEMATIC SCROLL
+/* SLOW SCROLL */
 function goDown(){
   const target = document.getElementById("deepSection").offsetTop;
   let start = window.scrollY;
@@ -229,20 +231,6 @@ function goDown(){
 
   document.body.style.pointerEvents = "none";
 
-  function animation(currentTime){
-    if(startTime === null) startTime = currentTime;
-    let timeElapsed = currentTime - startTime;
-
-    let run = ease(timeElapsed, start, distance, duration);
-    window.scrollTo(0, run);
-
-    if(timeElapsed < duration){
-      requestAnimationFrame(animation);
-    } else {
-      document.body.style.pointerEvents = "auto";
-    }
-  }
-
   function ease(t, b, c, d){
     t /= d/2;
     if (t < 1) return c/2*t*t + b;
@@ -250,18 +238,40 @@ function goDown(){
     return -c/2 * (t*(t-2) - 1) + b;
   }
 
-  requestAnimationFrame(animation);
+  function animate(currentTime){
+    if(startTime === null) startTime = currentTime;
+    let timeElapsed = currentTime - startTime;
+
+    let run = ease(timeElapsed, start, distance, duration);
+    window.scrollTo(0, run);
+
+    if(timeElapsed < duration){
+      requestAnimationFrame(animate);
+    } else {
+      document.body.style.pointerEvents = "auto";
+    }
+  }
+
+  requestAnimationFrame(animate);
 }
 
-// SCROLL REVEAL
+/* FINAL BUTTON REDIRECT */
+function startJourney(){
+  document.body.style.transition = "opacity 0.6s ease";
+  document.body.style.opacity = "0";
+
+  setTimeout(() => {
+    window.location.href = "aceblfs.html";
+  }, 600);
+}
+
+/* REVEAL */
 function revealOnScroll(){
-  const reveals = document.querySelectorAll(".reveal");
+  const items = document.querySelectorAll(".info");
 
-  reveals.forEach((el) => {
-    const windowHeight = window.innerHeight;
-    const elementTop = el.getBoundingClientRect().top;
-
-    if(elementTop < windowHeight - 100){
+  items.forEach(el => {
+    const top = el.getBoundingClientRect().top;
+    if(top < window.innerHeight - 100){
       el.classList.add("active");
     }
   });
@@ -277,6 +287,7 @@ function revealOnScroll(){
 window.addEventListener("scroll", revealOnScroll);
 
 typeWriter();
+
 </script>
 
 </body>
