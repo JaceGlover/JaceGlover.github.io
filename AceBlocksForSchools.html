@@ -13,11 +13,20 @@ body{
   font-family:'Inter', sans-serif;
   background:#0b0f19;
   color:white;
-  overflow-x:hidden;
+  overflow:hidden;
 }
 
-/* HERO SCREEN */
-.hero{
+/* WRAPPER HOLDS BOTH SCREENS */
+.wrapper{
+  display:flex;
+  width:200vw;
+  height:100vh;
+  transition:transform 1s ease;
+}
+
+/* EACH SCREEN */
+.screen{
+  width:100vw;
   height:100vh;
   display:flex;
   flex-direction:column;
@@ -26,7 +35,12 @@ body{
   text-align:center;
 }
 
-/* TYPEWRITER TEXT */
+/* HERO SCREEN */
+#hero{
+  background:#0b0f19;
+}
+
+/* TYPEWRITER */
 #type{
   font-size:3.5rem;
   font-weight:800;
@@ -45,68 +59,70 @@ body{
   color:#3b82f6;
 }
 
-/* SHOW CLASS */
 .show{
   opacity:1 !important;
   transform:translateY(0) !important;
 }
 
-/* CONTENT SECTION */
-.section{
-  padding:80px 20px;
-  text-align:center;
+/* MAIN PAGE */
+#main{
   background:#111827;
+  padding:40px;
 }
 
 h2{
-  font-size:2rem;
+  font-size:2.2rem;
   margin-bottom:20px;
 }
 
 p{
   color:#9ca3af;
-  max-width:700px;
-  margin:auto;
+  max-width:600px;
 }
 
 .features{
   display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
   gap:30px;
   margin-top:40px;
+  flex-wrap:wrap;
+  justify-content:center;
 }
 
 .box{
   background:#1f2937;
   padding:25px;
   border-radius:10px;
-  width:250px;
+  width:220px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- HERO -->
-<div class="hero">
-  <div id="type"></div>
-  <div id="codeSymbol">&lt;/&gt;</div>
-</div>
+<div class="wrapper" id="wrapper">
 
-<!-- CONTENT -->
-<div class="section">
-  <h2>AceBlocks for Schools</h2>
-  <p>
-    AceBlocks is a beginner-friendly coding platform designed to help students learn programming through visual building and real code output.
-  </p>
-
-  <div class="features">
-    <div class="box">No experience required</div>
-    <div class="box">Student-led learning</div>
-    <div class="box">Real coding skills</div>
-    <div class="box">Perfect for clubs or classrooms</div>
+  <!-- SCREEN 1 (INTRO) -->
+  <div class="screen" id="hero">
+    <div id="type"></div>
+    <div id="codeSymbol">&lt;/&gt;</div>
   </div>
+
+  <!-- SCREEN 2 (MAIN PAGE) -->
+  <div class="screen" id="main">
+    <h2>AceBlocks for Schools</h2>
+    <p>
+      AceBlocks helps students learn coding through visual building and real code output.
+      Perfect for beginners and student-led environments.
+    </p>
+
+    <div class="features">
+      <div class="box">No experience required</div>
+      <div class="box">Student-led learning</div>
+      <div class="box">Real coding skills</div>
+      <div class="box">Runs as a club or class</div>
+    </div>
+  </div>
+
 </div>
 
 <script>
@@ -119,9 +135,15 @@ function typeWriter() {
     i++;
     setTimeout(typeWriter, 100);
   } else {
-    // show </> after typing
     setTimeout(() => {
       document.getElementById("codeSymbol").classList.add("show");
+
+      // SLIDE LEFT AFTER SYMBOL
+      setTimeout(() => {
+        document.getElementById("wrapper").style.transform = "translateX(-100vw)";
+        document.body.style.overflow = "auto"; // allow scrolling after
+      }, 800);
+
     }, 300);
   }
 }
