@@ -1,85 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Site Under Construction</title>
-  <style>
-    /* Reset */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<title>AceBlocks for Schools</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    body {
-      font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      flex-direction: column;
-      text-align: center;
-    }
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
-    h1 {
-      font-size: 60px;
-      color: #3b82f6;
-      margin-bottom: 20px;
-      animation: bounce 1.5s infinite;
-    }
+<style>
+body{
+  margin:0;
+  font-family:'Inter', sans-serif;
+  background:#0b0f19;
+  color:white;
+  overflow-x:hidden;
+}
 
-    p {
-      font-size: 20px;
-      color: #94a3b8;
-      margin-bottom: 40px;
-    }
+/* HERO SCREEN */
+.hero{
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+}
 
-    .loader {
-      border: 6px solid #1e293b;
-      border-top: 6px solid #3b82f6;
-      border-radius: 50%;
-      width: 60px;
-      height: 60px;
-      animation: spin 1s linear infinite;
-      margin-bottom: 30px;
-    }
+/* TYPEWRITER TEXT */
+#type{
+  font-size:3.5rem;
+  font-weight:800;
+  border-right:3px solid #3b82f6;
+  white-space:nowrap;
+  overflow:hidden;
+}
 
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
+/* CODE SYMBOL */
+#codeSymbol{
+  font-size:2rem;
+  margin-top:20px;
+  opacity:0;
+  transform:translateY(20px);
+  transition:0.8s ease;
+  color:#3b82f6;
+}
 
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-15px); }
-    }
+/* SHOW CLASS */
+.show{
+  opacity:1 !important;
+  transform:translateY(0) !important;
+}
 
-    .contact {
-      margin-top: 20px;
-      font-size: 16px;
-      color: #3b82f6;
-      text-decoration: none;
-      border: 2px solid #3b82f6;
-      padding: 10px 20px;
-      border-radius: 8px;
-      transition: background 0.2s, color 0.2s;
-    }
+/* CONTENT SECTION */
+.section{
+  padding:80px 20px;
+  text-align:center;
+  background:#111827;
+}
 
-    .contact:hover {
-      background: #3b82f6;
-      color: white;
-    }
-  </style>
+h2{
+  font-size:2rem;
+  margin-bottom:20px;
+}
+
+p{
+  color:#9ca3af;
+  max-width:700px;
+  margin:auto;
+}
+
+.features{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:30px;
+  margin-top:40px;
+}
+
+.box{
+  background:#1f2937;
+  padding:25px;
+  border-radius:10px;
+  width:250px;
+}
+</style>
 </head>
+
 <body>
 
-  <div class="loader"></div>
-  <h1>Under Construction</h1>
-  <p>Our website is currently being worked on. We’ll be back soon!</p>
-  <a class="contact" href="mailto:JE-coding@outlook.com">Contact Us</a>
+<!-- HERO -->
+<div class="hero">
+  <div id="type"></div>
+  <div id="codeSymbol">&lt;/&gt;</div>
+</div>
+
+<!-- CONTENT -->
+<div class="section">
+  <h2>AceBlocks for Schools</h2>
+  <p>
+    AceBlocks is a beginner-friendly coding platform designed to help students learn programming through visual building and real code output.
+  </p>
+
+  <div class="features">
+    <div class="box">No experience required</div>
+    <div class="box">Student-led learning</div>
+    <div class="box">Real coding skills</div>
+    <div class="box">Perfect for clubs or classrooms</div>
+  </div>
+</div>
+
+<script>
+const text = "AceBlocks";
+let i = 0;
+
+function typeWriter() {
+  if (i < text.length) {
+    document.getElementById("type").innerHTML += text.charAt(i);
+    i++;
+    setTimeout(typeWriter, 100);
+  } else {
+    // show </> after typing
+    setTimeout(() => {
+      document.getElementById("codeSymbol").classList.add("show");
+    }, 300);
+  }
+}
+
+typeWriter();
+</script>
 
 </body>
 </html>
