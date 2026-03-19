@@ -14,7 +14,6 @@ body{
   background:#0b0f19;
   color:white;
   overflow:hidden;
-  scroll-behavior:smooth;
 }
 
 /* WRAPPER */
@@ -119,7 +118,7 @@ body{
   transform:translateY(0);
 }
 
-/* CTA SECTION */
+/* CTA */
 .cta{
   height:100vh;
   display:flex;
@@ -127,7 +126,6 @@ body{
   align-items:center;
 }
 
-/* FINAL BUTTON */
 .bigButton{
   padding:18px 40px;
   font-size:1.2rem;
@@ -168,7 +166,7 @@ body{
 
 </div>
 
-<!-- FULL PAGE BELOW -->
+<!-- FULL PAGE -->
 <div id="deepSection">
 
   <section class="info reveal">
@@ -191,7 +189,6 @@ body{
     <p>No complex setup. Perfect for clubs or classrooms.</p>
   </section>
 
-  <!-- FINAL CTA -->
   <section class="cta">
     <button class="bigButton">Start Your Journey</button>
   </section>
@@ -221,11 +218,38 @@ function typeWriter() {
   }
 }
 
-// SCROLL DOWN
+// 🎬 SLOW CINEMATIC SCROLL
 function goDown(){
-  document.getElementById("deepSection").scrollIntoView({
-    behavior: "smooth"
-  });
+  const target = document.getElementById("deepSection").offsetTop;
+  let start = window.scrollY;
+  let distance = target - start;
+  let duration = 2200;
+  let startTime = null;
+
+  document.body.style.pointerEvents = "none";
+
+  function animation(currentTime){
+    if(startTime === null) startTime = currentTime;
+    let timeElapsed = currentTime - startTime;
+
+    let run = ease(timeElapsed, start, distance, duration);
+    window.scrollTo(0, run);
+
+    if(timeElapsed < duration){
+      requestAnimationFrame(animation);
+    } else {
+      document.body.style.pointerEvents = "auto";
+    }
+  }
+
+  function ease(t, b, c, d){
+    t /= d/2;
+    if (t < 1) return c/2*t*t + b;
+    t--;
+    return -c/2 * (t*(t-2) - 1) + b;
+  }
+
+  requestAnimationFrame(animation);
 }
 
 // SCROLL REVEAL
