@@ -84,31 +84,66 @@ body{
   transform:translateY(-2px);
 }
 
-/* SECOND SECTION */
+/* DEEP SECTION */
 #deepSection{
-  height:100vh;
   background:#0b0f19;
+}
+
+/* INFO SECTIONS */
+.info{
+  min-height:80vh;
   display:flex;
   flex-direction:column;
   justify-content:center;
   align-items:center;
   text-align:center;
   padding:40px;
+  opacity:0;
+  transform:translateY(40px);
+  transition:1s ease;
 }
 
-.features{
+.info h2{
+  font-size:2.2rem;
+  margin-bottom:15px;
+}
+
+.info p{
+  max-width:600px;
+  color:#9ca3af;
+}
+
+/* REVEAL */
+.reveal.active{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* CTA SECTION */
+.cta{
+  height:100vh;
   display:flex;
-  gap:30px;
-  margin-top:30px;
-  flex-wrap:wrap;
   justify-content:center;
+  align-items:center;
 }
 
-.box{
-  background:#1f2937;
-  padding:25px;
+/* FINAL BUTTON */
+.bigButton{
+  padding:18px 40px;
+  font-size:1.2rem;
+  background:#3b82f6;
+  border:none;
   border-radius:10px;
-  width:220px;
+  color:white;
+  cursor:pointer;
+  opacity:0;
+  transform:translateY(60px);
+  transition:0.8s ease;
+}
+
+.bigButton.show{
+  opacity:1;
+  transform:translateY(0);
 }
 </style>
 </head>
@@ -135,17 +170,36 @@ body{
 
 <!-- FULL PAGE BELOW -->
 <div id="deepSection">
-  <h2>Why Schools Choose AceBlocks</h2>
 
-  <div class="features">
-    <div class="box">No experience needed</div>
-    <div class="box">Student-led</div>
-    <div class="box">Real coding skills</div>
-    <div class="box">Easy to run</div>
-  </div>
+  <section class="info reveal">
+    <h2>Why Schools Choose AceBlocks</h2>
+    <p>AceBlocks makes coding accessible, engaging, and easy to run in any school environment.</p>
+  </section>
+
+  <section class="info reveal">
+    <h2>Student-Led Learning</h2>
+    <p>Students can learn independently with minimal supervision.</p>
+  </section>
+
+  <section class="info reveal">
+    <h2>Real Coding Skills</h2>
+    <p>Visual blocks help beginners start fast and transition into real programming.</p>
+  </section>
+
+  <section class="info reveal">
+    <h2>Simple to Run</h2>
+    <p>No complex setup. Perfect for clubs or classrooms.</p>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="cta">
+    <button class="bigButton">Start Your Journey</button>
+  </section>
+
 </div>
 
 <script>
+// TYPEWRITER
 const text = "AceBlocks";
 let i = 0;
 
@@ -167,11 +221,35 @@ function typeWriter() {
   }
 }
 
+// SCROLL DOWN
 function goDown(){
   document.getElementById("deepSection").scrollIntoView({
     behavior: "smooth"
   });
 }
+
+// SCROLL REVEAL
+function revealOnScroll(){
+  const reveals = document.querySelectorAll(".reveal");
+
+  reveals.forEach((el) => {
+    const windowHeight = window.innerHeight;
+    const elementTop = el.getBoundingClientRect().top;
+
+    if(elementTop < windowHeight - 100){
+      el.classList.add("active");
+    }
+  });
+
+  const final = document.querySelector(".bigButton");
+  const finalTop = final.getBoundingClientRect().top;
+
+  if(finalTop < window.innerHeight - 100){
+    final.classList.add("show");
+  }
+}
+
+window.addEventListener("scroll", revealOnScroll);
 
 typeWriter();
 </script>
