@@ -14,9 +14,10 @@ body{
   background:#0b0f19;
   color:white;
   overflow:hidden;
+  scroll-behavior:smooth;
 }
 
-/* WRAPPER HOLDS BOTH SCREENS */
+/* WRAPPER */
 .wrapper{
   display:flex;
   width:200vw;
@@ -24,7 +25,7 @@ body{
   transition:transform 1s ease;
 }
 
-/* EACH SCREEN */
+/* SCREENS */
 .screen{
   width:100vw;
   height:100vh;
@@ -35,12 +36,7 @@ body{
   text-align:center;
 }
 
-/* HERO SCREEN */
-#hero{
-  background:#0b0f19;
-}
-
-/* TYPEWRITER */
+/* TYPE */
 #type{
   font-size:3.5rem;
   font-weight:800;
@@ -49,7 +45,7 @@ body{
   overflow:hidden;
 }
 
-/* CODE SYMBOL */
+/* SYMBOL */
 #codeSymbol{
   font-size:2rem;
   margin-top:20px;
@@ -64,26 +60,46 @@ body{
   transform:translateY(0) !important;
 }
 
-/* MAIN PAGE */
+/* MAIN SCREEN */
 #main{
   background:#111827;
   padding:40px;
 }
 
-h2{
-  font-size:2.2rem;
-  margin-bottom:20px;
+/* BUTTON */
+.button{
+  margin-top:40px;
+  padding:14px 28px;
+  background:#3b82f6;
+  border:none;
+  border-radius:8px;
+  color:white;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.3s;
 }
 
-p{
-  color:#9ca3af;
-  max-width:600px;
+.button:hover{
+  background:#2563eb;
+  transform:translateY(-2px);
+}
+
+/* SECOND SECTION */
+#deepSection{
+  height:100vh;
+  background:#0b0f19;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:40px;
 }
 
 .features{
   display:flex;
   gap:30px;
-  margin-top:40px;
+  margin-top:30px;
   flex-wrap:wrap;
   justify-content:center;
 }
@@ -101,28 +117,32 @@ p{
 
 <div class="wrapper" id="wrapper">
 
-  <!-- SCREEN 1 (INTRO) -->
-  <div class="screen" id="hero">
+  <!-- INTRO -->
+  <div class="screen">
     <div id="type"></div>
     <div id="codeSymbol">&lt;/&gt;</div>
   </div>
 
-  <!-- SCREEN 2 (MAIN PAGE) -->
+  <!-- MAIN -->
   <div class="screen" id="main">
     <h2>AceBlocks for Schools</h2>
-    <p>
-      AceBlocks helps students learn coding through visual building and real code output.
-      Perfect for beginners and student-led environments.
-    </p>
+    <p>Helping students learn coding through visual building and real code output.</p>
 
-    <div class="features">
-      <div class="box">No experience required</div>
-      <div class="box">Student-led learning</div>
-      <div class="box">Real coding skills</div>
-      <div class="box">Runs as a club or class</div>
-    </div>
+    <button class="button" onclick="goDown()">Start Your Journey ↓</button>
   </div>
 
+</div>
+
+<!-- FULL PAGE BELOW -->
+<div id="deepSection">
+  <h2>Why Schools Choose AceBlocks</h2>
+
+  <div class="features">
+    <div class="box">No experience needed</div>
+    <div class="box">Student-led</div>
+    <div class="box">Real coding skills</div>
+    <div class="box">Easy to run</div>
+  </div>
 </div>
 
 <script>
@@ -138,14 +158,19 @@ function typeWriter() {
     setTimeout(() => {
       document.getElementById("codeSymbol").classList.add("show");
 
-      // SLIDE LEFT AFTER SYMBOL
       setTimeout(() => {
         document.getElementById("wrapper").style.transform = "translateX(-100vw)";
-        document.body.style.overflow = "auto"; // allow scrolling after
+        document.body.style.overflow = "auto";
       }, 800);
 
     }, 300);
   }
+}
+
+function goDown(){
+  document.getElementById("deepSection").scrollIntoView({
+    behavior: "smooth"
+  });
 }
 
 typeWriter();
