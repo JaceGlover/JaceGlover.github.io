@@ -1,9 +1,9 @@
 ---
-Name: Feature request
-About: Suggest an idea for this project
-Title: A title for your request
-Labels: Any labels you think are necessary.
-Assignees: Any assignees.
+Name: 'Feature request.'
+About: 'Suggest an idea for this project.'
+Title: 'A title for your request.'
+Labels: 'Any labels you think are necessary.'
+Assignees: 'Any assignees.'
 
 ---
 
