@@ -45,7 +45,6 @@
     .banner{
       position:relative;
       text-align:center;
-      color:white;
       overflow:hidden;
     }
 
@@ -77,7 +76,6 @@
       to { transform: scale(1.05); }
     }
 
-    /* HERO */
     .hero{
       text-align:center;
       padding:60px 20px;
@@ -95,7 +93,6 @@
       margin:0 auto 30px;
     }
 
-    /* BUTTON */
     .button{
       display:inline-block;
       padding:14px 28px;
@@ -129,11 +126,15 @@
       width:100%;
     }
 
-    /* SECTIONS */
     .section{
       padding:80px 20px;
       text-align:center;
       background:#111827;
+    }
+
+    .section h3{
+      font-size:2rem;
+      margin-bottom:30px;
     }
 
     .features{
@@ -155,6 +156,39 @@
       transform:translateY(-6px);
     }
 
+    .mission{
+      max-width:700px;
+      margin:auto;
+      color:#d1d5db;
+    }
+
+    .founder-section{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:30px;
+    }
+
+    .founder-section img{
+      width:170px;
+      height:170px;
+      border-radius:50%;
+      object-fit:cover;
+      border:3px solid #3b82f6;
+    }
+
+    .founder-text{
+      max-width:600px;
+      color:#d1d5db;
+    }
+
+    footer{
+      text-align:center;
+      padding:30px;
+      background:#0f1626;
+      color:#9ca3af;
+    }
+
     /* 🔥 SCROLL ANIMATION */
     .fade-in{
       opacity:0;
@@ -166,63 +200,104 @@
       opacity:1;
       transform:translateY(0);
     }
-
-    footer{
-      text-align:center;
-      padding:30px;
-      background:#0f1626;
-      color:#9ca3af;
-    }
   </style>
 </head>
 
 <body>
 
 <header>
-  <h1 style="font-family: TitleFont;">AceBlocks</h1>
+  <div>
+    <h1 style="font-family: TitleFont;">AceBlocks</h1>
+    <small>Coding for the Future</small>
+  </div>
 
   <nav>
     <a href="index.html">Home</a>
     <a href="lessons.html">Lessons</a>
     <a href="learn-more.html">Learn More</a>
+    <a href="AceBlocksForSchools.html">For Schools</a>
   </nav>
 </header>
 
-<!-- 🔥 HERO IMAGE -->
+<!-- 🔥 IMAGE BANNER -->
 <div class="banner">
   <img src="AceBlocks.png">
   <h1>Learn to Code the Fun Way</h1>
 </div>
 
 <section class="hero fade-in">
+
   <h2>Build Code Visually</h2>
 
   <p>
-  AceBlocks is a beginner-friendly visual coding engine where you drag and drop blocks to build real programs.
+  AceBlocks is a beginner-friendly visual coding engine. Drag and drop blocks to create real programs and learn how coding works without needing to type complex syntax.
   </p>
 
+  <p style="color:#3b82f6;font-weight:600;">Coding for the Future</p>
+
   <a href="lessons.html" class="button">Start Learning</a>
+  <a href="mailto:je-coding@outlook.com" class="button">Join the Team</a>
+
 </section>
 
 <section class="section fade-in">
 
-  <h2>Core Features</h2>
+  <h3>Core Features</h3>
 
   <div class="features">
 
     <div class="feature-box">
-      <h3>Drag & Drop</h3>
-      <p>Create programs visually.</p>
+      <h4>Drag & Drop Blocks</h4>
+      <p>Create programs visually without memorizing syntax.</p>
     </div>
 
     <div class="feature-box">
-      <h3>Real Code</h3>
-      <p>Convert blocks into real code.</p>
+      <h4>Real Code Output</h4>
+      <p>Convert your visual blocks into clean code instantly.</p>
     </div>
 
     <div class="feature-box">
-      <h3>Beginner Friendly</h3>
-      <p>Perfect for new coders.</p>
+      <h4>Beginner Lessons</h4>
+      <p>Step-by-step lessons that teach real programming.</p>
+    </div>
+
+    <div class="feature-box">
+      <h4>Future Collaboration</h4>
+      <p>Work with others in future updates.</p>
+    </div>
+
+  </div>
+
+</section>
+
+<section class="section fade-in">
+
+  <h3>AceBlocks Mission</h3>
+
+  <p class="mission">
+  AceBlocks exists to make coding accessible for the next generation of creators.
+  </p>
+
+</section>
+
+<section class="section fade-in">
+
+  <h3>Join the Team</h3>
+
+  <p>Email: <strong>je-coding@outlook.com</strong></p>
+
+</section>
+
+<section class="section fade-in">
+
+  <h3>About the Founder</h3>
+
+  <div class="founder-section">
+
+    <img src="profile.jpg">
+
+    <div class="founder-text">
+      <p><strong>Jace Glover</strong> is building tools to make coding easier.</p>
     </div>
 
   </div>
@@ -230,10 +305,9 @@
 </section>
 
 <footer>
-  © 2026 AceBlocks
+  © 2026 AceBlocks — Coding for the Future
 </footer>
 
-<!-- 🔥 SCROLL SCRIPT -->
 <script>
 const observer = new IntersectionObserver(entries => {
   entries.forEach(entry => {
