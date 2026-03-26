@@ -22,7 +22,6 @@
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     html { scroll-behavior: smooth; }
 
     body {
@@ -32,7 +31,6 @@
       overflow-x: hidden;
     }
 
-    /* NOISE OVERLAY */
     body::before {
       content: '';
       position: fixed;
@@ -49,10 +47,10 @@
 
     /* SITE BANNER */
     .site-banner {
-      position: center;
+      position: relative;
       width: 100%;
       height: 480px;
-      margin-top: 73px; /* offset for fixed header */
+      margin-top: 73px;
       overflow: hidden;
     }
 
@@ -79,18 +77,19 @@
         linear-gradient(135deg, rgba(91,107,255,0.25) 0%, transparent 60%);
     }
 
+    /* FIXED: left/right + text-align instead of translateX */
     .site-banner-text {
-      position: center;
+      position: absolute;
       bottom: 40px;
-      left: 50%;
-      transform: translateX(-50%);
+      left: 0;
+      right: 0;
+      text-align: center;
       font-family: 'Syne', sans-serif;
       font-size: clamp(1.4rem, 4vw, 2.4rem);
       font-weight: 800;
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: rgba(255,255,255,0.9);
-      white-space: nowrap;
       animation: fadeUp 0.8s 0.4s ease both;
     }
 
@@ -174,7 +173,7 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 80px 24px 80px;
+      padding: 80px 24px;
       position: relative;
       overflow: hidden;
     }
@@ -287,10 +286,7 @@
       cursor: pointer;
     }
 
-    .btn-primary {
-      background: var(--accent);
-      color: #fff;
-    }
+    .btn-primary { background: var(--accent); color: #fff; }
     .btn-primary:hover {
       transform: translateY(-2px);
       box-shadow: 0 12px 32px var(--glow);
@@ -427,16 +423,12 @@
       opacity: 0;
       transform: translateY(30px);
     }
-    .feature-card.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    .feature-card.visible { opacity: 1; transform: translateY(0); }
     .feature-card:hover {
       transform: translateY(-6px);
       border-color: rgba(91,107,255,0.4);
       box-shadow: 0 16px 40px rgba(91,107,255,0.12);
     }
-
     .feature-card::before {
       content: '';
       position: absolute;
@@ -466,11 +458,7 @@
       margin-bottom: 8px;
     }
 
-    .feature-card p {
-      color: var(--muted);
-      font-size: 0.88rem;
-      line-height: 1.6;
-    }
+    .feature-card p { color: var(--muted); font-size: 0.88rem; line-height: 1.6; }
 
     /* MISSION */
     .mission-block {
@@ -526,9 +514,7 @@
       opacity: 0;
       transform: translateY(24px);
     }
-
     .team-card.visible { opacity: 1; transform: translateY(0); }
-
     .team-card:hover {
       transform: translateY(-4px);
       border-color: rgba(91,107,255,0.35);
@@ -548,11 +534,7 @@
       margin: 0 auto 14px;
     }
 
-    .team-name {
-      font-weight: 700;
-      font-size: 0.95rem;
-      margin-bottom: 4px;
-    }
+    .team-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
 
     .team-role {
       color: var(--muted);
@@ -641,12 +623,7 @@
       margin-bottom: 20px;
     }
 
-    .founder-text p {
-      color: var(--muted);
-      font-size: 0.95rem;
-      line-height: 1.75;
-      margin-bottom: 12px;
-    }
+    .founder-text p { color: var(--muted); font-size: 0.95rem; line-height: 1.75; margin-bottom: 12px; }
 
     /* CTA */
     .cta-banner {
@@ -677,13 +654,7 @@
       position: relative; z-index: 1;
     }
 
-    .cta-banner p {
-      color: var(--muted);
-      margin-bottom: 32px;
-      font-size: 1rem;
-      position: relative; z-index: 1;
-    }
-
+    .cta-banner p { color: var(--muted); margin-bottom: 32px; font-size: 1rem; position: relative; z-index: 1; }
     .cta-banner .btn { position: relative; z-index: 1; }
 
     /* FOOTER */
@@ -709,7 +680,6 @@
 
     footer p { color: var(--muted); font-size: 0.85rem; }
 
-    /* KEYFRAMES */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(24px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -736,7 +706,6 @@
     .stat:nth-child(3) { transition-delay: 0.2s; }
     .stat:nth-child(4) { transition-delay: 0.3s; }
 
-    /* RESPONSIVE */
     @media (max-width: 700px) {
       header { padding: 16px 20px; }
       .logo { font-size: 1.1rem; }
