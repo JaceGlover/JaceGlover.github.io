@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="icon" href="favicon.ico.png" type="image/x-icon">
   <meta charset="UTF-8">
   <title>AceBlocks | Visual Code Builder</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AceBlocks is a visual block-based coding engine that helps beginners build real programs without typing complex code. Created by Jace Glover.">
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="AceBlocksLogo.png" type="image/x-png">
 
   <style>
     @font-face {
@@ -14,6 +17,13 @@
     }
 
     body{
+      <div style="position: relative; text-align: center; color: white;">
+  <img src="AceBlocks.png" style="width:100%;">
+  
+  <h1 style="position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%);">
+    Learn to Code the Fun Way
+  </h1>
+</div>
       margin:0;
       font-family:'Inter', sans-serif;
       background:#0b0f19;
@@ -29,6 +39,11 @@
       align-items:center;
     }
 
+    header small{
+      color:#9ca3af;
+      font-size:0.8rem;
+    }
+
     nav a{
       color:white;
       text-decoration:none;
@@ -41,56 +56,23 @@
       color:#3b82f6;
     }
 
-    /* 🔥 BANNER */
-    .banner{
-      position:relative;
-      text-align:center;
-      overflow:hidden;
-    }
-
-    .banner img{
-      width:100%;
-      height:400px;
-      object-fit:cover;
-      filter:brightness(60%);
-      animation: zoom 12s ease-in-out infinite alternate;
-    }
-
-    .banner h1{
-      position:absolute;
-      top:50%;
-      left:50%;
-      transform:translate(-50%, -50%);
-      font-size:3rem;
-      font-weight:800;
-      animation: fadeDown 1s ease;
-    }
-
-    @keyframes fadeDown {
-      from { opacity:0; transform: translate(-50%, -80%); }
-      to { opacity:1; transform: translate(-50%, -50%); }
-    }
-
-    @keyframes zoom {
-      from { transform: scale(1); }
-      to { transform: scale(1.05); }
-    }
-
     .hero{
       text-align:center;
-      padding:60px 20px;
+      padding:110px 20px;
     }
 
     .hero h2{
       font-size:3rem;
       font-weight:800;
       margin-bottom:20px;
+      text-shadow:0 0 20px rgba(59,130,246,0.5);
     }
 
     .hero p{
       color:#9ca3af;
       max-width:650px;
       margin:0 auto 30px;
+      font-size:1.05rem;
     }
 
     .button{
@@ -103,27 +85,11 @@
       font-weight:600;
       text-decoration:none;
       transition:0.3s;
-      position:relative;
-      overflow:hidden;
     }
 
     .button:hover{
-      transform:translateY(-3px);
-    }
-
-    .button::after{
-      content:"";
-      position:absolute;
-      width:0;
-      height:100%;
-      top:0;
-      left:0;
-      background:rgba(255,255,255,0.15);
-      transition:0.4s;
-    }
-
-    .button:hover::after{
-      width:100%;
+      background:#2563eb;
+      transform:translateY(-2px);
     }
 
     .section{
@@ -154,12 +120,19 @@
 
     .feature-box:hover{
       transform:translateY(-6px);
+      box-shadow:0 10px 30px rgba(0,0,0,0.4);
+    }
+
+    .feature-box h4{
+      margin-bottom:10px;
+      color:#3b82f6;
     }
 
     .mission{
       max-width:700px;
       margin:auto;
       color:#d1d5db;
+      font-size:1.05rem;
     }
 
     .founder-section{
@@ -187,18 +160,15 @@
       padding:30px;
       background:#0f1626;
       color:#9ca3af;
+      font-size:0.9rem;
     }
 
-    /* 🔥 SCROLL ANIMATION */
-    .fade-in{
-      opacity:0;
-      transform:translateY(40px);
-      transition: all 0.8s ease;
-    }
-
-    .fade-in.show{
-      opacity:1;
-      transform:translateY(0);
+    @media(min-width:768px){
+      .founder-section{
+        flex-direction:row;
+        justify-content:center;
+        text-align:left;
+      }
     }
   </style>
 </head>
@@ -219,13 +189,7 @@
   </nav>
 </header>
 
-<!-- 🔥 IMAGE BANNER -->
-<div class="banner">
-  <img src="AceBlocks.png">
-  <h1>Learn to Code the Fun Way</h1>
-</div>
-
-<section class="hero fade-in">
+<section class="hero">
 
   <h2>Build Code Visually</h2>
 
@@ -240,7 +204,7 @@
 
 </section>
 
-<section class="section fade-in">
+<section class="section">
 
   <h3>Core Features</h3>
 
@@ -253,51 +217,79 @@
 
     <div class="feature-box">
       <h4>Real Code Output</h4>
-      <p>Convert your visual blocks into clean code instantly.</p>
+      <p>Convert your visual blocks into clean, readable code instantly.</p>
     </div>
 
     <div class="feature-box">
       <h4>Beginner Lessons</h4>
-      <p>Step-by-step lessons that teach real programming.</p>
+      <p>Step-by-step lessons that teach real programming concepts.</p>
     </div>
 
     <div class="feature-box">
       <h4>Future Collaboration</h4>
-      <p>Work with others in future updates.</p>
+      <p>Work with others and build projects together in future updates.</p>
     </div>
 
   </div>
 
 </section>
 
-<section class="section fade-in">
+<section class="section">
 
   <h3>AceBlocks Mission</h3>
 
   <p class="mission">
   AceBlocks exists to make coding accessible for the next generation of creators.
+  By combining visual scripting with real code output, students can learn
+  programming faster and start building projects with confidence.
   </p>
 
 </section>
 
-<section class="section fade-in">
+<section class="section">
 
   <h3>Join the Team</h3>
 
-  <p>Email: <strong>je-coding@outlook.com</strong></p>
+  <p>Want to help develop AceBlocks?</p>
+  <p><strong>Email: je-coding@outlook.com</strong></p>
+
+  <p><em>The Team:</em></p>
+  <ul style="font-size: 23px;">
+    Liam Cooper — Coder —
+    Reed Butwell — Designer —
+    Jace Glover — Founder —
+    Problox — Social Media Intern —
+    Henry Lewis — Coder —
+  </ul>
+
+  <p><strong>Employee of the Month:</strong> Henry Lewis — Coder, AceBlocks.</p>
 
 </section>
 
-<section class="section fade-in">
+<section class="section">
 
   <h3>About the Founder</h3>
 
   <div class="founder-section">
 
-    <img src="profile.jpg">
+    <img src="profile.jpg" alt="Jace Glover">
 
     <div class="founder-text">
-      <p><strong>Jace Glover</strong> is building tools to make coding easier.</p>
+
+      <p>
+      <strong>Jace Glover</strong> is a young developer building tools that make coding
+      easier for beginners through visual learning and creativity.
+      </p>
+
+      <p>
+      His goal is to help the next generation of creators learn programming and
+      build the future of technology.
+      </p>
+
+      <p>
+      <strong>Note from the founder:</strong> Hi — thank you for supporting AceBlocks.
+      </p>
+
     </div>
 
   </div>
@@ -305,20 +297,9 @@
 </section>
 
 <footer>
-  © 2026 AceBlocks — Coding for the Future
+  © 2026 AceBlocks — Coding for the Future<br>
+  Created by Jace Glover.
 </footer>
-
-<script>
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if(entry.isIntersecting){
-      entry.target.classList.add('show');
-    }
-  });
-});
-
-document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-</script>
 
 </body>
 </html>
