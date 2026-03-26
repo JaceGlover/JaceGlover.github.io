@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" href="favicon.ico.png" type="image/x-icon">
   <meta charset="UTF-8">
   <title>AceBlocks | Visual Code Builder</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="AceBlocks is a visual block-based coding engine that helps beginners build real programs without typing complex code. Created by Jace Glover.">
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-  <link rel="icon" href="AceBlocksLogo.png" type="image/x-png">
 
   <style>
     @font-face {
@@ -17,13 +15,6 @@
     }
 
     body{
-      <div style="position: relative; text-align: center; color: white;">
-  <img src="AceBlocks.png" style="width:100%;">
-  
-  <h1 style="position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%);">
-    Learn to Code the Fun Way
-  </h1>
-</div>
       margin:0;
       font-family:'Inter', sans-serif;
       background:#0b0f19;
@@ -56,9 +47,31 @@
       color:#3b82f6;
     }
 
+    .banner{
+      position:relative;
+      text-align:center;
+      color:white;
+    }
+
+    .banner img{
+      width:100%;
+      height:400px;
+      object-fit:cover;
+      filter:brightness(60%);
+    }
+
+    .banner h1{
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%, -50%);
+      font-size:3rem;
+      font-weight:800;
+    }
+
     .hero{
       text-align:center;
-      padding:110px 20px;
+      padding:60px 20px;
     }
 
     .hero h2{
@@ -188,6 +201,12 @@
     <a href="AceBlocksForSchools.html">For Schools</a>
   </nav>
 </header>
+
+<!-- ✅ NEW IMAGE BANNER -->
+<div class="banner">
+  <img src="AceBlocks.png">
+  <h1>Learn to Code the Fun Way</h1>
+</div>
 
 <section class="hero">
 
