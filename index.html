@@ -1,185 +1,275 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" href="favicon.ico.png" type="image/x-icon">
-<meta charset="UTF-8">
-<title>AceBlocks | Visual Code Builder</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="AceBlocks is a visual block-based coding engine that helps beginners build real programs without typing complex code. Created by Jace Glover.">
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="icon" href="AceBlocksLogo.png" type="image/x-png">
-
-<style>
-@font-face {
-@@ -17,13 +15,6 @@
-}
-
-body{
-      <div style="position: relative; text-align: center; color: white;">
-  <img src="AceBlocks.png" style="width:100%;">
-  
-  <h1 style="position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%);">
-    Learn to Code the Fun Way
-  </h1>
-</div>
-margin:0;
-font-family:'Inter', sans-serif;
-background:#0b0f19;
-@@ -56,9 +47,31 @@
-color:#3b82f6;
-}
-
-    .banner{
-      position:relative;
-      text-align:center;
-      color:white;
+  <meta charset="UTF-8">
+  <title>AceBlocks | Visual Code Builder</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AceBlocks is a visual block-based coding engine that helps beginners build real programs without typing complex code. Created by Jace Glover.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+ 
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: #0b0f19;
+      color: #e2e8f0;
     }
-
-    .banner img{
-      width:100%;
-      height:400px;
-      object-fit:cover;
-      filter:brightness(60%);
+ 
+    a {
+      color: #3b82f6;
     }
-
-    .banner h1{
-      position:absolute;
-      top:50%;
-      left:50%;
-      transform:translate(-50%, -50%);
-      font-size:3rem;
-      font-weight:800;
+ 
+    .banner {
+      position: relative;
+      text-align: center;
+      color: white;
     }
-
-.hero{
-text-align:center;
-      padding:110px 20px;
-      padding:60px 20px;
-}
-
-.hero h2{
-@@ -189,117 +202,123 @@
-</nav>
+ 
+    .banner img {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      filter: brightness(60%);
+    }
+ 
+    .banner h1 {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+ 
+    .hero {
+      text-align: center;
+      padding: 60px 20px;
+    }
+ 
+    .hero h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+ 
+    .hero p {
+      max-width: 600px;
+      margin: 0 auto 16px;
+      color: #94a3b8;
+    }
+ 
+    .button {
+      display: inline-block;
+      margin: 8px;
+      padding: 12px 24px;
+      background: #3b82f6;
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+ 
+    .button:hover {
+      background: #2563eb;
+    }
+ 
+    .section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 60px 20px;
+    }
+ 
+    .section h3 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 24px;
+    }
+ 
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+ 
+    .feature-box {
+      background: #1e293b;
+      border-radius: 12px;
+      padding: 24px;
+    }
+ 
+    .feature-box h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+ 
+    .feature-box p {
+      color: #94a3b8;
+      font-size: 0.9rem;
+    }
+ 
+    .mission {
+      color: #94a3b8;
+      line-height: 1.8;
+      max-width: 700px;
+    }
+ 
+    .founder-section {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+    }
+ 
+    .founder-section img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+ 
+    .founder-text p {
+      color: #94a3b8;
+      line-height: 1.7;
+      margin-bottom: 10px;
+    }
+ 
+    header {
+      background: #0b0f19;
+      padding: 16px 32px;
+      border-bottom: 1px solid #1e293b;
+    }
+ 
+    nav {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+    }
+ 
+    nav a {
+      color: #e2e8f0;
+      text-decoration: none;
+      font-weight: 600;
+    }
+ 
+    nav a:hover {
+      color: #3b82f6;
+    }
+ 
+    ul {
+      list-style: none;
+      padding: 0;
+      color: #94a3b8;
+      line-height: 2;
+    }
+ 
+    footer {
+      text-align: center;
+      padding: 32px 20px;
+      color: #475569;
+      font-size: 0.85rem;
+      border-top: 1px solid #1e293b;
+    }
+  </style>
+</head>
+<body>
+ 
+<header>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="lessons.html">Lessons</a>
+    <a href="mailto:je-coding@outlook.com">Contact</a>
+  </nav>
 </header>
-
-<!-- ✅ NEW IMAGE BANNER -->
+ 
+<!-- Image Banner -->
 <div class="banner">
-  <img src="AceBlocks.png">
+  <img src="AceBlocks.png" alt="AceBlocks Banner">
   <h1>Learn to Code the Fun Way</h1>
 </div>
-
+ 
 <section class="hero">
-
-<h2>Build Code Visually</h2>
-
-<p>
-AceBlocks is a beginner-friendly visual coding engine. Drag and drop blocks to create real programs and learn how coding works without needing to type complex syntax.
-</p>
-
-<p style="color:#3b82f6;font-weight:600;">Coding for the Future</p>
-
-<a href="lessons.html" class="button">Start Learning</a>
-<a href="mailto:je-coding@outlook.com" class="button">Join the Team</a>
-
+  <h2>Build Code Visually</h2>
+  <p>
+    AceBlocks is a beginner-friendly visual coding engine. Drag and drop blocks to create real programs
+    and learn how coding works without needing to type complex syntax.
+  </p>
+  <p style="color:#3b82f6; font-weight:600;">Coding for the Future</p>
+  <a href="lessons.html" class="button">Start Learning</a>
+  <a href="mailto:je-coding@outlook.com" class="button">Join the Team</a>
 </section>
-
+ 
 <section class="section">
-
-<h3>Core Features</h3>
-
-<div class="features">
-
-<div class="feature-box">
-<h4>Drag & Drop Blocks</h4>
-<p>Create programs visually without memorizing syntax.</p>
-</div>
-
-<div class="feature-box">
-<h4>Real Code Output</h4>
-<p>Convert your visual blocks into clean, readable code instantly.</p>
-</div>
-
-<div class="feature-box">
-<h4>Beginner Lessons</h4>
-<p>Step-by-step lessons that teach real programming concepts.</p>
-</div>
-
-<div class="feature-box">
-<h4>Future Collaboration</h4>
-<p>Work with others and build projects together in future updates.</p>
-</div>
-
-</div>
-
+  <h3>Core Features</h3>
+  <div class="features">
+    <div class="feature-box">
+      <h4>Drag &amp; Drop Blocks</h4>
+      <p>Create programs visually without memorizing syntax.</p>
+    </div>
+    <div class="feature-box">
+      <h4>Real Code Output</h4>
+      <p>Convert your visual blocks into clean, readable code instantly.</p>
+    </div>
+    <div class="feature-box">
+      <h4>Beginner Lessons</h4>
+      <p>Step-by-step lessons that teach real programming concepts.</p>
+    </div>
+    <div class="feature-box">
+      <h4>Future Collaboration</h4>
+      <p>Work with others and build projects together in future updates.</p>
+    </div>
+  </div>
 </section>
-
+ 
 <section class="section">
-
-<h3>AceBlocks Mission</h3>
-
-<p class="mission">
-AceBlocks exists to make coding accessible for the next generation of creators.
-By combining visual scripting with real code output, students can learn
-programming faster and start building projects with confidence.
-</p>
-
+  <h3>AceBlocks Mission</h3>
+  <p class="mission">
+    AceBlocks exists to make coding accessible for the next generation of creators.
+    By combining visual scripting with real code output, students can learn
+    programming faster and start building projects with confidence.
+  </p>
 </section>
-
+ 
 <section class="section">
-
-<h3>Join the Team</h3>
-
-<p>Want to help develop AceBlocks?</p>
-<p><strong>Email: je-coding@outlook.com</strong></p>
-
-<p><em>The Team:</em></p>
-<ul style="font-size: 23px;">
-Liam Cooper — Coder —
-Reed Butwell — Designer —
-Jace Glover — Founder —
-Problox — Social Media Intern —
-Henry Lewis — Coder —
-</ul>
-
-<p><strong>Employee of the Month:</strong> Henry Lewis — Coder, AceBlocks.</p>
-
+  <h3>Join the Team</h3>
+  <p>Want to help develop AceBlocks?</p>
+  <p><strong>Email: je-coding@outlook.com</strong></p>
+  <p><em>The Team:</em></p>
+  <ul style="font-size: 1.1rem;">
+    <li>Liam Cooper — Coder</li>
+    <li>Reed Butwell — Designer</li>
+    <li>Jace Glover — Founder</li>
+    <li>Problox — Social Media Intern</li>
+    <li>Henry Lewis — Coder</li>
+  </ul>
+  <p><strong>Employee of the Month:</strong> Henry Lewis — Coder, AceBlocks.</p>
 </section>
-
+ 
 <section class="section">
-
-<h3>About the Founder</h3>
-
-<div class="founder-section">
-
-<img src="profile.jpg" alt="Jace Glover">
-
-<div class="founder-text">
-
-<p>
-<strong>Jace Glover</strong> is a young developer building tools that make coding
-easier for beginners through visual learning and creativity.
-</p>
-
-<p>
-His goal is to help the next generation of creators learn programming and
-build the future of technology.
-</p>
-
-<p>
-<strong>Note from the founder:</strong> Hi — thank you for supporting AceBlocks.
-</p>
-
-</div>
-
-</div>
-
+  <h3>About the Founder</h3>
+  <div class="founder-section">
+    <img src="profile.jpg" alt="Jace Glover">
+    <div class="founder-text">
+      <p>
+        <strong>Jace Glover</strong> is a young developer building tools that make coding
+        easier for beginners through visual learning and creativity.
+      </p>
+      <p>
+        His goal is to help the next generation of creators learn programming and
+        build the future of technology.
+      </p>
+      <p>
+        <strong>Note from the founder:</strong> Hi — thank you for supporting AceBlocks.
+      </p>
+    </div>
+  </div>
 </section>
-
+ 
 <footer>
-© 2026 AceBlocks — Coding for the Future<br>
-Created by Jace Glover.
+  © 2026 AceBlocks — Coding for the Future<br>
+  Created by Jace Glover.
 </footer>
-
+ 
 </body>
-</html>
