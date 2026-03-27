@@ -1,295 +1,761 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>AceBlocks for Schools</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" href="favicon.ico.png" type="image/png"
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>AceBlocks for Schools</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="AceBlocksLogo.png" type="image/x-png">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 
-<style>
-body{
-  margin:0;
-  font-family:'Inter', sans-serif;
-  background:#0b0f19;
-  color:white;
-  overflow:hidden;
-}
+  <style>
+    :root {
+      --bg: #04060f;
+      --surface: #0d1120;
+      --surface2: #131929;
+      --border: rgba(99,120,255,0.15);
+      --accent: #5b6bff;
+      --accent2: #38f0c0;
+      --text: #e8eaf6;
+      --muted: #7b83a6;
+      --glow: rgba(91,107,255,0.35);
+    }
 
-/* WRAPPER */
-.wrapper{
-  display:flex;
-  width:200vw;
-  height:100vh;
-  transition:transform 1s ease;
-}
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
-/* SCREENS */
-.screen{
-  width:100vw;
-  height:100vh;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-}
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
 
-/* TYPE */
-#type{
-  font-size:3.5rem;
-  font-weight:800;
-  border-right:3px solid #3b82f6;
-  white-space:nowrap;
-  overflow:hidden;
-}
+    /* NOISE */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
 
-/* SYMBOL */
-#codeSymbol{
-  font-size:2rem;
-  margin-top:20px;
-  opacity:0;
-  transform:translateY(20px);
-  transition:0.8s ease;
-  color:#3b82f6;
-}
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
 
-.show{
-  opacity:1 !important;
-  transform:translateY(0) !important;
-}
+    /* ── HEADER ── */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      padding: 18px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(4,6,15,0.75);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      animation: slideDown 0.6s ease both;
+    }
 
-/* MAIN SCREEN */
-#main{
-  background:#111827;
-  padding:40px;
-}
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-decoration: none;
+    }
 
-/* BUTTON */
-.button{
-  margin-top:40px;
-  padding:14px 28px;
-  background:#3b82f6;
-  border:none;
-  border-radius:8px;
-  color:white;
-  font-weight:600;
-  cursor:pointer;
-  transition:0.3s;
-}
+    nav { display: flex; gap: 32px; align-items: center; }
 
-.button:hover{
-  background:#2563eb;
-  transform:translateY(-2px);
-}
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+      position: relative;
+    }
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 2px;
+      background: var(--accent2);
+      transition: width 0.3s ease;
+    }
+    nav a:hover { color: var(--text); }
+    nav a:hover::after { width: 100%; }
+    nav a.active { color: var(--text); }
+    nav a.active::after { width: 100%; }
 
-/* DEEP SECTION */
-#deepSection{
-  background:#0b0f19;
-}
+    .nav-cta {
+      padding: 8px 20px;
+      background: var(--accent);
+      color: #fff !important;
+      border-radius: 8px;
+      font-weight: 700 !important;
+      transition: background 0.2s, transform 0.2s !important;
+    }
+    .nav-cta::after { display: none !important; }
+    .nav-cta:hover { background: #7080ff !important; transform: translateY(-1px); }
 
-/* INFO SECTIONS */
-.info{
-  min-height:80vh;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  padding:40px;
-  opacity:0;
-  transform:translateY(40px);
-  transition:1s ease;
-}
+    /* ── INTRO SCREEN (typewriter) ── */
+    #introScreen {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
 
-.info h2{
-  font-size:2.2rem;
-  margin-bottom:15px;
-}
+    #introScreen.hide {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-32px);
+    }
 
-.info p{
-  max-width:600px;
-  color:#9ca3af;
-}
+    .intro-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(99,120,255,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99,120,255,0.06) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%);
+    }
 
-/* REVEAL */
-.info.active{
-  opacity:1;
-  transform:translateY(0);
-}
+    .intro-glow {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 50% 60% at 50% 50%, rgba(91,107,255,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
 
-/* CTA */
-.cta{
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
+    #typeText {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.8rem, 8vw, 5.5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      position: relative; z-index: 1;
+      background: linear-gradient(135deg, var(--text), rgba(232,234,246,0.7));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
 
-.bigButton{
-  padding:18px 40px;
-  font-size:1.2rem;
-  background:#3b82f6;
-  border:none;
-  border-radius:10px;
-  color:white;
-  cursor:pointer;
-  opacity:0;
-  transform:translateY(60px);
-  transition:0.8s ease;
-}
+    .cursor {
+      display: inline-block;
+      width: 3px;
+      height: 1em;
+      background: var(--accent);
+      margin-left: 4px;
+      vertical-align: middle;
+      animation: cursorBlink 0.9s step-end infinite;
+    }
 
-.bigButton.show{
-  opacity:1;
-  transform:translateY(0);
-}
-</style>
+    @keyframes cursorBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    #codeSymbol {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent2);
+      margin-top: 20px;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      position: relative; z-index: 1;
+      letter-spacing: 0.1em;
+    }
+
+    #codeSymbol.show { opacity: 1; transform: translateY(0); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 32px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 55% 55% at 25% 45%, rgba(91,107,255,0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 45% 45% at 78% 30%, rgba(56,240,192,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 50% at 50% 90%, rgba(91,107,255,0.1) 0%, transparent 70%);
+      animation: meshPulse 8s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+
+    @keyframes meshPulse {
+      0%   { opacity: 0.6; transform: scale(1); }
+      100% { opacity: 1;   transform: scale(1.05); }
+    }
+
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(99,120,255,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99,120,255,0.05) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: rgba(91,107,255,0.12);
+      border: 1px solid rgba(91,107,255,0.3);
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--accent2);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      position: relative; z-index: 1;
+      animation: fadeUp 0.5s 0.1s ease both;
+    }
+
+    .hero-badge .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent2);
+      animation: blink 1.5s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
+    }
+
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.8rem, 7vw, 5rem);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      position: relative; z-index: 1;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+
+    .hero h1 .grad {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      max-width: 520px;
+      margin: 22px auto 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.75;
+      position: relative; z-index: 1;
+      animation: fadeUp 0.6s 0.35s ease both;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 14px;
+      margin-top: 40px;
+      justify-content: center;
+      flex-wrap: wrap;
+      position: relative; z-index: 1;
+      animation: fadeUp 0.6s 0.5s ease both;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 26px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.93rem;
+      font-family: 'Space Grotesk', sans-serif;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px var(--glow);
+      background: #6e7dff;
+    }
+
+    .btn-secondary {
+      background: var(--surface2);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      border-color: rgba(99,120,255,0.4);
+      background: #1a2236;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      animation: fadeUp 1s 1s ease both;
+      z-index: 1;
+      cursor: pointer;
+    }
+
+    .scroll-line {
+      width: 1px; height: 40px;
+      background: linear-gradient(to bottom, var(--muted), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(0.8); }
+      50% { opacity: 1; transform: scaleY(1); }
+    }
+
+    /* ── INFO CARDS ── */
+    .deep {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 80px 32px 120px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .section-intro {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .section-label {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 14px;
+    }
+
+    .section-intro h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+
+    .section-intro p {
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* Alternating wide info cards */
+    .info-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 48px 52px;
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 32px;
+      align-items: start;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .info-card.visible { opacity: 1; transform: translateY(0); }
+
+    .info-card:hover {
+      border-color: rgba(91,107,255,0.35);
+      box-shadow: 0 16px 48px rgba(91,107,255,0.1);
+    }
+
+    .info-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .info-card:hover::before { opacity: 1; }
+
+    .info-card::after {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(91,107,255,0.1), transparent 70%);
+      pointer-events: none;
+    }
+
+    .card-icon {
+      width: 56px; height: 56px;
+      border-radius: 14px;
+      background: rgba(91,107,255,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      flex-shrink: 0;
+    }
+
+    .card-body {}
+
+    .card-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 10px;
+    }
+
+    .card-body h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      margin-bottom: 12px;
+    }
+
+    .card-body p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.75;
+    }
+
+    /* Stagger delays */
+    .info-card:nth-child(2) { transition-delay: 0.05s; }
+    .info-card:nth-child(3) { transition-delay: 0.1s; }
+    .info-card:nth-child(4) { transition-delay: 0.15s; }
+    .info-card:nth-child(5) { transition-delay: 0.2s; }
+
+    /* ── CTA BANNER ── */
+    .cta-wrap {
+      padding: 0 32px 100px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .cta-block {
+      background: linear-gradient(135deg, rgba(91,107,255,0.15), rgba(56,240,192,0.08));
+      border: 1px solid rgba(91,107,255,0.25);
+      border-radius: 24px;
+      padding: 72px 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .cta-block.visible { opacity: 1; transform: translateY(0); }
+
+    .cta-block::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(91,107,255,0.1), transparent);
+      pointer-events: none;
+    }
+
+    .cta-block h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.7rem, 4vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 14px;
+      position: relative; z-index: 1;
+    }
+
+    .cta-block p {
+      color: var(--muted);
+      font-size: 1rem;
+      margin-bottom: 32px;
+      position: relative; z-index: 1;
+    }
+
+    .cta-block .btn { position: relative; z-index: 1; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 32px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    footer p { color: var(--muted); font-size: 0.85rem; }
+
+    /* ── KEYFRAMES ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      header { padding: 14px 20px; }
+      nav { gap: 14px; }
+      .hero { padding: 100px 20px 72px; }
+      .deep { padding: 60px 20px 80px; }
+      .info-card { grid-template-columns: 1fr; padding: 32px 24px; gap: 20px; }
+      .cta-wrap { padding: 0 20px 72px; }
+      .cta-block { padding: 48px 24px; }
+      footer { flex-direction: column; text-align: center; padding: 24px; }
+    }
+  </style>
 </head>
-
 <body>
 
-<div class="wrapper" id="wrapper">
-
-  <!-- INTRO -->
-  <div class="screen">
-    <div id="type"></div>
-    <div id="codeSymbol">&lt;/&gt;</div>
-  </div>
-
-  <!-- MAIN -->
-  <div class="screen" id="main">
-    <h2>AceBlocks for Schools</h2>
-    <p>Helping students learn coding through visual building and real code output.</p>
-
-    <button class="button" onclick="goDown()">Start Your Journey ↓</button>
-  </div>
-
+<!-- INTRO OVERLAY -->
+<div id="introScreen">
+  <div class="intro-grid"></div>
+  <div class="intro-glow"></div>
+  <div id="typeText"><span class="cursor"></span></div>
+  <div id="codeSymbol">for Schools</div>
 </div>
 
-<!-- FULL PAGE -->
-<div id="deepSection">
+<!-- HEADER -->
+<header>
+  <a href="index.html" class="logo">AceBlocks</a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="lessons.html">Lessons</a>
+    <a href="learn-more.html">Learn More</a>
+    <a href="AceBlocksForSchools.html" class="active">For Schools</a>
+    <a href="lessons.html" class="nav-cta">Start Learning</a>
+  </nav>
+</header>
 
-  <section class="info">
-    <h2>Why Schools Choose AceBlocks</h2>
-    <p>AceBlocks makes coding accessible, engaging, and easy to run in any school environment.</p>
-    <p>⬇️ (scroll) ⬇️</p>
-  </section>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
 
-  <section class="info">
-    <h2>Student-Led Learning</h2>
-    <p>Students can learn independently with minimal supervision.</p>
-  </section>
+  <div class="hero-badge">
+    <span class="dot"></span>
+    Built for Education
+  </div>
 
-  <section class="info">
-    <h2>Real Coding Skills</h2>
-    <p>Visual blocks help beginners start fast and transition into real programming.</p>
-  </section>
+  <h1>AceBlocks<br><span class="grad">for Schools</span></h1>
 
-  <section class="info">
-    <h2>Simple to Run</h2>
-    <p>No complex setup. Perfect for clubs or classrooms.</p>
-  </section>
+  <p>
+    Helping students learn coding through visual building and real code output —
+    designed to work in any classroom, club, or home environment.
+  </p>
 
-  <section class="cta">
-    <a href="AceBlocksforschoolsMAINPAGE (2).html"><button class="button">Begin</button></a>
-
-      
+  <div class="hero-btns">
+    <button class="btn btn-primary" onclick="goDown()">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+      See What We Offer
     </button>
-  </section>
+    <a href="lessons.html" class="btn btn-secondary">Start Learning</a>
+  </div>
 
+  <div class="scroll-hint" onclick="goDown()">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- DEEP CONTENT -->
+<div id="deepSection">
+  <div class="deep">
+
+    <div class="section-intro">
+      <span class="section-label">Why AceBlocks</span>
+      <h2>Everything your school needs<br>to teach coding</h2>
+      <p>Simple to run, built for students, and designed to grow with them.</p>
+    </div>
+
+    <div class="info-card">
+      <div class="card-icon">🏫</div>
+      <div class="card-body">
+        <div class="card-label">Classroom Ready</div>
+        <h3>Why Schools Choose AceBlocks</h3>
+        <p>AceBlocks makes coding accessible, engaging, and easy to run in any school environment — no specialist equipment or prior teacher experience required.</p>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <div class="card-icon">🧑‍🎓</div>
+      <div class="card-body">
+        <div class="card-label">Independent Learning</div>
+        <h3>Student-Led Learning</h3>
+        <p>Students can explore and progress independently with minimal supervision, freeing up teachers while keeping learners actively engaged and building confidence at their own pace.</p>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <div class="card-icon">⚡</div>
+      <div class="card-body">
+        <div class="card-label">Real Skills</div>
+        <h3>Real Coding Skills</h3>
+        <p>Visual blocks help beginners start fast and naturally transition into real programming concepts — including Luau for Roblox development — without hitting a wall of syntax.</p>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <div class="card-icon">🔧</div>
+      <div class="card-body">
+        <div class="card-label">Zero Setup</div>
+        <h3>Simple to Run</h3>
+        <p>No complex installation, logins, or IT tickets needed. AceBlocks works in the browser and is perfect for coding clubs, classroom sessions, or independent take-home learning.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-wrap">
+    <div class="cta-block">
+      <h2>Ready to bring AceBlocks<br>to your school?</h2>
+      <p>Get in touch with the team or dive straight into the lessons.</p>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+        <a href="AceBlocksforschoolsMAINPAGE (2).html" class="btn btn-primary">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Get Started
+        </a>
+        <a href="mailto:je-coding@outlook.com" class="btn btn-secondary">Contact the Team</a>
+      </div>
+    </div>
+  </div>
 </div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">AceBlocks</div>
+  <p>© 2026 AceBlocks — Coding for the Future</p>
+  <p>Created by Jace Glover</p>
+</footer>
 
 <script>
+  // ── TYPEWRITER ──
+  const text = "AceBlocks";
+  let i = 0;
+  const typeEl = document.getElementById("typeText");
 
-/* TYPEWRITER */
-const text = "AceBlocks";
-let i = 0;
-
-function typeWriter() {
-  if (i < text.length) {
-    document.getElementById("type").innerHTML += text.charAt(i);
-    i++;
-    setTimeout(typeWriter, 100);
-  } else {
-    setTimeout(() => {
-      document.getElementById("codeSymbol").classList.add("show");
-
-      setTimeout(() => {
-        document.getElementById("wrapper").style.transform = "translateX(-100vw)";
-        document.body.style.overflow = "auto";
-      }, 800);
-
-    }, 300);
-  }
-}
-
-/* SLOW SCROLL */
-function goDown(){
-  const target = document.getElementById("deepSection").offsetTop;
-  let start = window.scrollY;
-  let distance = target - start;
-  let duration = 2200;
-  let startTime = null;
-
-  document.body.style.pointerEvents = "none";
-
-  function ease(t, b, c, d){
-    t /= d/2;
-    if (t < 1) return c/2*t*t + b;
-    t--;
-    return -c/2 * (t*(t-2) - 1) + b;
-  }
-
-  function animate(currentTime){
-    if(startTime === null) startTime = currentTime;
-    let timeElapsed = currentTime - startTime;
-
-    let run = ease(timeElapsed, start, distance, duration);
-    window.scrollTo(0, run);
-
-    if(timeElapsed < duration){
-      requestAnimationFrame(animate);
+  function typeWriter() {
+    if (i < text.length) {
+      // Insert char before the cursor span
+      typeEl.insertBefore(document.createTextNode(text.charAt(i)), typeEl.querySelector('.cursor'));
+      i++;
+      setTimeout(typeWriter, 110);
     } else {
-      document.body.style.pointerEvents = "auto";
+      // Done typing — show subtitle
+      setTimeout(() => {
+        document.getElementById("codeSymbol").classList.add("show");
+        setTimeout(() => {
+          document.getElementById("introScreen").classList.add("hide");
+        }, 900);
+      }, 300);
     }
   }
 
-  requestAnimationFrame(animate);
-}
+  typeWriter();
 
-/* FINAL BUTTON REDIRECT */
-function startJourney(){
-  document.body.style.transition = "opacity 0.6s ease";
-  document.body.style.opacity = "0";
+  // ── SMOOTH SCROLL DOWN ──
+  function goDown() {
+    const target = document.getElementById("deepSection").offsetTop;
+    const start = window.scrollY;
+    const distance = target - start;
+    const duration = 1800;
+    let startTime = null;
 
-  setTimeout(() => {
-    window.location.href = "aceblfs.html";
-  }, 600);
-}
-
-/* REVEAL */
-function revealOnScroll(){
-  const items = document.querySelectorAll(".info");
-
-  items.forEach(el => {
-    const top = el.getBoundingClientRect().top;
-    if(top < window.innerHeight - 100){
-      el.classList.add("active");
+    function ease(t, b, c, d) {
+      t /= d / 2;
+      if (t < 1) return c / 2 * t * t + b;
+      t--;
+      return -c / 2 * (t * (t - 2) - 1) + b;
     }
-  });
 
-  const final = document.querySelector(".bigButton");
-  const finalTop = final.getBoundingClientRect().top;
+    function animate(currentTime) {
+      if (startTime === null) startTime = currentTime;
+      const elapsed = currentTime - startTime;
+      window.scrollTo(0, ease(elapsed, start, distance, duration));
+      if (elapsed < duration) requestAnimationFrame(animate);
+    }
 
-  if(finalTop < window.innerHeight - 100){
-    final.classList.add("show");
+    requestAnimationFrame(animate);
   }
-}
 
-window.addEventListener("scroll", revealOnScroll);
+  // ── SCROLL REVEAL ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
 
-typeWriter();
-
+  document.querySelectorAll('.info-card, .cta-block').forEach(el => observer.observe(el));
 </script>
 
 </body>
