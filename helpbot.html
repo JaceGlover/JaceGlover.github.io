@@ -89,21 +89,16 @@ function addMessage(sender, text) {
 }
 
 function getBotResponse(input) {
-  if (input.includes("hello") || input.includes("hi")) {
-    return "Hey! 👋 I'm the AceBlocks help bot!";
-  }
 
-  if (input.includes("what is aceblocks")) {
+  if (input.includes("what is aceblocks") || input.includes("about")) {
     return "AceBlocks is your awesome project platform 😎";
   }
-
+//keep help inputs ALPHABETICAL.
   if (input.includes("help")) {
-    return "You can ask me about features, commands, or how to use AceBlocks!";
+    return "About: What AceBlocks is about\nHelp: Shows availible commands";
   }
 
-  if (input.includes("account")) {
-    return "To manage your account, go to the dashboard and settings.";
-  }
+  if (input.includes(""))
 
   return "Hmm... I don't know that yet 🤔 try asking something else!";
 }</script>
