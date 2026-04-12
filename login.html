@@ -467,10 +467,19 @@
     if (password.length < 6) return show('Password must be at least 6 characters.', 'error')
     btn.disabled = true
     btn.textContent = 'Creating account...'
-    const { error } = await sb.auth.signUp({ email, password, options: { data: { display_name: name } } })
-    error ? show(error.message, 'error') : show('Account created! Check your email to confirm, then log in.', 'success')
-    btn.disabled = false
-    btn.textContent = 'Create Account'
+    const { data, error } = await sb.auth.signUp({ email, password, options: { data: { display_name: name } } })
+    if (error) {
+      show(error.message, 'error')
+      btn.disabled = false
+      btn.textContent = 'Create Account'
+    } else if (data.session) {
+      show('Account created! Redirecting...', 'success')
+      setTimeout(() => window.location.href = '/dashboard.html', 900)
+    } else {
+      show('Account created! Check your email to confirm, then log in.', 'success')
+      btn.disabled = false
+      btn.textContent = 'Create Account'
+    }
   }
  
   async function handleGoogle() {
@@ -492,4 +501,3 @@
 </script>
 </body>
 </html>
- 
