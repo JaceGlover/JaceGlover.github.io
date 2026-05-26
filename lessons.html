@@ -433,167 +433,242 @@
   }
 
   /* CERTIFICATE */
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap');
+
   #certificate {
     display: none;
     position: fixed;
     inset: 0;
     z-index: 9999;
-    background: #ffffff;
+    background: #0e1628;
     overflow: auto;
-    padding: 40px;
+    padding: 48px 24px;
   }
 
-  .cert-outer {
-    max-width: 860px;
+  .cert-page {
+    max-width: 880px;
     margin: 0 auto;
-    border: 10px solid #0c3c8a;
-    border-radius: 4px;
-    padding: 72px 80px 60px;
-    text-align: center;
-    color: #0a0a1a;
+    background: #faf7f0;
     position: relative;
-    background: #fff;
+    padding: 0;
   }
 
-  .cert-corner {
+  .cert-border-svg {
     position: absolute;
-    width: 64px; height: 64px;
-    border-color: #0c3c8a;
-    border-style: solid;
-  }
-  .cert-corner.tl { top: 12px; left: 12px; border-width: 3px 0 0 3px; }
-  .cert-corner.tr { top: 12px; right: 12px; border-width: 3px 3px 0 0; }
-  .cert-corner.bl { bottom: 12px; left: 12px; border-width: 0 0 3px 3px; }
-  .cert-corner.br { bottom: 12px; right: 12px; border-width: 0 3px 3px 0; }
-
-  .cert-badge-top {
-    display: inline-block;
-    padding: 5px 20px;
-    background: #0c3c8a;
-    color: white;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    border-radius: 100px;
-    margin-bottom: 28px;
-    font-family: 'Space Grotesk', sans-serif;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
   }
 
-  .cert-outer h1 {
+  .cert-inner {
+    position: relative;
+    z-index: 1;
+    padding: 72px 96px 60px;
+    text-align: center;
+  }
+
+  .cert-header-band {
+    background: #0c2d6b;
+    margin: -72px -96px 0;
+    padding: 22px 96px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 44px;
+  }
+
+  .cert-brand {
     font-family: 'Syne', sans-serif;
-    font-size: 2.8rem;
+    font-size: 1.1rem;
     font-weight: 800;
-    letter-spacing: -0.02em;
-    color: #0a0a1a;
+    color: #ffffff;
+    letter-spacing: 0.04em;
+  }
+
+  .cert-program-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #a8bfe8;
+  }
+
+  .cert-medallion {
+    width: 88px;
+    height: 88px;
+    margin: 0 auto 32px;
+  }
+
+  .cert-eyebrow {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: #9a7c2e;
     margin-bottom: 10px;
   }
 
-  .cert-subtitle {
-    font-size: 1rem;
-    color: #666;
-    margin-bottom: 40px;
-    font-family: 'Space Grotesk', sans-serif;
+  .cert-title {
+    font-family: 'Cormorant Garamond', 'Georgia', serif;
+    font-size: 3.4rem;
+    font-weight: 700;
+    color: #0c1a3a;
+    letter-spacing: -0.01em;
+    line-height: 1.05;
+    margin-bottom: 0;
   }
 
-  .cert-presented {
-    font-size: 0.9rem;
-    color: #888;
-    margin-bottom: 8px;
-    font-family: 'Space Grotesk', sans-serif;
+  .cert-rule {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 24px auto;
+    max-width: 420px;
+  }
+  .cert-rule-line {
+    flex: 1;
+    height: 1px;
+    background: #c8a84b;
+  }
+  .cert-rule-diamond {
+    width: 7px; height: 7px;
+    background: #c8a84b;
+    transform: rotate(45deg);
+    flex-shrink: 0;
+  }
+
+  .cert-presented-to {
+    font-family: 'Cormorant Garamond', 'Georgia', serif;
+    font-size: 1.05rem;
+    font-style: italic;
+    color: #6b6050;
+    margin-bottom: 6px;
   }
 
   #certName {
-    font-family: 'Syne', sans-serif;
-    font-size: 3rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, #3b60f0, #0ca678);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin: 4px 0 32px;
+    font-family: 'Cormorant Garamond', 'Georgia', serif;
+    font-size: 3.6rem;
+    font-weight: 600;
+    font-style: italic;
+    color: #0c2d6b;
     line-height: 1.1;
+    margin: 0 0 6px;
+    letter-spacing: 0.01em;
   }
 
-  .cert-body {
-    font-size: 0.95rem;
-    color: #555;
-    max-width: 520px;
-    margin: 0 auto 24px;
-    line-height: 1.7;
+  .cert-rule2 {
+    width: 240px;
+    height: 1px;
+    background: #d4b86a;
+    margin: 0 auto 28px;
+  }
+
+  .cert-body-text {
+    font-family: 'Cormorant Garamond', 'Georgia', serif;
+    font-size: 1.12rem;
+    color: #3a3020;
+    max-width: 480px;
+    margin: 0 auto 10px;
+    line-height: 1.75;
+  }
+
+  .cert-completion-tag {
+    display: inline-block;
+    padding: 5px 18px;
+    border: 1px solid #c8a84b;
+    border-radius: 2px;
     font-family: 'Space Grotesk', sans-serif;
-  }
-
-  #certDate {
-    font-size: 0.88rem;
-    color: #888;
-    margin-bottom: 48px;
-    font-family: 'Space Grotesk', sans-serif;
-  }
-
-  .cert-divider {
-    width: 80px; height: 2px;
-    background: linear-gradient(90deg, #3b60f0, #0ca678);
-    margin: 0 auto 40px;
-    border: none;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #9a7c2e;
+    margin-bottom: 32px;
   }
 
   .cert-sigs {
     display: flex;
     justify-content: center;
-    gap: 64px;
+    gap: 56px;
     flex-wrap: wrap;
-    margin-bottom: 48px;
+    margin: 8px 0 36px;
+    padding-top: 8px;
   }
 
   .cert-sig { text-align: center; }
 
-  .cert-sig-line {
-    width: 120px;
-    height: 1px;
-    background: #ccc;
-    margin: 0 auto 8px;
-  }
-
   .cert-sig-name {
+    font-family: 'Cormorant Garamond', 'Georgia', serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    font-style: italic;
+    color: #0c1a3a;
+    display: block;
+    margin-bottom: 4px;
+    border-bottom: 1px solid #b0a090;
+    padding-bottom: 6px;
+    min-width: 140px;
+  }
+
+  .cert-sig-role {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.68rem;
     font-weight: 700;
-    font-size: 0.92rem;
-    color: #1a1a2e;
-    font-family: 'Space Grotesk', sans-serif;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #9a8870;
   }
 
-  .cert-sig-title {
-    font-size: 0.78rem;
-    color: #888;
-    font-family: 'Space Grotesk', sans-serif;
+  .cert-footer-band {
+    background: #0c2d6b;
+    margin: 0 -96px -60px;
+    padding: 16px 96px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
   }
 
-  .cert-footer-text {
-    font-size: 0.78rem;
-    color: #aaa;
+  #certDate {
     font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: #a8bfe8;
+  }
+
+  .cert-footer-copy {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.68rem;
+    color: #6680aa;
+    letter-spacing: 0.08em;
   }
 
   #printBtn {
     display: block;
     margin: 28px auto 0;
-    padding: 12px 32px;
-    background: #0c3c8a;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 0.92rem;
+    padding: 13px 36px;
+    background: transparent;
+    color: #a8bfe8;
+    border: 1px solid #2a4a7f;
+    border-radius: 6px;
+    font-size: 0.88rem;
     font-weight: 700;
     cursor: pointer;
     font-family: 'Space Grotesk', sans-serif;
-    transition: background 0.2s;
+    letter-spacing: 0.08em;
+    transition: background 0.2s, color 0.2s;
   }
-  #printBtn:hover { background: #1d4ed8; }
+  #printBtn:hover { background: #1a3060; color: #fff; }
 
   @media print {
     body * { visibility: hidden; }
     #certificate, #certificate * { visibility: visible; }
-    #certificate { position: absolute; left: 0; top: 0; padding: 0; }
+    #certificate { position: absolute; left: 0; top: 0; padding: 0; background: #fff; }
+    .cert-page { box-shadow: none; }
     #printBtn { display: none; }
   }
 
@@ -748,51 +823,115 @@
 
 <!-- CERTIFICATE -->
 <div id="certificate">
-  <div class="cert-outer">
-    <div class="cert-corner tl"></div>
-    <div class="cert-corner tr"></div>
-    <div class="cert-corner bl"></div>
-    <div class="cert-corner br"></div>
+  <div class="cert-page">
 
-    <div class="cert-badge-top">AceBlocks — Visual Coding Program</div>
+    <!-- Decorative SVG border -->
+    <svg class="cert-border-svg" viewBox="0 0 880 640" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Outer double border -->
+      <rect x="14" y="14" width="852" height="612" fill="none" stroke="#c8a84b" stroke-width="1.5"/>
+      <rect x="20" y="20" width="840" height="600" fill="none" stroke="#c8a84b" stroke-width="0.5"/>
+      <!-- Corner ornaments TL -->
+      <path d="M14,50 L14,14 L50,14" fill="none" stroke="#9a7c2e" stroke-width="2"/>
+      <circle cx="14" cy="14" r="4" fill="#c8a84b"/>
+      <!-- Corner ornaments TR -->
+      <path d="M866,50 L866,14 L830,14" fill="none" stroke="#9a7c2e" stroke-width="2"/>
+      <circle cx="866" cy="14" r="4" fill="#c8a84b"/>
+      <!-- Corner ornaments BL -->
+      <path d="M14,590 L14,626 L50,626" fill="none" stroke="#9a7c2e" stroke-width="2"/>
+      <circle cx="14" cy="626" r="4" fill="#c8a84b"/>
+      <!-- Corner ornaments BR -->
+      <path d="M866,590 L866,626 L830,626" fill="none" stroke="#9a7c2e" stroke-width="2"/>
+      <circle cx="866" cy="626" r="4" fill="#c8a84b"/>
+      <!-- Mid-edge accent marks -->
+      <line x1="440" y1="14" x2="440" y2="24" stroke="#c8a84b" stroke-width="1"/>
+      <line x1="440" y1="616" x2="440" y2="626" stroke="#c8a84b" stroke-width="1"/>
+      <line x1="14" y1="320" x2="24" y2="320" stroke="#c8a84b" stroke-width="1"/>
+      <line x1="856" y1="320" x2="866" y2="320" stroke="#c8a84b" stroke-width="1"/>
+    </svg>
 
-    <h1>Certificate of Completion</h1>
-    <p class="cert-subtitle">This is to certify that</p>
+    <div class="cert-inner">
 
-    <h2 id="certName"></h2>
-
-    <p class="cert-body">
-      has successfully completed all 12 AceBlocks coding lessons and demonstrated a strong understanding of block-based scripting, arithmetic, logic, and programming fundamentals.
-    </p>
-
-    <hr class="cert-divider">
-
-    <p id="certDate"></p>
-
-    <div class="cert-sigs">
-      <div class="cert-sig">
-        <div class="cert-sig-line"></div>
-        <div class="cert-sig-name">Jace Glover</div>
-        <div class="cert-sig-title">Founder, AceBlocks</div>
+      <!-- Header band -->
+      <div class="cert-header-band">
+        <div class="cert-brand">AceBlocks</div>
+        <div class="cert-program-label">Visual Coding Program &nbsp;·&nbsp; 2026</div>
       </div>
-      <div class="cert-sig">
-        <div class="cert-sig-line"></div>
-        <div class="cert-sig-name">Liam Cooper</div>
-        <div class="cert-sig-title">Coder, AceBlocks</div>
+
+      <!-- Gold medallion seal -->
+      <div class="cert-medallion">
+        <svg viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg">
+          <!-- Outer starburst rays -->
+          <g fill="#c8a84b" opacity="0.55">
+            <polygon points="44,2 46.4,10 44,8 41.6,10"/>
+            <polygon points="44,86 46.4,78 44,80 41.6,78"/>
+            <polygon points="2,44 10,46.4 8,44 10,41.6"/>
+            <polygon points="86,44 78,46.4 80,44 78,41.6"/>
+            <polygon points="14.1,14.1 19.8,20.9 17.3,18.4 20.9,19.8"/>
+            <polygon points="73.9,73.9 68.2,67.1 70.7,69.6 67.1,68.2"/>
+            <polygon points="73.9,14.1 67.1,19.8 69.6,17.3 68.2,20.9"/>
+            <polygon points="14.1,73.9 20.9,68.2 18.4,70.7 19.8,67.1"/>
+          </g>
+          <!-- Main ring -->
+          <circle cx="44" cy="44" r="38" fill="#0c2d6b" stroke="#c8a84b" stroke-width="2"/>
+          <circle cx="44" cy="44" r="32" fill="none" stroke="#c8a84b" stroke-width="0.8" stroke-dasharray="3,3"/>
+          <!-- Inner emblem -->
+          <circle cx="44" cy="44" r="26" fill="#0e3580"/>
+          <!-- Star / code symbol -->
+          <text x="44" y="52" text-anchor="middle" font-family="'Syne',sans-serif" font-weight="800" font-size="22" fill="#c8a84b">&lt;/&gt;</text>
+          <!-- Tiny label -->
+          <text x="44" y="72" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-weight="700" font-size="5.5" fill="#a8bfe8" letter-spacing="1.5">CERTIFIED</text>
+        </svg>
       </div>
-      <div class="cert-sig">
-        <div class="cert-sig-line"></div>
-        <div class="cert-sig-name">Henry Lewis</div>
-        <div class="cert-sig-title">Coder, AceBlocks</div>
+
+      <div class="cert-eyebrow">Certificate of Completion</div>
+
+      <div class="cert-title">AceBlocks</div>
+
+      <div class="cert-rule">
+        <div class="cert-rule-line"></div>
+        <div class="cert-rule-diamond"></div>
+        <div class="cert-rule-line"></div>
       </div>
+
+      <p class="cert-presented-to">This is to proudly certify that</p>
+
+      <h2 id="certName"></h2>
+
+      <div class="cert-rule2"></div>
+
+      <p class="cert-body-text">
+        has successfully completed all 12 lessons of the AceBlocks Visual Coding Program,
+        demonstrating a strong grasp of block-based scripting, arithmetic,
+        logic, and core programming fundamentals.
+      </p>
+
+      <div class="cert-completion-tag">12 Lessons &nbsp;·&nbsp; 4 Chapters &nbsp;·&nbsp; Full Program</div>
+
+      <div class="cert-sigs">
+        <div class="cert-sig">
+          <span class="cert-sig-name">Jace Glover</span>
+          <div class="cert-sig-role">Founder, AceBlocks</div>
+        </div>
+        <div class="cert-sig">
+          <span class="cert-sig-name">Liam Cooper</span>
+          <div class="cert-sig-role">Coder, AceBlocks</div>
+        </div>
+        <div class="cert-sig">
+          <span class="cert-sig-name">Henry Lewis</span>
+          <div class="cert-sig-role">Coder, AceBlocks</div>
+        </div>
+      </div>
+
+      <!-- Footer band -->
+      <div class="cert-footer-band">
+        <p id="certDate"></p>
+        <span class="cert-footer-copy">© 2026 AceBlocks — Coding for the Future</span>
+      </div>
+
     </div>
-
-    <p class="cert-footer-text">© 2026 AceBlocks — Coding for the Future</p>
-
-    <button id="printBtn" onclick="window.print()">
-      🖨️ Print Certificate
-    </button>
   </div>
+
+  <button id="printBtn" onclick="window.print()">Print Certificate</button>
 </div>
 
 <!-- Toolbox XML -->
