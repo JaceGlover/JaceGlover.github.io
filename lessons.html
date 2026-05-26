@@ -39,7 +39,6 @@
     min-height: 100vh;
   }
 
-  /* NOISE */
   body::before {
     content: '';
     position: fixed;
@@ -115,7 +114,7 @@
   .nav-cta::after { display: none !important; }
   .nav-cta:hover { background: #7080ff !important; transform: translateY(-1px); }
 
-  /* ─── INTRO SCREEN ─── */
+  /* INTRO SCREEN */
   #lessonIntro {
     min-height: 100vh;
     display: flex;
@@ -201,13 +200,12 @@
     animation: fadeUp 0.6s 0.45s ease both;
   }
 
-  /* lesson preview cards on intro */
   .lesson-preview {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
     justify-content: center;
-    max-width: 560px;
+    max-width: 680px;
     margin: 36px auto 0;
     position: relative; z-index: 1;
     animation: fadeUp 0.6s 0.55s ease both;
@@ -229,13 +227,12 @@
     animation: fadeUp 0.6s 0.65s ease both;
   }
 
-  /* ─── MAIN LESSON AREA ─── */
+  /* MAIN LESSON AREA */
   #lessonArea {
     display: none;
     padding-top: 73px;
   }
 
-  /* TOP BAR: lesson title + progress */
   .lesson-topbar {
     background: var(--surface);
     border-bottom: 1px solid var(--border);
@@ -262,6 +259,33 @@
     font-weight: 600;
     margin-top: 4px;
   }
+
+  /* LESSON HINT */
+  #lessonHint {
+    color: var(--muted);
+    font-size: 0.82rem;
+    font-weight: 500;
+    margin-top: 6px;
+    font-style: italic;
+  }
+
+  /* CHAPTER BADGE */
+  .chapter-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 12px;
+    border-radius: 100px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .chapter-basics   { background: rgba(91,107,255,0.15); color: #a0aaff; border: 1px solid rgba(91,107,255,0.3); }
+  .chapter-numbers  { background: rgba(56,240,192,0.12); color: #38f0c0; border: 1px solid rgba(56,240,192,0.3); }
+  .chapter-logic    { background: rgba(250,200,80,0.12); color: #fac850; border: 1px solid rgba(250,200,80,0.3); }
+  .chapter-challenge{ background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
 
   .progress-wrap {
     display: flex;
@@ -295,7 +319,14 @@
     transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
   }
 
-  /* WORKSPACE AREA */
+  #progressText {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* WORKSPACE */
   .workspace-wrap {
     max-width: 1200px;
     margin: 0 auto;
@@ -401,7 +432,7 @@
     margin-bottom: 10px;
   }
 
-  /* ─── CERTIFICATE ─── */
+  /* CERTIFICATE */
   #certificate {
     display: none;
     position: fixed;
@@ -515,9 +546,7 @@
     margin-bottom: 48px;
   }
 
-  .cert-sig {
-    text-align: center;
-  }
+  .cert-sig { text-align: center; }
 
   .cert-sig-line {
     width: 120px;
@@ -611,6 +640,9 @@
   .toast.success { background: rgba(16,185,129,0.18); border: 1px solid rgba(16,185,129,0.4); color: #10b981; }
   .toast.error   { background: rgba(239,68,68,0.15);  border: 1px solid rgba(239,68,68,0.3);  color: #ef4444; }
 
+  /* CHAPTER DIVIDER in topbar */
+  #chapterBadgeWrap { margin-bottom: 4px; }
+
   @media (max-width: 700px) {
     header { padding: 14px 20px; }
     nav { gap: 14px; }
@@ -639,18 +671,18 @@
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<!-- ─── INTRO SCREEN ─── -->
+<!-- INTRO SCREEN -->
 <div id="lessonIntro">
   <div class="intro-grid"></div>
 
   <div class="intro-badge">
     <span class="dot"></span>
-    6 Interactive Lessons
+    12 Interactive Lessons
   </div>
 
   <h2>Welcome to<br><span>AceBlocks Lessons</span></h2>
 
-  <p>Learn visual coding step by step. Print messages, work with numbers, and perform real logic — all with drag-and-drop blocks.</p>
+  <p>Learn visual coding step by step. Print messages, work with numbers, build logic, and take on real challenges — all with drag-and-drop blocks.</p>
 
   <div class="lesson-preview">
     <span class="lesson-pip">🖨️ Hello World</span>
@@ -659,6 +691,12 @@
     <span class="lesson-pip">➕ Math</span>
     <span class="lesson-pip">📋 Multi-Print</span>
     <span class="lesson-pip">❤️ I Love Coding</span>
+    <span class="lesson-pip">✖️ Multiply</span>
+    <span class="lesson-pip">➖ Subtract</span>
+    <span class="lesson-pip">🔟 Big Number</span>
+    <span class="lesson-pip">🧮 Chain Math</span>
+    <span class="lesson-pip">📣 Three Lines</span>
+    <span class="lesson-pip">🏆 Grand Finale</span>
   </div>
 
   <div class="intro-actions">
@@ -669,27 +707,27 @@
   </div>
 </div>
 
-<!-- ─── LESSON AREA ─── -->
+<!-- LESSON AREA -->
 <div id="lessonArea">
 
-  <!-- Top bar -->
   <div class="lesson-topbar">
     <div class="lesson-meta">
+      <div id="chapterBadgeWrap"></div>
       <div id="lessonTitle"></div>
       <div id="lessonObjective"></div>
+      <div id="lessonHint"></div>
     </div>
     <div class="progress-wrap">
       <div class="progress-label">Progress</div>
       <div id="progressContainer"><div id="progressBar"></div></div>
+      <div id="progressText"></div>
     </div>
   </div>
 
-  <!-- Blockly workspace -->
   <div class="workspace-wrap">
     <div id="blocklyDiv"></div>
   </div>
 
-  <!-- Buttons -->
   <div class="action-row">
     <button class="btn btn-primary" id="runBtn">
       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
@@ -701,7 +739,6 @@
     </button>
   </div>
 
-  <!-- Output -->
   <div class="output-wrap">
     <div class="output-label">Output</div>
     <div id="output">Ready — run your code to see results here.</div>
@@ -709,7 +746,7 @@
 
 </div>
 
-<!-- ─── CERTIFICATE ─── -->
+<!-- CERTIFICATE -->
 <div id="certificate">
   <div class="cert-outer">
     <div class="cert-corner tl"></div>
@@ -725,7 +762,7 @@
     <h2 id="certName"></h2>
 
     <p class="cert-body">
-      has successfully completed all AceBlocks coding lessons and demonstrated a strong understanding of block-based scripting, logic, and programming fundamentals.
+      has successfully completed all 12 AceBlocks coding lessons and demonstrated a strong understanding of block-based scripting, arithmetic, logic, and programming fundamentals.
     </p>
 
     <hr class="cert-divider">
@@ -789,8 +826,13 @@ function runCode() {
 function hasPrintWithValue() {
   return workspace ? workspace.getAllBlocks(false).some(b => b.type === "text_print" && b.getInputTargetBlock("TEXT")) : false;
 }
+
 function countValidPrints() {
   return workspace ? workspace.getAllBlocks(false).filter(b => b.type === "text_print" && b.getInputTargetBlock("TEXT")).length : 0;
+}
+
+function getOutputText() {
+  return document.getElementById("output").innerText || "";
 }
 
 // ═══════════════ TOAST ═══════════════
@@ -802,29 +844,153 @@ function showToast(msg, type = "success") {
 }
 
 // ═══════════════ LESSONS ═══════════════
+// Chapters: basics (1-3), numbers (4-6), math (7-9), challenge (10-12)
 const lessons = {
-  1: { title: "Lesson 1 — Print \"Hello World\"",    objective: "Use the print block to display \"Hello World\".",      check: () => getCode().toLowerCase().includes("hello world") },
-  2: { title: "Lesson 2 — Print Anything",            objective: "Print any message using the text print block.",        check: () => hasPrintWithValue() },
-  3: { title: "Lesson 3 — Print the Number 5",        objective: "Use the print block to show the number 5.",            check: () => getCode().includes("5") },
-  4: { title: "Lesson 4 — Add 2 + 3",                 objective: "Print the result of 2 + 3.",                           check: () => getCode().includes("2 + 3") },
-  5: { title: "Lesson 5 — Print Two Things",          objective: "Print at least two messages or numbers.",              check: () => countValidPrints() >= 2 },
-  6: { title: "Lesson 6 — Print \"I Love Coding\"",   objective: "Use the print block to display \"I Love Coding\".",   check: () => getCode().toLowerCase().includes("i love coding") }
+  1: {
+    chapter: "basics",
+    chapterLabel: "Chapter 1 — Basics",
+    title: "Lesson 1 — Print \"Hello World\"",
+    objective: "Use the print block to display \"Hello World\".",
+    hint: "Tip: Drag a Print block, connect a Text block to it, and type Hello World inside.",
+    check: () => getCode().toLowerCase().includes("hello world")
+  },
+  2: {
+    chapter: "basics",
+    chapterLabel: "Chapter 1 — Basics",
+    title: "Lesson 2 — Print Anything",
+    objective: "Print any message you like using the text print block.",
+    hint: "Tip: Type anything into a Text block and connect it to a Print block.",
+    check: () => hasPrintWithValue()
+  },
+  3: {
+    chapter: "basics",
+    chapterLabel: "Chapter 1 — Basics",
+    title: "Lesson 3 — Print Your Name",
+    objective: "Use the print block to display your own name.",
+    hint: "Tip: Type your name into a Text block, then connect it to a Print block.",
+    check: () => {
+      const code = getCode();
+      // Must have a print with a non-empty text value, and it shouldn't be a default placeholder
+      return hasPrintWithValue() && code.length > 20;
+    }
+  },
+  4: {
+    chapter: "numbers",
+    chapterLabel: "Chapter 2 — Numbers",
+    title: "Lesson 4 — Print the Number 5",
+    objective: "Use the print block to show the number 5.",
+    hint: "Tip: Use a Number block (not a Text block) set to 5, then connect it to Print.",
+    check: () => {
+      const code = getCode();
+      return code.includes("5") && hasPrintWithValue();
+    }
+  },
+  5: {
+    chapter: "numbers",
+    chapterLabel: "Chapter 2 — Numbers",
+    title: "Lesson 5 — Print the Number 10",
+    objective: "Print the number 10 using a number block.",
+    hint: "Tip: Set a Number block to 10 and connect it to a Print block.",
+    check: () => {
+      const code = getCode();
+      return code.includes("10") && hasPrintWithValue();
+    }
+  },
+  6: {
+    chapter: "numbers",
+    chapterLabel: "Chapter 2 — Numbers",
+    title: "Lesson 6 — Add 2 + 3",
+    objective: "Print the result of 2 + 3.",
+    hint: "Tip: Use a Math Arithmetic block set to ADD, plug in Number blocks for 2 and 3, then Print.",
+    check: () => getCode().includes("2 + 3")
+  },
+  7: {
+    chapter: "math",
+    chapterLabel: "Chapter 3 — Math",
+    title: "Lesson 7 — Subtract 10 − 4",
+    objective: "Print the result of 10 minus 4.",
+    hint: "Tip: Use the Math Arithmetic block and switch it to MINUS. Set the numbers to 10 and 4.",
+    check: () => getCode().includes("10 - 4")
+  },
+  8: {
+    chapter: "math",
+    chapterLabel: "Chapter 3 — Math",
+    title: "Lesson 8 — Multiply 3 × 6",
+    objective: "Print the result of 3 multiplied by 6.",
+    hint: "Tip: Switch the Math Arithmetic block to MULTIPLY (×). Set the numbers to 3 and 6.",
+    check: () => getCode().includes("3 * 6")
+  },
+  9: {
+    chapter: "math",
+    chapterLabel: "Chapter 3 — Math",
+    title: "Lesson 9 — Print a Number Over 50",
+    objective: "Print any number that is greater than 50.",
+    hint: "Tip: Use a Number block set to any value larger than 50 (e.g. 99, 100, 77...).",
+    check: () => {
+      const code = getCode();
+      const matches = code.match(/console\.log\((\d+(\.\d+)?)\)/);
+      if (matches) {
+        return parseFloat(matches[1]) > 50;
+      }
+      // Also allow math results
+      const output = getOutputText();
+      const numMatch = output.match(/^(\d+(\.\d+)?)/);
+      if (numMatch) return parseFloat(numMatch[1]) > 50;
+      return false;
+    }
+  },
+  10: {
+    chapter: "challenge",
+    chapterLabel: "Chapter 4 — Challenge",
+    title: "Lesson 10 — Print Two Things",
+    objective: "Print at least two separate messages or numbers.",
+    hint: "Tip: Add two Print blocks — each one can have different content.",
+    check: () => countValidPrints() >= 2
+  },
+  11: {
+    chapter: "challenge",
+    chapterLabel: "Chapter 4 — Challenge",
+    title: "Lesson 11 — Print Three Lines",
+    objective: "Print three separate messages, numbers, or calculations.",
+    hint: "Tip: Add three Print blocks to the workspace, each with something connected.",
+    check: () => countValidPrints() >= 3
+  },
+  12: {
+    chapter: "challenge",
+    chapterLabel: "Chapter 4 — Challenge",
+    title: "Lesson 12 — Print \"I Love Coding\"",
+    objective: "Use the print block to display \"I Love Coding\".",
+    hint: "Tip: Type I Love Coding exactly into a Text block (capitalisation doesn't matter).",
+    check: () => getCode().toLowerCase().includes("i love coding")
+  }
 };
 
 const TOTAL = Object.keys(lessons).length;
+
+const chapterClasses = {
+  basics:    "chapter-basics",
+  numbers:   "chapter-numbers",
+  math:      "chapter-logic",
+  challenge: "chapter-challenge"
+};
 
 // ═══════════════ LOAD LESSON ═══════════════
 function loadLesson() {
   if (!workspace) return;
   workspace.clear();
-  document.getElementById("lessonTitle").innerText    = lessons[currentLesson].title;
-  document.getElementById("lessonObjective").innerText = lessons[currentLesson].objective;
+  const l = lessons[currentLesson];
+  document.getElementById("chapterBadgeWrap").innerHTML =
+    `<span class="chapter-badge ${chapterClasses[l.chapter]}">${l.chapterLabel}</span>`;
+  document.getElementById("lessonTitle").innerText     = l.title;
+  document.getElementById("lessonObjective").innerText = l.objective;
+  document.getElementById("lessonHint").innerText      = l.hint;
   const outputDiv = document.getElementById("output");
   outputDiv.innerText = "Ready — run your code to see results here.";
   outputDiv.className = "";
   localStorage.setItem("aceblocksLesson", currentLesson);
   const pct = Math.min(((currentLesson - 1) / TOTAL) * 100, 100);
   document.getElementById("progressBar").style.width = pct + "%";
+  document.getElementById("progressText").innerText = `Lesson ${currentLesson} of ${TOTAL}`;
 }
 
 // ═══════════════ START ═══════════════
@@ -868,8 +1034,8 @@ document.getElementById("runBtn").addEventListener("click", function() {
     showToast("✅ Lesson " + currentLesson + " complete!", "success");
     currentLesson++;
     if (currentLesson > TOTAL) {
-      // Fill bar to 100 before certificate
       document.getElementById("progressBar").style.width = "100%";
+      document.getElementById("progressText").innerText = `All ${TOTAL} lessons done!`;
       setTimeout(showCertificate, 900);
     } else {
       setTimeout(loadLesson, 900);
@@ -893,7 +1059,7 @@ document.getElementById("resetProgress").addEventListener("click", function() {
 
 // ═══════════════ CERTIFICATE ═══════════════
 function showCertificate() {
-  const name = prompt("🎉 You finished all lessons!\n\nEnter your name for the certificate:");
+  const name = prompt("🎉 You finished all 12 lessons!\n\nEnter your name for the certificate:");
   document.getElementById("certName").innerText = name || "Student";
   const today = new Date();
   document.getElementById("certDate").innerText =
