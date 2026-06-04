@@ -29,7 +29,7 @@ Please include:
 2. We will investigate the issue and communicate updates via email.
 3. Critical security issues will be **patched immediately** and released in the next update.
 4. We may ask for your help testing the fix.
-5. You may be credited in a public security acknowledgement if you choose.
+5. You may be credited in a public security acknowledgment if you choose.
 
 ## Reporting Guidelines
 

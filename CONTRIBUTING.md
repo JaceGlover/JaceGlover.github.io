@@ -6,7 +6,7 @@ AceBlocks is an educational platform designed to help people learn coding throug
 
 ## How to Contribute
 
-There are several ways you can help improve AceBlocks:
+There are numerous ways you can help improve AceBlocks:
 
 ### Report Bugs
 
