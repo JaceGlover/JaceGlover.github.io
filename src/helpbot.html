@@ -1,107 +1,107 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>AceBlocks Help Bot</title>
-    <style>
-      body {
-        background: #0f172a;
-        color: white;
-        font-family: monospace;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-      }
+	<head>
+		<meta charset="UTF-8">
+		<title>AceBlocks Help Bot</title>
+		<style>
+			body {
+				background: #0f172a;
+				color: white;
+				font-family: monospace;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				height: 100vh;
+			}
+			
+			.chat-container {
+				width: 400px;
+				background: #020617;
+				border-radius: 10px;
+				padding: 10px;
+			}
+			
+			#chat-box {
+				height: 300px;
+				overflow-y: auto;
+				margin-bottom: 10px;
+			}
+			
+			.message {
+				margin: 5px 0;
+			}
+			
+			.bot {
+				color: #38bdf8;
+			}
+			
+			.user {
+				text-align: right;
+				color: #22c55e;
+			}
+			
+			.input-area {
+				display: flex;
+			}
+			
+			input {
+				flex: 1;
+				padding: 5px;
+			}
+			
+			button {
+				padding: 5px 10px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="chat-container">
+			<div id="chat-box"></div>
 
-      .chat-container {
-        width: 400px;
-        background: #020617;
-        border-radius: 10px;
-        padding: 10px;
-      }
+			<div class="input-area">
+				<input type="text" id="user-input" placeholder="Ask me something...">
+				<button onclick="sendMessage()">Send</button>
+			</div>
+		</div>
 
-      #chat-box {
-        height: 300px;
-        overflow-y: auto;
-        margin-bottom: 10px;
-      }
-
-      .message {
-        margin: 5px 0;
-      }
-
-      .bot {
-        color: #38bdf8;
-      }
-
-      .user {
-        text-align: right;
-        color: #22c55e;
-      }
-
-      .input-area {
-        display: flex;
-      }
-
-      input {
-        flex: 1;
-        padding: 5px;
-      }
-
-      button {
-        padding: 5px 10px;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="chat-container">
-      <div id="chat-box"></div>
-
-      <div class="input-area">
-        <input type="text" id="user-input" placeholder="Ask me something..." />
-        <button onclick="sendMessage()">Send</button>
-      </div>
-    </div>
-
-    <script>
-      const chatBox = document.getElementById("chat-box");
-
-      function sendMessage() {
-        const input = document.getElementById("user-input");
-        const userText = input.value.toLowerCase();
-
-        if (userText === "") return;
-
-        addMessage("user", userText);
-
-        let response = getBotResponse(userText);
-        setTimeout(() => addMessage("bot", response), 500);
-
-        input.value = "";
-      }
-
-      function addMessage(sender, text) {
-        const msg = document.createElement("div");
-        msg.classList.add("message", sender);
-        msg.textContent = text;
-        chatBox.appendChild(msg);
-
-        chatBox.scrollTop = chatBox.scrollHeight;
-      }
-
-      function getBotResponse(input) {
-        if (input.includes("what is aceblocks") || input.includes("about")) {
-          return "AceBlocks is your awesome project platform 😎";
-        }
-        //keep help inputs ALPHABETICAL.
-        if (input.includes("help")) {
-          return "About: What AceBlocks is about. \n Help: Shows availible commands.";
-        }
-
-        if (input.includes(""))
-          return "Hmm... I don't know that yet 🤔 try asking something else!";
-      }
-    </script>
-  </body>
+		<script>
+			const chatBox = document.getElementById("chat-box");
+			
+			function sendMessage() {
+				const input = document.getElementById("user-input");
+				const userText = input.value.toLowerCase();
+				
+				if (userText === "") return;
+				
+				addMessage("user", userText);
+				
+				let response = getBotResponse(userText);
+				setTimeout(() => addMessage("bot", response), 500);
+				
+				input.value = "";
+			}
+			
+			function addMessage(sender, text) {
+				const msg = document.createElement("div");
+				msg.classList.add("message", sender);
+				msg.textContent = text;
+				chatBox.appendChild(msg);
+				
+				chatBox.scrollTop = chatBox.scrollHeight;
+			}
+			
+			function getBotResponse(input) {
+				if (input.includes("what is aceblocks") || input.includes("about")) {
+					return "AceBlocks is your awesome project platform 😎";
+				}
+				//keep help inputs ALPHABETICAL.
+				if (input.includes("help")) {
+					return "About: What AceBlocks is about. \n Help: Shows availible commands.";
+				}
+				
+				if (input.includes(""))
+				return "Hmm... I don't know that yet 🤔 try asking something else!";
+			}
+		</script>
+	</body>
 </html>

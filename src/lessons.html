@@ -1,1566 +1,1476 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AceBlocks Lessons</title>
-    <link rel="icon" href="/images/AceBlocksLogo.png" type="image/x-png" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Syne:wght@700;800&display=swap"
-      rel="stylesheet"
-    />
-
-    <!-- Blockly v9 -->
-    <script src="https://unpkg.com/blockly@9.3.3/blockly_compressed.js"></script>
-    <script src="https://unpkg.com/blockly@9.3.3/blocks_compressed.js"></script>
-    <script src="https://unpkg.com/blockly@9.3.3/javascript_compressed.js"></script>
-    <script src="https://unpkg.com/blockly@9.3.3/msg/en.js"></script>
-
-    <style>
-      :root {
-        --bg: #04060f;
-        --surface: #0d1120;
-        --surface2: #131929;
-        --border: rgba(99, 120, 255, 0.15);
-        --accent: #5b6bff;
-        --accent2: #38f0c0;
-        --text: #e8eaf6;
-        --muted: #7b83a6;
-        --glow: rgba(91, 107, 255, 0.35);
-        --success: #10b981;
-        --danger: #ef4444;
-      }
-
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-      html {
-        scroll-behavior: smooth;
-      }
-
-      body {
-        font-family: "Space Grotesk", sans-serif;
-        background: var(--bg);
-        color: var(--text);
-        overflow-x: hidden;
-        min-height: 100vh;
-      }
-
-      body::before {
-        content: "";
-        position: fixed;
-        inset: 0;
-        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-        pointer-events: none;
-        z-index: 9999;
-        opacity: 0.4;
-      }
-
-      ::-webkit-scrollbar {
-        width: 6px;
-      }
-      ::-webkit-scrollbar-track {
-        background: var(--bg);
-      }
-      ::-webkit-scrollbar-thumb {
-        background: var(--accent);
-        border-radius: 3px;
-      }
-
-      /* HEADER */
-      header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 200;
-        padding: 18px 48px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        background: rgba(4, 6, 15, 0.8);
-        backdrop-filter: blur(20px);
-        border-bottom: 1px solid var(--border);
-        animation: slideDown 0.6s ease both;
-      }
-
-      .logo {
-        font-family: "Syne", sans-serif;
-        font-size: 1.3rem;
-        font-weight: 800;
-        letter-spacing: -0.02em;
-        background: linear-gradient(135deg, var(--accent), var(--accent2));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        text-decoration: none;
-      }
-
-      nav {
-        display: flex;
-        gap: 28px;
-        align-items: center;
-      }
-
-      nav a {
-        color: var(--muted);
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 0.88rem;
-        transition: color 0.2s;
-        position: relative;
-      }
-      nav a::after {
-        content: "";
-        position: absolute;
-        bottom: -4px;
-        left: 0;
-        width: 0;
-        height: 2px;
-        background: var(--accent2);
-        transition: width 0.3s;
-      }
-      nav a:hover {
-        color: var(--text);
-      }
-      nav a:hover::after {
-        width: 100%;
-      }
-      nav a.active {
-        color: var(--text);
-      }
-      nav a.active::after {
-        width: 100%;
-      }
-
-      .nav-cta {
-        padding: 7px 18px;
-        background: var(--accent);
-        color: #fff !important;
-        border-radius: 8px;
-        font-weight: 700 !important;
-        transition:
-          background 0.2s,
-          transform 0.2s !important;
-      }
-      .nav-cta::after {
-        display: none !important;
-      }
-      .nav-cta:hover {
-        background: #7080ff !important;
-        transform: translateY(-1px);
-      }
-
-      /* INTRO SCREEN */
-      #lessonIntro {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        padding: 100px 32px 60px;
-        position: relative;
-        overflow: hidden;
-      }
-
-      #lessonIntro::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background:
-          radial-gradient(
-            ellipse 55% 55% at 30% 40%,
-            rgba(91, 107, 255, 0.18) 0%,
-            transparent 70%
-          ),
-          radial-gradient(
-            ellipse 45% 45% at 75% 65%,
-            rgba(56, 240, 192, 0.12) 0%,
-            transparent 70%
-          );
-        animation: meshPulse 8s ease-in-out infinite alternate;
-        pointer-events: none;
-      }
-
-      .intro-grid {
-        position: absolute;
-        inset: 0;
-        background-image:
-          linear-gradient(rgba(99, 120, 255, 0.05) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(99, 120, 255, 0.05) 1px, transparent 1px);
-        background-size: 64px 64px;
-        mask-image: radial-gradient(
-          ellipse 80% 80% at 50% 50%,
-          black 20%,
-          transparent 80%
-        );
-      }
-
-      .intro-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 6px 16px;
-        background: rgba(91, 107, 255, 0.12);
-        border: 1px solid rgba(91, 107, 255, 0.3);
-        border-radius: 100px;
-        font-size: 0.78rem;
-        font-weight: 700;
-        color: var(--accent2);
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        margin-bottom: 28px;
-        position: relative;
-        z-index: 1;
-        animation: fadeUp 0.5s 0.2s ease both;
-      }
-
-      .intro-badge .dot {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: var(--accent2);
-        animation: blink 1.5s ease-in-out infinite;
-      }
-
-      #lessonIntro h2 {
-        font-family: "Syne", sans-serif;
-        font-size: clamp(2.4rem, 6vw, 4rem);
-        font-weight: 800;
-        letter-spacing: -0.03em;
-        line-height: 1.1;
-        position: relative;
-        z-index: 1;
-        animation: fadeUp 0.6s 0.3s ease both;
-      }
-
-      #lessonIntro h2 span {
-        background: linear-gradient(135deg, var(--accent), var(--accent2));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-      }
-
-      #lessonIntro p {
-        max-width: 500px;
-        margin: 20px auto 0;
-        color: var(--muted);
-        font-size: 1.05rem;
-        line-height: 1.75;
-        position: relative;
-        z-index: 1;
-        animation: fadeUp 0.6s 0.45s ease both;
-      }
-
-      .lesson-preview {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-        justify-content: center;
-        max-width: 680px;
-        margin: 36px auto 0;
-        position: relative;
-        z-index: 1;
-        animation: fadeUp 0.6s 0.55s ease both;
-      }
-
-      .lesson-pip {
-        padding: 6px 14px;
-        border-radius: 100px;
-        background: var(--surface);
-        border: 1px solid var(--border);
-        font-size: 0.78rem;
-        font-weight: 600;
-        color: var(--muted);
-      }
-
-      .intro-actions {
-        margin-top: 40px;
-        position: relative;
-        z-index: 1;
-        animation: fadeUp 0.6s 0.65s ease both;
-      }
-
-      /* MAIN LESSON AREA */
-      #lessonArea {
-        display: none;
-        padding-top: 73px;
-      }
-
-      .lesson-topbar {
-        background: var(--surface);
-        border-bottom: 1px solid var(--border);
-        padding: 20px 48px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 16px;
-      }
-
-      .lesson-meta {
-      }
-
-      #lessonTitle {
-        font-family: "Syne", sans-serif;
-        font-size: 1.15rem;
-        font-weight: 800;
-        letter-spacing: -0.01em;
-      }
-
-      #lessonObjective {
-        color: var(--accent2);
-        font-size: 0.88rem;
-        font-weight: 600;
-        margin-top: 4px;
-      }
-
-      /* LESSON HINT */
-      #lessonHint {
-        color: var(--muted);
-        font-size: 0.82rem;
-        font-weight: 500;
-        margin-top: 6px;
-        font-style: italic;
-      }
-
-      /* CHAPTER BADGE */
-      .chapter-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 3px 12px;
-        border-radius: 100px;
-        font-size: 0.72rem;
-        font-weight: 700;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        margin-bottom: 6px;
-      }
-      .chapter-basics {
-        background: rgba(91, 107, 255, 0.15);
-        color: #a0aaff;
-        border: 1px solid rgba(91, 107, 255, 0.3);
-      }
-      .chapter-numbers {
-        background: rgba(56, 240, 192, 0.12);
-        color: #38f0c0;
-        border: 1px solid rgba(56, 240, 192, 0.3);
-      }
-      .chapter-logic {
-        background: rgba(250, 200, 80, 0.12);
-        color: #fac850;
-        border: 1px solid rgba(250, 200, 80, 0.3);
-      }
-      .chapter-challenge {
-        background: rgba(239, 68, 68, 0.12);
-        color: #f87171;
-        border: 1px solid rgba(239, 68, 68, 0.3);
-      }
-
-      .progress-wrap {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 6px;
-        min-width: 200px;
-      }
-
-      .progress-label {
-        font-size: 0.78rem;
-        font-weight: 700;
-        color: var(--muted);
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-      }
-
-      #progressContainer {
-        width: 220px;
-        background: rgba(99, 120, 255, 0.12);
-        border-radius: 100px;
-        height: 8px;
-        overflow: hidden;
-      }
-
-      #progressBar {
-        height: 100%;
-        width: 0%;
-        background: linear-gradient(90deg, var(--accent), var(--accent2));
-        border-radius: 100px;
-        transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-
-      #progressText {
-        font-size: 0.72rem;
-        font-weight: 700;
-        color: var(--muted);
-        letter-spacing: 0.05em;
-      }
-
-      /* WORKSPACE */
-      .workspace-wrap {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 32px 32px 0;
-      }
-
-      #blocklyDiv {
-        height: 480px;
-        width: 100%;
-        border-radius: 16px;
-        overflow: hidden;
-        border: 1px solid var(--border);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-      }
-
-      /* ACTION ROW */
-      .action-row {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px 32px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        flex-wrap: wrap;
-      }
-
-      .btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 11px 24px;
-        border-radius: 10px;
-        font-weight: 700;
-        font-size: 0.92rem;
-        font-family: "Space Grotesk", sans-serif;
-        border: none;
-        cursor: pointer;
-        transition:
-          transform 0.2s,
-          box-shadow 0.2s,
-          background 0.2s;
-        text-decoration: none;
-      }
-
-      .btn-primary {
-        background: var(--accent);
-        color: #fff;
-      }
-      .btn-primary:hover {
-        background: #6e7dff;
-        transform: translateY(-2px);
-        box-shadow: 0 8px 24px var(--glow);
-      }
-
-      .btn-danger {
-        background: rgba(239, 68, 68, 0.12);
-        color: #ef4444;
-        border: 1px solid rgba(239, 68, 68, 0.25);
-      }
-      .btn-danger:hover {
-        background: rgba(239, 68, 68, 0.2);
-        transform: translateY(-2px);
-      }
-
-      .btn-ghost {
-        background: var(--surface2);
-        color: var(--text);
-        border: 1px solid var(--border);
-      }
-      .btn-ghost:hover {
-        transform: translateY(-2px);
-        border-color: rgba(99, 120, 255, 0.4);
-      }
-
-      /* OUTPUT */
-      .output-wrap {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 32px 48px;
-      }
-
-      #output {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 14px;
-        padding: 20px 24px;
-        min-height: 72px;
-        white-space: pre-wrap;
-        font-family: "JetBrains Mono", "Fira Mono", monospace;
-        font-size: 0.92rem;
-        line-height: 1.7;
-        color: var(--text);
-        transition: border-color 0.3s;
-        position: relative;
-      }
-
-      #output.success {
-        border-color: rgba(16, 185, 129, 0.4);
-        color: var(--success);
-      }
-      #output.error {
-        border-color: rgba(239, 68, 68, 0.35);
-        color: var(--danger);
-      }
-
-      .output-label {
-        font-size: 0.72rem;
-        font-weight: 700;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: var(--muted);
-        margin-bottom: 10px;
-      }
-
-      /* CERTIFICATE */
-      @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap");
-
-      #certificate {
-        display: none;
-        position: fixed;
-        inset: 0;
-        z-index: 9999;
-        background: #0e1628;
-        overflow: auto;
-        padding: 48px 24px;
-      }
-
-      .cert-page {
-        max-width: 880px;
-        margin: 0 auto;
-        background: #faf7f0;
-        position: relative;
-        padding: 0;
-      }
-
-      .cert-border-svg {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-      }
-
-      .cert-inner {
-        position: relative;
-        z-index: 1;
-        padding: 72px 96px 60px;
-        text-align: center;
-      }
-
-      .cert-header-band {
-        background: #0c2d6b;
-        margin: -72px -96px 0;
-        padding: 22px 96px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 44px;
-      }
-
-      .cert-brand {
-        font-family: "Syne", sans-serif;
-        font-size: 1.1rem;
-        font-weight: 800;
-        color: #ffffff;
-        letter-spacing: 0.04em;
-      }
-
-      .cert-program-label {
-        font-family: "Space Grotesk", sans-serif;
-        font-size: 0.68rem;
-        font-weight: 700;
-        letter-spacing: 0.22em;
-        text-transform: uppercase;
-        color: #a8bfe8;
-      }
-
-      .cert-medallion {
-        width: 88px;
-        height: 88px;
-        margin: 0 auto 32px;
-      }
-
-      .cert-eyebrow {
-        font-family: "Space Grotesk", sans-serif;
-        font-size: 0.72rem;
-        font-weight: 700;
-        letter-spacing: 0.28em;
-        text-transform: uppercase;
-        color: #9a7c2e;
-        margin-bottom: 10px;
-      }
-
-      .cert-title {
-        font-family: "Cormorant Garamond", "Georgia", serif;
-        font-size: 3.4rem;
-        font-weight: 700;
-        color: #0c1a3a;
-        letter-spacing: -0.01em;
-        line-height: 1.05;
-        margin-bottom: 0;
-      }
-
-      .cert-rule {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        margin: 24px auto;
-        max-width: 420px;
-      }
-      .cert-rule-line {
-        flex: 1;
-        height: 1px;
-        background: #c8a84b;
-      }
-      .cert-rule-diamond {
-        width: 7px;
-        height: 7px;
-        background: #c8a84b;
-        transform: rotate(45deg);
-        flex-shrink: 0;
-      }
-
-      .cert-presented-to {
-        font-family: "Cormorant Garamond", "Georgia", serif;
-        font-size: 1.05rem;
-        font-style: italic;
-        color: #6b6050;
-        margin-bottom: 6px;
-      }
-
-      #certName {
-        font-family: "Cormorant Garamond", "Georgia", serif;
-        font-size: 3.6rem;
-        font-weight: 600;
-        font-style: italic;
-        color: #0c2d6b;
-        line-height: 1.1;
-        margin: 0 0 6px;
-        letter-spacing: 0.01em;
-      }
-
-      .cert-rule2 {
-        width: 240px;
-        height: 1px;
-        background: #d4b86a;
-        margin: 0 auto 28px;
-      }
-
-      .cert-body-text {
-        font-family: "Cormorant Garamond", "Georgia", serif;
-        font-size: 1.12rem;
-        color: #3a3020;
-        max-width: 480px;
-        margin: 0 auto 10px;
-        line-height: 1.75;
-      }
-
-      .cert-completion-tag {
-        display: inline-block;
-        padding: 5px 18px;
-        border: 1px solid #c8a84b;
-        border-radius: 2px;
-        font-family: "Space Grotesk", sans-serif;
-        font-size: 0.7rem;
-        font-weight: 700;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        color: #9a7c2e;
-        margin-bottom: 32px;
-      }
-
-      .cert-sigs {
-        display: flex;
-        justify-content: center;
-        gap: 56px;
-        flex-wrap: wrap;
-        margin: 8px 0 36px;
-        padding-top: 8px;
-      }
-
-      .cert-sig {
-        text-align: center;
-      }
-
-      .cert-sig-name {
-        font-family: "Cormorant Garamond", "Georgia", serif;
-        font-size: 1.15rem;
-        font-weight: 600;
-        font-style: italic;
-        color: #0c1a3a;
-        display: block;
-        margin-bottom: 4px;
-        border-bottom: 1px solid #b0a090;
-        padding-bottom: 6px;
-        min-width: 140px;
-      }
-
-      .cert-sig-role {
-        font-family: "Space Grotesk", sans-serif;
-        font-size: 0.68rem;
-        font-weight: 700;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: #9a8870;
-      }
-
-      .cert-footer-band {
-        background: #0c2d6b;
-        margin: 0 -96px -60px;
-        padding: 16px 96px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-top: 8px;
-      }
-
-      #certDate {
-        font-family: "Space Grotesk", sans-serif;
-        font-size: 0.72rem;
-        font-weight: 600;
-        letter-spacing: 0.1em;
-        color: #a8bfe8;
-      }
-
-      .cert-footer-copy {
-        font-family: "Space Grotesk", sans-serif;
-        font-size: 0.68rem;
-        color: #6680aa;
-        letter-spacing: 0.08em;
-      }
-
-      #printBtn {
-        display: block;
-        margin: 28px auto 0;
-        padding: 13px 36px;
-        background: transparent;
-        color: #a8bfe8;
-        border: 1px solid #2a4a7f;
-        border-radius: 6px;
-        font-size: 0.88rem;
-        font-weight: 700;
-        cursor: pointer;
-        font-family: "Space Grotesk", sans-serif;
-        letter-spacing: 0.08em;
-        transition:
-          background 0.2s,
-          color 0.2s;
-      }
-      #printBtn:hover {
-        background: #1a3060;
-        color: #fff;
-      }
-
-      @media print {
-        body * {
-          visibility: hidden;
-        }
-        #certificate,
-        #certificate * {
-          visibility: visible;
-        }
-        #certificate {
-          position: absolute;
-          left: 0;
-          top: 0;
-          padding: 0;
-          background: #fff;
-        }
-        .cert-page {
-          box-shadow: none;
-        }
-        #printBtn {
-          display: none;
-        }
-      }
-
-      /* ANIMATIONS */
-      @keyframes fadeUp {
-        from {
-          opacity: 0;
-          transform: translateY(22px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      @keyframes slideDown {
-        from {
-          opacity: 0;
-          transform: translateY(-20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      @keyframes meshPulse {
-        0% {
-          opacity: 0.7;
-          transform: scale(1);
-        }
-        100% {
-          opacity: 1;
-          transform: scale(1.06);
-        }
-      }
-      @keyframes blink {
-        0%,
-        100% {
-          opacity: 1;
-        }
-        50% {
-          opacity: 0.2;
-        }
-      }
-      @keyframes popIn {
-        0% {
-          transform: scale(0.8);
-          opacity: 0;
-        }
-        70% {
-          transform: scale(1.05);
-        }
-        100% {
-          transform: scale(1);
-          opacity: 1;
-        }
-      }
-
-      /* TOAST */
-      .toast {
-        position: fixed;
-        bottom: 32px;
-        left: 50%;
-        transform: translateX(-50%) translateY(80px);
-        padding: 14px 28px;
-        border-radius: 12px;
-        font-weight: 700;
-        font-size: 0.95rem;
-        z-index: 500;
-        transition:
-          transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
-          opacity 0.4s;
-        opacity: 0;
-        pointer-events: none;
-        white-space: nowrap;
-      }
-      .toast.show {
-        transform: translateX(-50%) translateY(0);
-        opacity: 1;
-      }
-      .toast.success {
-        background: rgba(16, 185, 129, 0.18);
-        border: 1px solid rgba(16, 185, 129, 0.4);
-        color: #10b981;
-      }
-      .toast.error {
-        background: rgba(239, 68, 68, 0.15);
-        border: 1px solid rgba(239, 68, 68, 0.3);
-        color: #ef4444;
-      }
-
-      /* CHAPTER DIVIDER in topbar */
-      #chapterBadgeWrap {
-        margin-bottom: 4px;
-      }
-
-      @media (max-width: 700px) {
-        header {
-          padding: 14px 20px;
-        }
-        nav {
-          gap: 14px;
-        }
-        .lesson-topbar {
-          padding: 16px 20px;
-        }
-        .workspace-wrap {
-          padding: 20px 16px 0;
-        }
-        .action-row {
-          padding: 16px;
-        }
-        .output-wrap {
-          padding: 0 16px 32px;
-        }
-        .progress-wrap {
-          min-width: unset;
-        }
-        #progressContainer {
-          width: 160px;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <!-- HEADER -->
-    <header>
-      <a href="index.html" class="logo">AceBlocks</a>
-      <nav>
-        <a href="index.html">Home</a>
-        <a href="lessons.html" class="active">Lessons</a>
-        <a href="learn-more.html">Learn More</a>
-        <a href="AceBlocksForSchools.html">For Schools</a>
-      </nav>
-    </header>
-
-    <!-- TOAST -->
-    <div class="toast" id="toast"></div>
-
-    <!-- INTRO SCREEN -->
-    <div id="lessonIntro">
-      <div class="intro-grid"></div>
-
-      <div class="intro-badge">
-        <span class="dot"></span>
-        12 Interactive Lessons
-      </div>
-
-      <h2>Welcome to<br /><span>AceBlocks Lessons</span></h2>
-
-      <p>
-        Learn visual coding step by step. Print messages, work with numbers,
-        build logic, and take on real challenges — all with drag-and-drop
-        blocks.
-      </p>
-
-      <div class="lesson-preview">
-        <span class="lesson-pip">🖨️ Hello World</span>
-        <span class="lesson-pip">✏️ Print Anything</span>
-        <span class="lesson-pip">🔢 Numbers</span>
-        <span class="lesson-pip">➕ Math</span>
-        <span class="lesson-pip">📋 Multi-Print</span>
-        <span class="lesson-pip">❤️ I Love Coding</span>
-        <span class="lesson-pip">✖️ Multiply</span>
-        <span class="lesson-pip">➖ Subtract</span>
-        <span class="lesson-pip">🔟 Big Number</span>
-        <span class="lesson-pip">🧮 Chain Math</span>
-        <span class="lesson-pip">📣 Three Lines</span>
-        <span class="lesson-pip">🏆 Grand Finale</span>
-      </div>
-
-      <div class="intro-actions">
-        <button class="btn btn-primary" id="startBtn">
-          <svg
-            width="15"
-            height="15"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            viewBox="0 0 24 24"
-          >
-            <polygon points="5 3 19 12 5 21 5 3" />
-          </svg>
-          Start Lessons
-        </button>
-      </div>
-    </div>
-
-    <!-- LESSON AREA -->
-    <div id="lessonArea">
-      <div class="lesson-topbar">
-        <div class="lesson-meta">
-          <div id="chapterBadgeWrap"></div>
-          <div id="lessonTitle"></div>
-          <div id="lessonObjective"></div>
-          <div id="lessonHint"></div>
-        </div>
-        <div class="progress-wrap">
-          <div class="progress-label">Progress</div>
-          <div id="progressContainer"><div id="progressBar"></div></div>
-          <div id="progressText"></div>
-        </div>
-      </div>
-
-      <div class="workspace-wrap">
-        <div id="blocklyDiv"></div>
-      </div>
-
-      <div class="action-row">
-        <button class="btn btn-primary" id="runBtn">
-          <svg
-            width="14"
-            height="14"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            viewBox="0 0 24 24"
-          >
-            <polygon points="5 3 19 12 5 21 5 3" />
-          </svg>
-          Run Code
-        </button>
-        <button class="btn btn-danger" id="resetProgress">
-          <svg
-            width="14"
-            height="14"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            viewBox="0 0 24 24"
-          >
-            <polyline points="23 4 23 10 17 10" />
-            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
-          </svg>
-          Reset Progress
-        </button>
-      </div>
-
-      <div class="output-wrap">
-        <div class="output-label">Output</div>
-        <div id="output">Ready — run your code to see results here.</div>
-      </div>
-    </div>
-
-    <!-- CERTIFICATE -->
-    <div id="certificate">
-      <div class="cert-page">
-        <!-- Decorative SVG border -->
-        <svg
-          class="cert-border-svg"
-          viewBox="0 0 880 640"
-          preserveAspectRatio="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <!-- Outer double border -->
-          <rect
-            x="14"
-            y="14"
-            width="852"
-            height="612"
-            fill="none"
-            stroke="#c8a84b"
-            stroke-width="1.5"
-          />
-          <rect
-            x="20"
-            y="20"
-            width="840"
-            height="600"
-            fill="none"
-            stroke="#c8a84b"
-            stroke-width="0.5"
-          />
-          <!-- Corner ornaments TL -->
-          <path
-            d="M14,50 L14,14 L50,14"
-            fill="none"
-            stroke="#9a7c2e"
-            stroke-width="2"
-          />
-          <circle cx="14" cy="14" r="4" fill="#c8a84b" />
-          <!-- Corner ornaments TR -->
-          <path
-            d="M866,50 L866,14 L830,14"
-            fill="none"
-            stroke="#9a7c2e"
-            stroke-width="2"
-          />
-          <circle cx="866" cy="14" r="4" fill="#c8a84b" />
-          <!-- Corner ornaments BL -->
-          <path
-            d="M14,590 L14,626 L50,626"
-            fill="none"
-            stroke="#9a7c2e"
-            stroke-width="2"
-          />
-          <circle cx="14" cy="626" r="4" fill="#c8a84b" />
-          <!-- Corner ornaments BR -->
-          <path
-            d="M866,590 L866,626 L830,626"
-            fill="none"
-            stroke="#9a7c2e"
-            stroke-width="2"
-          />
-          <circle cx="866" cy="626" r="4" fill="#c8a84b" />
-          <!-- Mid-edge accent marks -->
-          <line
-            x1="440"
-            y1="14"
-            x2="440"
-            y2="24"
-            stroke="#c8a84b"
-            stroke-width="1"
-          />
-          <line
-            x1="440"
-            y1="616"
-            x2="440"
-            y2="626"
-            stroke="#c8a84b"
-            stroke-width="1"
-          />
-          <line
-            x1="14"
-            y1="320"
-            x2="24"
-            y2="320"
-            stroke="#c8a84b"
-            stroke-width="1"
-          />
-          <line
-            x1="856"
-            y1="320"
-            x2="866"
-            y2="320"
-            stroke="#c8a84b"
-            stroke-width="1"
-          />
-        </svg>
-
-        <div class="cert-inner">
-          <!-- Header band -->
-          <div class="cert-header-band">
-            <div class="cert-brand">AceBlocks</div>
-            <div class="cert-program-label">
-              Visual Coding Program &nbsp;·&nbsp; 2026
-            </div>
-          </div>
-
-          <!-- Gold medallion seal -->
-          <div class="cert-medallion">
-            <svg viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg">
-              <!-- Outer starburst rays -->
-              <g fill="#c8a84b" opacity="0.55">
-                <polygon points="44,2 46.4,10 44,8 41.6,10" />
-                <polygon points="44,86 46.4,78 44,80 41.6,78" />
-                <polygon points="2,44 10,46.4 8,44 10,41.6" />
-                <polygon points="86,44 78,46.4 80,44 78,41.6" />
-                <polygon points="14.1,14.1 19.8,20.9 17.3,18.4 20.9,19.8" />
-                <polygon points="73.9,73.9 68.2,67.1 70.7,69.6 67.1,68.2" />
-                <polygon points="73.9,14.1 67.1,19.8 69.6,17.3 68.2,20.9" />
-                <polygon points="14.1,73.9 20.9,68.2 18.4,70.7 19.8,67.1" />
-              </g>
-              <!-- Main ring -->
-              <circle
-                cx="44"
-                cy="44"
-                r="38"
-                fill="#0c2d6b"
-                stroke="#c8a84b"
-                stroke-width="2"
-              />
-              <circle
-                cx="44"
-                cy="44"
-                r="32"
-                fill="none"
-                stroke="#c8a84b"
-                stroke-width="0.8"
-                stroke-dasharray="3,3"
-              />
-              <!-- Inner emblem -->
-              <circle cx="44" cy="44" r="26" fill="#0e3580" />
-              <!-- Star / code symbol -->
-              <text
-                x="44"
-                y="52"
-                text-anchor="middle"
-                font-family="'Syne',sans-serif"
-                font-weight="800"
-                font-size="22"
-                fill="#c8a84b"
-              >
-                &lt;/&gt;
-              </text>
-              <!-- Tiny label -->
-              <text
-                x="44"
-                y="72"
-                text-anchor="middle"
-                font-family="'Space Grotesk',sans-serif"
-                font-weight="700"
-                font-size="5.5"
-                fill="#a8bfe8"
-                letter-spacing="1.5"
-              >
-                CERTIFIED
-              </text>
-            </svg>
-          </div>
-
-          <div class="cert-eyebrow">Certificate of Completion</div>
-
-          <div class="cert-title">AceBlocks</div>
-
-          <div class="cert-rule">
-            <div class="cert-rule-line"></div>
-            <div class="cert-rule-diamond"></div>
-            <div class="cert-rule-line"></div>
-          </div>
-
-          <p class="cert-presented-to">This is to proudly certify that</p>
-
-          <h2 id="certName"></h2>
-
-          <div class="cert-rule2"></div>
-
-          <p class="cert-body-text">
-            has successfully completed all 12 lessons of the AceBlocks Visual
-            Coding Program, demonstrating a strong grasp of block-based
-            scripting, arithmetic, logic, and core programming fundamentals.
-          </p>
-
-          <div class="cert-completion-tag">
-            12 Lessons &nbsp;·&nbsp; 4 Chapters &nbsp;·&nbsp; Full Program
-          </div>
-
-          <div class="cert-sigs">
-            <div class="cert-sig">
-              <span class="cert-sig-name">Jace Glover</span>
-              <div class="cert-sig-role">Founder, AceBlocks</div>
-            </div>
-            <div class="cert-sig">
-              <span class="cert-sig-name">Liam Cooper</span>
-              <div class="cert-sig-role">Coder, AceBlocks</div>
-            </div>
-            <div class="cert-sig">
-              <span class="cert-sig-name">Henry Lewis</span>
-              <div class="cert-sig-role">Coder, AceBlocks</div>
-            </div>
-          </div>
-
-          <!-- Footer band -->
-          <div class="cert-footer-band">
-            <p id="certDate"></p>
-            <span class="cert-footer-copy"
-              >© 2026 AceBlocks — Coding for the Future</span
-            >
-          </div>
-        </div>
-      </div>
-
-      <button id="printBtn" onclick="window.print()">Print Certificate</button>
-    </div>
-
-    <!-- Toolbox XML -->
-    <xml id="toolbox" style="display: none">
-      <block type="text_print"></block>
-      <block type="text"></block>
-      <block type="math_number"></block>
-      <block type="math_arithmetic"></block>
-    </xml>
-
-    <script>
-      // ═══════════════ GLOBALS ═══════════════
-      let workspace = null;
-      let currentLesson =
-        parseInt(localStorage.getItem("aceblocksLesson")) || 1;
-
-      // ═══════════════ HELPERS ═══════════════
-      function getCode() {
-        return workspace ? Blockly.JavaScript.workspaceToCode(workspace) : "";
-      }
-
-      function runCode() {
-        const outputDiv = document.getElementById("output");
-        outputDiv.className = "";
-        outputDiv.innerText = "";
-        const orig = console.log;
-        console.log = function (msg) {
-          outputDiv.innerText += msg + "\n";
-          orig(msg);
-        };
-        try {
-          eval(getCode());
-        } catch (e) {
-          outputDiv.innerText += "Error: " + e.message;
-        }
-        console.log = orig;
-      }
-
-      function hasPrintWithValue() {
-        return workspace
-          ? workspace
-              .getAllBlocks(false)
-              .some(
-                (b) => b.type === "text_print" && b.getInputTargetBlock("TEXT"),
-              )
-          : false;
-      }
-
-      function countValidPrints() {
-        return workspace
-          ? workspace
-              .getAllBlocks(false)
-              .filter(
-                (b) => b.type === "text_print" && b.getInputTargetBlock("TEXT"),
-              ).length
-          : 0;
-      }
-
-      function getOutputText() {
-        return document.getElementById("output").innerText || "";
-      }
-
-      // ═══════════════ TOAST ═══════════════
-      function showToast(msg, type = "success") {
-        const t = document.getElementById("toast");
-        t.textContent = msg;
-        t.className = "toast " + type + " show";
-        setTimeout(() => {
-          t.className = "toast " + type;
-        }, 2800);
-      }
-
-      // ═══════════════ LESSONS ═══════════════
-      // Chapters: basics (1-3), numbers (4-6), math (7-9), challenge (10-12)
-      const lessons = {
-        1: {
-          chapter: "basics",
-          chapterLabel: "Chapter 1 — Basics",
-          title: 'Lesson 1 — Print "Hello World"',
-          objective: 'Use the print block to display "Hello World".',
-          hint: "Tip: Drag a Print block, connect a Text block to it, and type Hello World inside.",
-          check: () => getCode().toLowerCase().includes("hello world"),
-        },
-        2: {
-          chapter: "basics",
-          chapterLabel: "Chapter 1 — Basics",
-          title: "Lesson 2 — Print Anything",
-          objective: "Print any message you like using the text print block.",
-          hint: "Tip: Type anything into a Text block and connect it to a Print block.",
-          check: () => hasPrintWithValue(),
-        },
-        3: {
-          chapter: "basics",
-          chapterLabel: "Chapter 1 — Basics",
-          title: "Lesson 3 — Print Your Name",
-          objective: "Use the print block to display your own name.",
-          hint: "Tip: Type your name into a Text block, then connect it to a Print block.",
-          check: () => {
-            const code = getCode();
-            // Must have a print with a non-empty text value, and it shouldn't be a default placeholder
-            return hasPrintWithValue() && code.length > 20;
-          },
-        },
-        4: {
-          chapter: "numbers",
-          chapterLabel: "Chapter 2 — Numbers",
-          title: "Lesson 4 — Print the Number 5",
-          objective: "Use the print block to show the number 5.",
-          hint: "Tip: Use a Number block (not a Text block) set to 5, then connect it to Print.",
-          check: () => {
-            const code = getCode();
-            return code.includes("5") && hasPrintWithValue();
-          },
-        },
-        5: {
-          chapter: "numbers",
-          chapterLabel: "Chapter 2 — Numbers",
-          title: "Lesson 5 — Print the Number 10",
-          objective: "Print the number 10 using a number block.",
-          hint: "Tip: Set a Number block to 10 and connect it to a Print block.",
-          check: () => {
-            const code = getCode();
-            return code.includes("10") && hasPrintWithValue();
-          },
-        },
-        6: {
-          chapter: "numbers",
-          chapterLabel: "Chapter 2 — Numbers",
-          title: "Lesson 6 — Add 2 + 3",
-          objective: "Print the result of 2 + 3.",
-          hint: "Tip: Use a Math Arithmetic block set to ADD, plug in Number blocks for 2 and 3, then Print.",
-          check: () => getCode().includes("2 + 3"),
-        },
-        7: {
-          chapter: "math",
-          chapterLabel: "Chapter 3 — Math",
-          title: "Lesson 7 — Subtract 10 − 4",
-          objective: "Print the result of 10 minus 4.",
-          hint: "Tip: Use the Math Arithmetic block and switch it to MINUS. Set the numbers to 10 and 4.",
-          check: () => getCode().includes("10 - 4"),
-        },
-        8: {
-          chapter: "math",
-          chapterLabel: "Chapter 3 — Math",
-          title: "Lesson 8 — Multiply 3 × 6",
-          objective: "Print the result of 3 multiplied by 6.",
-          hint: "Tip: Switch the Math Arithmetic block to MULTIPLY (×). Set the numbers to 3 and 6.",
-          check: () => getCode().includes("3 * 6"),
-        },
-        9: {
-          chapter: "math",
-          chapterLabel: "Chapter 3 — Math",
-          title: "Lesson 9 — Print a Number Over 50",
-          objective: "Print any number that is greater than 50.",
-          hint: "Tip: Use a Number block set to any value larger than 50 (e.g. 99, 100, 77...).",
-          check: () => {
-            const code = getCode();
-            const matches = code.match(/console\.log\((\d+(\.\d+)?)\)/);
-            if (matches) {
-              return parseFloat(matches[1]) > 50;
-            }
-            // Also allow math results
-            const output = getOutputText();
-            const numMatch = output.match(/^(\d+(\.\d+)?)/);
-            if (numMatch) return parseFloat(numMatch[1]) > 50;
-            return false;
-          },
-        },
-        10: {
-          chapter: "challenge",
-          chapterLabel: "Chapter 4 — Challenge",
-          title: "Lesson 10 — Print Two Things",
-          objective: "Print at least two separate messages or numbers.",
-          hint: "Tip: Add two Print blocks — each one can have different content.",
-          check: () => countValidPrints() >= 2,
-        },
-        11: {
-          chapter: "challenge",
-          chapterLabel: "Chapter 4 — Challenge",
-          title: "Lesson 11 — Print Three Lines",
-          objective: "Print three separate messages, numbers, or calculations.",
-          hint: "Tip: Add three Print blocks to the workspace, each with something connected.",
-          check: () => countValidPrints() >= 3,
-        },
-        12: {
-          chapter: "challenge",
-          chapterLabel: "Chapter 4 — Challenge",
-          title: 'Lesson 12 — Print "I Love Coding"',
-          objective: 'Use the print block to display "I Love Coding".',
-          hint: "Tip: Type I Love Coding exactly into a Text block (capitalisation doesn't matter).",
-          check: () => getCode().toLowerCase().includes("i love coding"),
-        },
-      };
-
-      const TOTAL = Object.keys(lessons).length;
-
-      const chapterClasses = {
-        basics: "chapter-basics",
-        numbers: "chapter-numbers",
-        math: "chapter-logic",
-        challenge: "chapter-challenge",
-      };
-
-      // ═══════════════ LOAD LESSON ═══════════════
-      function loadLesson() {
-        if (!workspace) return;
-        workspace.clear();
-        const l = lessons[currentLesson];
-        document.getElementById("chapterBadgeWrap").innerHTML =
-          `<span class="chapter-badge ${chapterClasses[l.chapter]}">${l.chapterLabel}</span>`;
-        document.getElementById("lessonTitle").innerText = l.title;
-        document.getElementById("lessonObjective").innerText = l.objective;
-        document.getElementById("lessonHint").innerText = l.hint;
-        const outputDiv = document.getElementById("output");
-        outputDiv.innerText = "Ready — run your code to see results here.";
-        outputDiv.className = "";
-        localStorage.setItem("aceblocksLesson", currentLesson);
-        const pct = Math.min(((currentLesson - 1) / TOTAL) * 100, 100);
-        document.getElementById("progressBar").style.width = pct + "%";
-        document.getElementById("progressText").innerText =
-          `Lesson ${currentLesson} of ${TOTAL}`;
-      }
-
-      // ═══════════════ START ═══════════════
-      document
-        .getElementById("startBtn")
-        .addEventListener("click", function () {
-          document.getElementById("lessonIntro").style.display = "none";
-          document.getElementById("lessonArea").style.display = "block";
-
-          workspace = Blockly.inject("blocklyDiv", {
-            toolbox: document.getElementById("toolbox"),
-            theme: Blockly.Theme.defineTheme("aceblocks", {
-              base: Blockly.Themes.Classic,
-              componentStyles: {
-                workspaceBackgroundColour: "#0d1120",
-                toolboxBackgroundColour: "#0a0d18",
-                toolboxForegroundColour: "#e8eaf6",
-                flyoutBackgroundColour: "#0d1120",
-                flyoutForegroundColour: "#e8eaf6",
-                flyoutOpacity: 1,
-                scrollbarColour: "#5b6bff",
-              },
-            }),
-            scrollbars: true,
-            trashcan: true,
-          });
-
-          Blockly.JavaScript["text_print"] = function (block) {
-            const msg =
-              Blockly.JavaScript.valueToCode(
-                block,
-                "TEXT",
-                Blockly.JavaScript.ORDER_NONE,
-              ) || '""';
-            return "console.log(" + msg + ");\n";
-          };
-
-          loadLesson();
-        });
-
-      // ═══════════════ RUN ═══════════════
-      document.getElementById("runBtn").addEventListener("click", function () {
-        runCode();
-        const outputDiv = document.getElementById("output");
-        if (lessons[currentLesson].check()) {
-          outputDiv.className = "success";
-          outputDiv.innerText += "\n✅ Correct! Well done.";
-          showToast("✅ Lesson " + currentLesson + " complete!", "success");
-          currentLesson++;
-          if (currentLesson > TOTAL) {
-            document.getElementById("progressBar").style.width = "100%";
-            document.getElementById("progressText").innerText =
-              `All ${TOTAL} lessons done!`;
-            setTimeout(showCertificate, 900);
-          } else {
-            setTimeout(loadLesson, 900);
-          }
-        } else {
-          outputDiv.className = "error";
-          outputDiv.innerText += "\n❌ Not quite — give it another try!";
-          showToast("❌ Not quite. Try again!", "error");
-        }
-      });
-
-      // ═══════════════ RESET ═══════════════
-      document
-        .getElementById("resetProgress")
-        .addEventListener("click", function () {
-          if (confirm("Reset all progress and start from Lesson 1?")) {
-            currentLesson = 1;
-            localStorage.removeItem("aceblocksLesson");
-            loadLesson();
-            showToast("Progress reset to Lesson 1.", "error");
-          }
-        });
-
-      // ═══════════════ CERTIFICATE ═══════════════
-      function showCertificate() {
-        const name = prompt(
-          "🎉 You finished all 12 lessons!\n\nEnter your name for the certificate:",
-        );
-        document.getElementById("certName").innerText = name || "Student";
-        const today = new Date();
-        document.getElementById("certDate").innerText =
-          "Issued on " +
-          today.toLocaleDateString("en-NZ", {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-          });
-        document.getElementById("certificate").style.display = "block";
-        localStorage.removeItem("aceblocksLesson");
-      }
-
-      // ═══════════════ DEV TOOLS ═══════════════
-      window.aceblocksSkipToCertificate = function () {
-        showCertificate();
-      };
-      document.addEventListener("keydown", function (e) {
-        if (e.ctrlKey && e.shiftKey && e.code === "KeyC") showCertificate();
-      });
-    </script>
-  </body>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>AceBlocks Lessons</title>
+		<link rel="icon" href="/images/AceBlocksLogo.png" type="image/x-png">
+		<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
+		<!-- Blockly v9 -->
+		<script src="https://unpkg.com/blockly@9.3.3/blockly_compressed.js"></script>
+		<script src="https://unpkg.com/blockly@9.3.3/blocks_compressed.js"></script>
+		<script src="https://unpkg.com/blockly@9.3.3/javascript_compressed.js"></script>
+		<script src="https://unpkg.com/blockly@9.3.3/msg/en.js"></script>
+
+		<style>
+			:root {
+				--bg: #04060f;
+				--surface: #0d1120;
+				--surface2: #131929;
+				--border: rgba(99, 120, 255, 0.15);
+				--accent: #5b6bff;
+				--accent2: #38f0c0;
+				--text: #e8eaf6;
+				--muted: #7b83a6;
+				--glow: rgba(91, 107, 255, 0.35);
+				--success: #10b981;
+				--danger: #ef4444;
+			}
+			
+			*,
+			*::before,
+			*::after {
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+			}
+			html {
+				scroll-behavior: smooth;
+			}
+			
+			body {
+				font-family: "Space Grotesk", sans-serif;
+				background: var(--bg);
+				color: var(--text);
+				overflow-x: hidden;
+				min-height: 100vh;
+			}
+			
+			body::before {
+				content: "";
+				position: fixed;
+				inset: 0;
+				background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+				pointer-events: none;
+				z-index: 9999;
+				opacity: 0.4;
+			}
+			
+			::-webkit-scrollbar {
+				width: 6px;
+			}
+			::-webkit-scrollbar-track {
+				background: var(--bg);
+			}
+			::-webkit-scrollbar-thumb {
+				background: var(--accent);
+				border-radius: 3px;
+			}
+			
+			/* HEADER */
+			header {
+				position: fixed;
+				top: 0;
+				left: 0;
+				right: 0;
+				z-index: 200;
+				padding: 18px 48px;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				background: rgba(4, 6, 15, 0.8);
+				backdrop-filter: blur(20px);
+				border-bottom: 1px solid var(--border);
+				animation: slideDown 0.6s ease both;
+			}
+			
+			.logo {
+				font-family: "Syne", sans-serif;
+				font-size: 1.3rem;
+				font-weight: 800;
+				letter-spacing: -0.02em;
+				background: linear-gradient(135deg, var(--accent), var(--accent2));
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				background-clip: text;
+				text-decoration: none;
+			}
+			
+			nav {
+				display: flex;
+				gap: 28px;
+				align-items: center;
+			}
+			
+			nav a {
+				color: var(--muted);
+				text-decoration: none;
+				font-weight: 600;
+				font-size: 0.88rem;
+				transition: color 0.2s;
+				position: relative;
+			}
+			nav a::after {
+				content: "";
+				position: absolute;
+				bottom: -4px;
+				left: 0;
+				width: 0;
+				height: 2px;
+				background: var(--accent2);
+				transition: width 0.3s;
+			}
+			nav a:hover {
+				color: var(--text);
+			}
+			nav a:hover::after {
+				width: 100%;
+			}
+			nav a.active {
+				color: var(--text);
+			}
+			nav a.active::after {
+				width: 100%;
+			}
+			
+			.nav-cta {
+				padding: 7px 18px;
+				background: var(--accent);
+				color: #fff !important;
+				border-radius: 8px;
+				font-weight: 700 !important;
+				transition:
+				background 0.2s,
+				transform 0.2s !important;
+			}
+			.nav-cta::after {
+				display: none !important;
+			}
+			.nav-cta:hover {
+				background: #7080ff !important;
+				transform: translateY(-1px);
+			}
+			
+			/* INTRO SCREEN */
+			#lessonIntro {
+				min-height: 100vh;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				text-align: center;
+				padding: 100px 32px 60px;
+				position: relative;
+				overflow: hidden;
+			}
+			
+			#lessonIntro::after {
+				content: "";
+				position: absolute;
+				inset: 0;
+				background:
+				radial-gradient(
+				ellipse 55% 55% at 30% 40%,
+				rgba(91, 107, 255, 0.18) 0%,
+				transparent 70%
+				),
+				radial-gradient(
+				ellipse 45% 45% at 75% 65%,
+				rgba(56, 240, 192, 0.12) 0%,
+				transparent 70%
+				);
+				animation: meshPulse 8s ease-in-out infinite alternate;
+				pointer-events: none;
+			}
+			
+			.intro-grid {
+				position: absolute;
+				inset: 0;
+				background-image:
+				linear-gradient(rgba(99, 120, 255, 0.05) 1px, transparent 1px),
+				linear-gradient(90deg, rgba(99, 120, 255, 0.05) 1px, transparent 1px);
+				background-size: 64px 64px;
+				mask-image: radial-gradient(
+				ellipse 80% 80% at 50% 50%,
+				black 20%,
+				transparent 80%
+				);
+			}
+			
+			.intro-badge {
+				display: inline-flex;
+				align-items: center;
+				gap: 8px;
+				padding: 6px 16px;
+				background: rgba(91, 107, 255, 0.12);
+				border: 1px solid rgba(91, 107, 255, 0.3);
+				border-radius: 100px;
+				font-size: 0.78rem;
+				font-weight: 700;
+				color: var(--accent2);
+				letter-spacing: 0.1em;
+				text-transform: uppercase;
+				margin-bottom: 28px;
+				position: relative;
+				z-index: 1;
+				animation: fadeUp 0.5s 0.2s ease both;
+			}
+			
+			.intro-badge .dot {
+				width: 6px;
+				height: 6px;
+				border-radius: 50%;
+				background: var(--accent2);
+				animation: blink 1.5s ease-in-out infinite;
+			}
+			
+			#lessonIntro h2 {
+				font-family: "Syne", sans-serif;
+				font-size: clamp(2.4rem, 6vw, 4rem);
+				font-weight: 800;
+				letter-spacing: -0.03em;
+				line-height: 1.1;
+				position: relative;
+				z-index: 1;
+				animation: fadeUp 0.6s 0.3s ease both;
+			}
+			
+			#lessonIntro h2 span {
+				background: linear-gradient(135deg, var(--accent), var(--accent2));
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				background-clip: text;
+			}
+			
+			#lessonIntro p {
+				max-width: 500px;
+				margin: 20px auto 0;
+				color: var(--muted);
+				font-size: 1.05rem;
+				line-height: 1.75;
+				position: relative;
+				z-index: 1;
+				animation: fadeUp 0.6s 0.45s ease both;
+			}
+			
+			.lesson-preview {
+				display: flex;
+				gap: 10px;
+				flex-wrap: wrap;
+				justify-content: center;
+				max-width: 680px;
+				margin: 36px auto 0;
+				position: relative;
+				z-index: 1;
+				animation: fadeUp 0.6s 0.55s ease both;
+			}
+			
+			.lesson-pip {
+				padding: 6px 14px;
+				border-radius: 100px;
+				background: var(--surface);
+				border: 1px solid var(--border);
+				font-size: 0.78rem;
+				font-weight: 600;
+				color: var(--muted);
+			}
+			
+			.intro-actions {
+				margin-top: 40px;
+				position: relative;
+				z-index: 1;
+				animation: fadeUp 0.6s 0.65s ease both;
+			}
+			
+			/* MAIN LESSON AREA */
+			#lessonArea {
+				display: none;
+				padding-top: 73px;
+			}
+			
+			.lesson-topbar {
+				background: var(--surface);
+				border-bottom: 1px solid var(--border);
+				padding: 20px 48px;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				flex-wrap: wrap;
+				gap: 16px;
+			}
+			
+			.lesson-meta {
+			}
+			
+			#lessonTitle {
+				font-family: "Syne", sans-serif;
+				font-size: 1.15rem;
+				font-weight: 800;
+				letter-spacing: -0.01em;
+			}
+			
+			#lessonObjective {
+				color: var(--accent2);
+				font-size: 0.88rem;
+				font-weight: 600;
+				margin-top: 4px;
+			}
+			
+			/* LESSON HINT */
+			#lessonHint {
+				color: var(--muted);
+				font-size: 0.82rem;
+				font-weight: 500;
+				margin-top: 6px;
+				font-style: italic;
+			}
+			
+			/* CHAPTER BADGE */
+			.chapter-badge {
+				display: inline-flex;
+				align-items: center;
+				gap: 6px;
+				padding: 3px 12px;
+				border-radius: 100px;
+				font-size: 0.72rem;
+				font-weight: 700;
+				letter-spacing: 0.08em;
+				text-transform: uppercase;
+				margin-bottom: 6px;
+			}
+			.chapter-basics {
+				background: rgba(91, 107, 255, 0.15);
+				color: #a0aaff;
+				border: 1px solid rgba(91, 107, 255, 0.3);
+			}
+			.chapter-numbers {
+				background: rgba(56, 240, 192, 0.12);
+				color: #38f0c0;
+				border: 1px solid rgba(56, 240, 192, 0.3);
+			}
+			.chapter-logic {
+				background: rgba(250, 200, 80, 0.12);
+				color: #fac850;
+				border: 1px solid rgba(250, 200, 80, 0.3);
+			}
+			.chapter-challenge {
+				background: rgba(239, 68, 68, 0.12);
+				color: #f87171;
+				border: 1px solid rgba(239, 68, 68, 0.3);
+			}
+			
+			.progress-wrap {
+				display: flex;
+				flex-direction: column;
+				align-items: flex-end;
+				gap: 6px;
+				min-width: 200px;
+			}
+			
+			.progress-label {
+				font-size: 0.78rem;
+				font-weight: 700;
+				color: var(--muted);
+				letter-spacing: 0.05em;
+				text-transform: uppercase;
+			}
+			
+			#progressContainer {
+				width: 220px;
+				background: rgba(99, 120, 255, 0.12);
+				border-radius: 100px;
+				height: 8px;
+				overflow: hidden;
+			}
+			
+			#progressBar {
+				height: 100%;
+				width: 0%;
+				background: linear-gradient(90deg, var(--accent), var(--accent2));
+				border-radius: 100px;
+				transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+			}
+			
+			#progressText {
+				font-size: 0.72rem;
+				font-weight: 700;
+				color: var(--muted);
+				letter-spacing: 0.05em;
+			}
+			
+			/* WORKSPACE */
+			.workspace-wrap {
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 32px 32px 0;
+			}
+			
+			#blocklyDiv {
+				height: 480px;
+				width: 100%;
+				border-radius: 16px;
+				overflow: hidden;
+				border: 1px solid var(--border);
+				box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+			}
+			
+			/* ACTION ROW */
+			.action-row {
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 20px 32px;
+				display: flex;
+				align-items: center;
+				gap: 12px;
+				flex-wrap: wrap;
+			}
+			
+			.btn {
+				display: inline-flex;
+				align-items: center;
+				gap: 8px;
+				padding: 11px 24px;
+				border-radius: 10px;
+				font-weight: 700;
+				font-size: 0.92rem;
+				font-family: "Space Grotesk", sans-serif;
+				border: none;
+				cursor: pointer;
+				transition:
+				transform 0.2s,
+				box-shadow 0.2s,
+				background 0.2s;
+				text-decoration: none;
+			}
+			
+			.btn-primary {
+				background: var(--accent);
+				color: #fff;
+			}
+			.btn-primary:hover {
+				background: #6e7dff;
+				transform: translateY(-2px);
+				box-shadow: 0 8px 24px var(--glow);
+			}
+			
+			.btn-danger {
+				background: rgba(239, 68, 68, 0.12);
+				color: #ef4444;
+				border: 1px solid rgba(239, 68, 68, 0.25);
+			}
+			.btn-danger:hover {
+				background: rgba(239, 68, 68, 0.2);
+				transform: translateY(-2px);
+			}
+			
+			.btn-ghost {
+				background: var(--surface2);
+				color: var(--text);
+				border: 1px solid var(--border);
+			}
+			.btn-ghost:hover {
+				transform: translateY(-2px);
+				border-color: rgba(99, 120, 255, 0.4);
+			}
+			
+			/* OUTPUT */
+			.output-wrap {
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 0 32px 48px;
+			}
+			
+			#output {
+				background: var(--surface);
+				border: 1px solid var(--border);
+				border-radius: 14px;
+				padding: 20px 24px;
+				min-height: 72px;
+				white-space: pre-wrap;
+				font-family: "JetBrains Mono", "Fira Mono", monospace;
+				font-size: 0.92rem;
+				line-height: 1.7;
+				color: var(--text);
+				transition: border-color 0.3s;
+				position: relative;
+			}
+			
+			#output.success {
+				border-color: rgba(16, 185, 129, 0.4);
+				color: var(--success);
+			}
+			#output.error {
+				border-color: rgba(239, 68, 68, 0.35);
+				color: var(--danger);
+			}
+			
+			.output-label {
+				font-size: 0.72rem;
+				font-weight: 700;
+				letter-spacing: 0.12em;
+				text-transform: uppercase;
+				color: var(--muted);
+				margin-bottom: 10px;
+			}
+			
+			/* CERTIFICATE */
+			@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap");
+			
+			#certificate {
+				display: none;
+				position: fixed;
+				inset: 0;
+				z-index: 9999;
+				background: #0e1628;
+				overflow: auto;
+				padding: 48px 24px;
+			}
+			
+			.cert-page {
+				max-width: 880px;
+				margin: 0 auto;
+				background: #faf7f0;
+				position: relative;
+				padding: 0;
+			}
+			
+			.cert-border-svg {
+				position: absolute;
+				inset: 0;
+				width: 100%;
+				height: 100%;
+				pointer-events: none;
+			}
+			
+			.cert-inner {
+				position: relative;
+				z-index: 1;
+				padding: 72px 96px 60px;
+				text-align: center;
+			}
+			
+			.cert-header-band {
+				background: #0c2d6b;
+				margin: -72px -96px 0;
+				padding: 22px 96px;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				margin-bottom: 44px;
+			}
+			
+			.cert-brand {
+				font-family: "Syne", sans-serif;
+				font-size: 1.1rem;
+				font-weight: 800;
+				color: #ffffff;
+				letter-spacing: 0.04em;
+			}
+			
+			.cert-program-label {
+				font-family: "Space Grotesk", sans-serif;
+				font-size: 0.68rem;
+				font-weight: 700;
+				letter-spacing: 0.22em;
+				text-transform: uppercase;
+				color: #a8bfe8;
+			}
+			
+			.cert-medallion {
+				width: 88px;
+				height: 88px;
+				margin: 0 auto 32px;
+			}
+			
+			.cert-eyebrow {
+				font-family: "Space Grotesk", sans-serif;
+				font-size: 0.72rem;
+				font-weight: 700;
+				letter-spacing: 0.28em;
+				text-transform: uppercase;
+				color: #9a7c2e;
+				margin-bottom: 10px;
+			}
+			
+			.cert-title {
+				font-family: "Cormorant Garamond", "Georgia", serif;
+				font-size: 3.4rem;
+				font-weight: 700;
+				color: #0c1a3a;
+				letter-spacing: -0.01em;
+				line-height: 1.05;
+				margin-bottom: 0;
+			}
+			
+			.cert-rule {
+				display: flex;
+				align-items: center;
+				gap: 14px;
+				margin: 24px auto;
+				max-width: 420px;
+			}
+			.cert-rule-line {
+				flex: 1;
+				height: 1px;
+				background: #c8a84b;
+			}
+			.cert-rule-diamond {
+				width: 7px;
+				height: 7px;
+				background: #c8a84b;
+				transform: rotate(45deg);
+				flex-shrink: 0;
+			}
+			
+			.cert-presented-to {
+				font-family: "Cormorant Garamond", "Georgia", serif;
+				font-size: 1.05rem;
+				font-style: italic;
+				color: #6b6050;
+				margin-bottom: 6px;
+			}
+			
+			#certName {
+				font-family: "Cormorant Garamond", "Georgia", serif;
+				font-size: 3.6rem;
+				font-weight: 600;
+				font-style: italic;
+				color: #0c2d6b;
+				line-height: 1.1;
+				margin: 0 0 6px;
+				letter-spacing: 0.01em;
+			}
+			
+			.cert-rule2 {
+				width: 240px;
+				height: 1px;
+				background: #d4b86a;
+				margin: 0 auto 28px;
+			}
+			
+			.cert-body-text {
+				font-family: "Cormorant Garamond", "Georgia", serif;
+				font-size: 1.12rem;
+				color: #3a3020;
+				max-width: 480px;
+				margin: 0 auto 10px;
+				line-height: 1.75;
+			}
+			
+			.cert-completion-tag {
+				display: inline-block;
+				padding: 5px 18px;
+				border: 1px solid #c8a84b;
+				border-radius: 2px;
+				font-family: "Space Grotesk", sans-serif;
+				font-size: 0.7rem;
+				font-weight: 700;
+				letter-spacing: 0.2em;
+				text-transform: uppercase;
+				color: #9a7c2e;
+				margin-bottom: 32px;
+			}
+			
+			.cert-sigs {
+				display: flex;
+				justify-content: center;
+				gap: 56px;
+				flex-wrap: wrap;
+				margin: 8px 0 36px;
+				padding-top: 8px;
+			}
+			
+			.cert-sig {
+				text-align: center;
+			}
+			
+			.cert-sig-name {
+				font-family: "Cormorant Garamond", "Georgia", serif;
+				font-size: 1.15rem;
+				font-weight: 600;
+				font-style: italic;
+				color: #0c1a3a;
+				display: block;
+				margin-bottom: 4px;
+				border-bottom: 1px solid #b0a090;
+				padding-bottom: 6px;
+				min-width: 140px;
+			}
+			
+			.cert-sig-role {
+				font-family: "Space Grotesk", sans-serif;
+				font-size: 0.68rem;
+				font-weight: 700;
+				letter-spacing: 0.12em;
+				text-transform: uppercase;
+				color: #9a8870;
+			}
+			
+			.cert-footer-band {
+				background: #0c2d6b;
+				margin: 0 -96px -60px;
+				padding: 16px 96px;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				margin-top: 8px;
+			}
+			
+			#certDate {
+				font-family: "Space Grotesk", sans-serif;
+				font-size: 0.72rem;
+				font-weight: 600;
+				letter-spacing: 0.1em;
+				color: #a8bfe8;
+			}
+			
+			.cert-footer-copy {
+				font-family: "Space Grotesk", sans-serif;
+				font-size: 0.68rem;
+				color: #6680aa;
+				letter-spacing: 0.08em;
+			}
+			
+			#printBtn {
+				display: block;
+				margin: 28px auto 0;
+				padding: 13px 36px;
+				background: transparent;
+				color: #a8bfe8;
+				border: 1px solid #2a4a7f;
+				border-radius: 6px;
+				font-size: 0.88rem;
+				font-weight: 700;
+				cursor: pointer;
+				font-family: "Space Grotesk", sans-serif;
+				letter-spacing: 0.08em;
+				transition:
+				background 0.2s,
+				color 0.2s;
+			}
+			#printBtn:hover {
+				background: #1a3060;
+				color: #fff;
+			}
+			
+			@media print {
+				body * {
+					visibility: hidden;
+				}
+				#certificate,
+				#certificate * {
+					visibility: visible;
+				}
+				#certificate {
+					position: absolute;
+					left: 0;
+					top: 0;
+					padding: 0;
+					background: #fff;
+				}
+				.cert-page {
+					box-shadow: none;
+				}
+				#printBtn {
+					display: none;
+				}
+			}
+			
+			/* ANIMATIONS */
+			@keyframes fadeUp {
+				from {
+					opacity: 0;
+					transform: translateY(22px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+			@keyframes slideDown {
+				from {
+					opacity: 0;
+					transform: translateY(-20px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+			@keyframes meshPulse {
+				0% {
+					opacity: 0.7;
+					transform: scale(1);
+				}
+				100% {
+					opacity: 1;
+					transform: scale(1.06);
+				}
+			}
+			@keyframes blink {
+				0%,
+				100% {
+					opacity: 1;
+				}
+				50% {
+					opacity: 0.2;
+				}
+			}
+			@keyframes popIn {
+				0% {
+					transform: scale(0.8);
+					opacity: 0;
+				}
+				70% {
+					transform: scale(1.05);
+				}
+				100% {
+					transform: scale(1);
+					opacity: 1;
+				}
+			}
+			
+			/* TOAST */
+			.toast {
+				position: fixed;
+				bottom: 32px;
+				left: 50%;
+				transform: translateX(-50%) translateY(80px);
+				padding: 14px 28px;
+				border-radius: 12px;
+				font-weight: 700;
+				font-size: 0.95rem;
+				z-index: 500;
+				transition:
+				transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+				opacity 0.4s;
+				opacity: 0;
+				pointer-events: none;
+				white-space: nowrap;
+			}
+			.toast.show {
+				transform: translateX(-50%) translateY(0);
+				opacity: 1;
+			}
+			.toast.success {
+				background: rgba(16, 185, 129, 0.18);
+				border: 1px solid rgba(16, 185, 129, 0.4);
+				color: #10b981;
+			}
+			.toast.error {
+				background: rgba(239, 68, 68, 0.15);
+				border: 1px solid rgba(239, 68, 68, 0.3);
+				color: #ef4444;
+			}
+			
+			/* CHAPTER DIVIDER in topbar */
+			#chapterBadgeWrap {
+				margin-bottom: 4px;
+			}
+			
+			@media (max-width: 700px) {
+				header {
+					padding: 14px 20px;
+				}
+				nav {
+					gap: 14px;
+				}
+				.lesson-topbar {
+					padding: 16px 20px;
+				}
+				.workspace-wrap {
+					padding: 20px 16px 0;
+				}
+				.action-row {
+					padding: 16px;
+				}
+				.output-wrap {
+					padding: 0 16px 32px;
+				}
+				.progress-wrap {
+					min-width: unset;
+				}
+				#progressContainer {
+					width: 160px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<!-- HEADER -->
+		<header>
+			<a href="index.html" class="logo">AceBlocks</a>
+			<nav>
+				<a href="index.html">Home</a>
+				<a href="lessons.html" class="active">Lessons</a>
+				<a href="learn-more.html">Learn More</a>
+				<a href="AceBlocksForSchools.html">For Schools</a>
+			</nav>
+		</header>
+
+		<!-- TOAST -->
+		<div class="toast" id="toast"></div>
+
+		<!-- INTRO SCREEN -->
+		<div id="lessonIntro">
+			<div class="intro-grid"></div>
+
+			<div class="intro-badge">
+				<span class="dot"></span>
+				12 Interactive Lessons
+			</div>
+
+			<h2>Welcome to<br><span>AceBlocks Lessons</span></h2>
+
+			<p>
+				Learn visual coding step by step. Print messages, work with numbers,
+				build logic, and take on real challenges — all with drag-and-drop
+				blocks.
+			</p>
+
+			<div class="lesson-preview">
+				<span class="lesson-pip">🖨️ Hello World</span>
+				<span class="lesson-pip">✏️ Print Anything</span>
+				<span class="lesson-pip">🔢 Numbers</span>
+				<span class="lesson-pip">➕ Math</span>
+				<span class="lesson-pip">📋 Multi-Print</span>
+				<span class="lesson-pip">❤️ I Love Coding</span>
+				<span class="lesson-pip">✖️ Multiply</span>
+				<span class="lesson-pip">➖ Subtract</span>
+				<span class="lesson-pip">🔟 Big Number</span>
+				<span class="lesson-pip">🧮 Chain Math</span>
+				<span class="lesson-pip">📣 Three Lines</span>
+				<span class="lesson-pip">🏆 Grand Finale</span>
+			</div>
+
+			<div class="intro-actions">
+				<button class="btn btn-primary" id="startBtn">
+					<svg width="15"
+					     height="15"
+					     fill="none"
+					     stroke="currentColor"
+					     stroke-width="2.5"
+					     viewBox="0 0 24 24"
+					>
+						<polygon points="5 3 19 12 5 21 5 3"/>
+					</svg>
+					Start Lessons
+				</button>
+			</div>
+		</div>
+
+		<!-- LESSON AREA -->
+		<div id="lessonArea">
+			<div class="lesson-topbar">
+				<div class="lesson-meta">
+					<div id="chapterBadgeWrap"></div>
+					<div id="lessonTitle"></div>
+					<div id="lessonObjective"></div>
+					<div id="lessonHint"></div>
+				</div>
+				<div class="progress-wrap">
+					<div class="progress-label">Progress</div>
+					<div id="progressContainer"><div id="progressBar"></div></div>
+					<div id="progressText"></div>
+				</div>
+			</div>
+
+			<div class="workspace-wrap">
+				<div id="blocklyDiv"></div>
+			</div>
+
+			<div class="action-row">
+				<button class="btn btn-primary" id="runBtn">
+					<svg width="14"
+					     height="14"
+					     fill="none"
+					     stroke="currentColor"
+					     stroke-width="2.5"
+					     viewBox="0 0 24 24"
+					>
+						<polygon points="5 3 19 12 5 21 5 3"/>
+					</svg>
+					Run Code
+				</button>
+				<button class="btn btn-danger" id="resetProgress">
+					<svg width="14"
+					     height="14"
+					     fill="none"
+					     stroke="currentColor"
+					     stroke-width="2.5"
+					     viewBox="0 0 24 24"
+					>
+						<polyline points="23 4 23 10 17 10"/>
+						<path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+					</svg>
+					Reset Progress
+				</button>
+			</div>
+
+			<div class="output-wrap">
+				<div class="output-label">Output</div>
+				<div id="output">Ready — run your code to see results here.</div>
+			</div>
+		</div>
+
+		<!-- CERTIFICATE -->
+		<div id="certificate">
+			<div class="cert-page">
+				<!-- Decorative SVG border -->
+				<svg class="cert-border-svg"
+				     viewBox="0 0 880 640"
+				     preserveAspectRatio="none"
+				     xmlns="http://www.w3.org/2000/svg"
+				>
+					<!-- Outer double border -->
+					<rect x="14" y="14" width="852" height="612" fill="none" stroke="#c8a84b" stroke-width="1.5"/>
+					<rect x="20" y="20" width="840" height="600" fill="none" stroke="#c8a84b" stroke-width="0.5"/>
+					<!-- Corner ornaments TL -->
+					<path d="M14,50 L14,14 L50,14" fill="none" stroke="#9a7c2e" stroke-width="2"/>
+					<circle cx="14" cy="14" r="4" fill="#c8a84b"/>
+					<!-- Corner ornaments TR -->
+					<path d="M866,50 L866,14 L830,14" fill="none" stroke="#9a7c2e" stroke-width="2"/>
+					<circle cx="866" cy="14" r="4" fill="#c8a84b"/>
+					<!-- Corner ornaments BL -->
+					<path d="M14,590 L14,626 L50,626" fill="none" stroke="#9a7c2e" stroke-width="2"/>
+					<circle cx="14" cy="626" r="4" fill="#c8a84b"/>
+					<!-- Corner ornaments BR -->
+					<path d="M866,590 L866,626 L830,626" fill="none" stroke="#9a7c2e" stroke-width="2"/>
+					<circle cx="866" cy="626" r="4" fill="#c8a84b"/>
+					<!-- Mid-edge accent marks -->
+					<line x1="440" y1="14" x2="440" y2="24" stroke="#c8a84b" stroke-width="1"/>
+					<line x1="440" y1="616" x2="440" y2="626" stroke="#c8a84b" stroke-width="1"/>
+					<line x1="14" y1="320" x2="24" y2="320" stroke="#c8a84b" stroke-width="1"/>
+					<line x1="856" y1="320" x2="866" y2="320" stroke="#c8a84b" stroke-width="1"/>
+				</svg>
+
+				<div class="cert-inner">
+					<!-- Header band -->
+					<div class="cert-header-band">
+						<div class="cert-brand">AceBlocks</div>
+						<div class="cert-program-label">
+							Visual Coding Program &nbsp;·&nbsp; 2026
+						</div>
+					</div>
+
+					<!-- Gold medallion seal -->
+					<div class="cert-medallion">
+						<svg viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg">
+							<!-- Outer starburst rays -->
+							<g fill="#c8a84b" opacity="0.55">
+								<polygon points="44,2 46.4,10 44,8 41.6,10"/>
+								<polygon points="44,86 46.4,78 44,80 41.6,78"/>
+								<polygon points="2,44 10,46.4 8,44 10,41.6"/>
+								<polygon points="86,44 78,46.4 80,44 78,41.6"/>
+								<polygon points="14.1,14.1 19.8,20.9 17.3,18.4 20.9,19.8"/>
+								<polygon points="73.9,73.9 68.2,67.1 70.7,69.6 67.1,68.2"/>
+								<polygon points="73.9,14.1 67.1,19.8 69.6,17.3 68.2,20.9"/>
+								<polygon points="14.1,73.9 20.9,68.2 18.4,70.7 19.8,67.1"/>
+							</g>
+							<!-- Main ring -->
+							<circle cx="44" cy="44" r="38" fill="#0c2d6b" stroke="#c8a84b" stroke-width="2"/>
+							<circle cx="44" cy="44" r="32" fill="none" stroke="#c8a84b" stroke-width="0.8" stroke-dasharray="3,3"/>
+							<!-- Inner emblem -->
+							<circle cx="44" cy="44" r="26" fill="#0e3580"/>
+							<!-- Star / code symbol -->
+							<text x="44"
+							      y="52"
+							      text-anchor="middle"
+							      font-family="'Syne',sans-serif"
+							      font-weight="800"
+							      font-size="22"
+							      fill="#c8a84b"
+							>
+								&lt;/&gt;
+							</text>
+							<!-- Tiny label -->
+							<text x="44"
+							      y="72"
+							      text-anchor="middle"
+							      font-family="'Space Grotesk',sans-serif"
+							      font-weight="700"
+							      font-size="5.5"
+							      fill="#a8bfe8"
+							      letter-spacing="1.5"
+							>
+								CERTIFIED
+							</text>
+						</svg>
+					</div>
+
+					<div class="cert-eyebrow">Certificate of Completion</div>
+
+					<div class="cert-title">AceBlocks</div>
+
+					<div class="cert-rule">
+						<div class="cert-rule-line"></div>
+						<div class="cert-rule-diamond"></div>
+						<div class="cert-rule-line"></div>
+					</div>
+
+					<p class="cert-presented-to">This is to proudly certify that</p>
+
+					<h2 id="certName"></h2>
+
+					<div class="cert-rule2"></div>
+
+					<p class="cert-body-text">
+						has successfully completed all 12 lessons of the AceBlocks Visual
+						Coding Program, demonstrating a strong grasp of block-based
+						scripting, arithmetic, logic, and core programming fundamentals.
+					</p>
+
+					<div class="cert-completion-tag">
+						12 Lessons &nbsp;·&nbsp; 4 Chapters &nbsp;·&nbsp; Full Program
+					</div>
+
+					<div class="cert-sigs">
+						<div class="cert-sig">
+							<span class="cert-sig-name">Jace Glover</span>
+							<div class="cert-sig-role">Founder, AceBlocks</div>
+						</div>
+						<div class="cert-sig">
+							<span class="cert-sig-name">Liam Cooper</span>
+							<div class="cert-sig-role">Coder, AceBlocks</div>
+						</div>
+						<div class="cert-sig">
+							<span class="cert-sig-name">Henry Lewis</span>
+							<div class="cert-sig-role">Coder, AceBlocks</div>
+						</div>
+					</div>
+
+					<!-- Footer band -->
+					<div class="cert-footer-band">
+						<p id="certDate"></p>
+						<span class="cert-footer-copy">© 2026 AceBlocks — Coding for the Future</span>
+					</div>
+				</div>
+			</div>
+
+			<button id="printBtn" onclick="window.print()">Print Certificate</button>
+		</div>
+
+		<!-- Toolbox XML -->
+		<xml id="toolbox" style="display: none">
+			<block type="text_print"></block>
+			<block type="text"></block>
+			<block type="math_number"></block>
+			<block type="math_arithmetic"></block>
+		</xml>
+
+		<script>
+			// ═══════════════ GLOBALS ═══════════════
+			let workspace = null;
+			let currentLesson =
+			parseInt(localStorage.getItem("aceblocksLesson")) || 1;
+			
+			// ═══════════════ HELPERS ═══════════════
+			function getCode() {
+				return workspace ? Blockly.JavaScript.workspaceToCode(workspace) : "";
+			}
+			
+			function runCode() {
+				const outputDiv = document.getElementById("output");
+				outputDiv.className = "";
+				outputDiv.innerText = "";
+				const orig = console.log;
+				console.log = function (msg) {
+					outputDiv.innerText += msg + "\n";
+					orig(msg);
+					};
+					try {
+						eval(getCode());
+						} catch (e) {
+							outputDiv.innerText += "Error: " + e.message;
+						}
+						console.log = orig;
+					}
+					
+					function hasPrintWithValue() {
+						return workspace
+						? workspace
+						.getAllBlocks(false)
+						.some(
+						(b) => b.type === "text_print" && b.getInputTargetBlock("TEXT"),
+						)
+						: false;
+					}
+					
+					function countValidPrints() {
+						return workspace
+						? workspace
+						.getAllBlocks(false)
+						.filter(
+						(b) => b.type === "text_print" && b.getInputTargetBlock("TEXT"),
+						).length
+						: 0;
+					}
+					
+					function getOutputText() {
+						return document.getElementById("output").innerText || "";
+					}
+					
+					// ═══════════════ TOAST ═══════════════
+					function showToast(msg, type = "success") {
+						const t = document.getElementById("toast");
+						t.textContent = msg;
+						t.className = "toast " + type + " show";
+						setTimeout(() => {
+							t.className = "toast " + type;
+							}, 2800);
+						}
+						
+						// ═══════════════ LESSONS ═══════════════
+						// Chapters: basics (1-3), numbers (4-6), math (7-9), challenge (10-12)
+						const lessons = {
+							1: {
+								chapter: "basics",
+								chapterLabel: "Chapter 1 — Basics",
+								title: 'Lesson 1 — Print "Hello World"',
+								objective: 'Use the print block to display "Hello World".',
+								hint: "Tip: Drag a Print block, connect a Text block to it, and type Hello World inside.",
+								check: () => getCode().toLowerCase().includes("hello world"),
+								},
+								2: {
+									chapter: "basics",
+									chapterLabel: "Chapter 1 — Basics",
+									title: "Lesson 2 — Print Anything",
+									objective: "Print any message you like using the text print block.",
+									hint: "Tip: Type anything into a Text block and connect it to a Print block.",
+									check: () => hasPrintWithValue(),
+									},
+									3: {
+										chapter: "basics",
+										chapterLabel: "Chapter 1 — Basics",
+										title: "Lesson 3 — Print Your Name",
+										objective: "Use the print block to display your own name.",
+										hint: "Tip: Type your name into a Text block, then connect it to a Print block.",
+										check: () => {
+											const code = getCode();
+											// Must have a print with a non-empty text value, and it shouldn't be a default placeholder
+											return hasPrintWithValue() && code.length > 20;
+											},
+											},
+											4: {
+												chapter: "numbers",
+												chapterLabel: "Chapter 2 — Numbers",
+												title: "Lesson 4 — Print the Number 5",
+												objective: "Use the print block to show the number 5.",
+												hint: "Tip: Use a Number block (not a Text block) set to 5, then connect it to Print.",
+												check: () => {
+													const code = getCode();
+													return code.includes("5") && hasPrintWithValue();
+													},
+													},
+													5: {
+														chapter: "numbers",
+														chapterLabel: "Chapter 2 — Numbers",
+														title: "Lesson 5 — Print the Number 10",
+														objective: "Print the number 10 using a number block.",
+														hint: "Tip: Set a Number block to 10 and connect it to a Print block.",
+														check: () => {
+															const code = getCode();
+															return code.includes("10") && hasPrintWithValue();
+															},
+															},
+															6: {
+																chapter: "numbers",
+																chapterLabel: "Chapter 2 — Numbers",
+																title: "Lesson 6 — Add 2 + 3",
+																objective: "Print the result of 2 + 3.",
+																hint: "Tip: Use a Math Arithmetic block set to ADD, plug in Number blocks for 2 and 3, then Print.",
+																check: () => getCode().includes("2 + 3"),
+																},
+																7: {
+																	chapter: "math",
+																	chapterLabel: "Chapter 3 — Math",
+																	title: "Lesson 7 — Subtract 10 − 4",
+																	objective: "Print the result of 10 minus 4.",
+																	hint: "Tip: Use the Math Arithmetic block and switch it to MINUS. Set the numbers to 10 and 4.",
+																	check: () => getCode().includes("10 - 4"),
+																	},
+																	8: {
+																		chapter: "math",
+																		chapterLabel: "Chapter 3 — Math",
+																		title: "Lesson 8 — Multiply 3 × 6",
+																		objective: "Print the result of 3 multiplied by 6.",
+																		hint: "Tip: Switch the Math Arithmetic block to MULTIPLY (×). Set the numbers to 3 and 6.",
+																		check: () => getCode().includes("3 * 6"),
+																		},
+																		9: {
+																			chapter: "math",
+																			chapterLabel: "Chapter 3 — Math",
+																			title: "Lesson 9 — Print a Number Over 50",
+																			objective: "Print any number that is greater than 50.",
+																			hint: "Tip: Use a Number block set to any value larger than 50 (e.g. 99, 100, 77...).",
+																			check: () => {
+																				const code = getCode();
+																				const matches = code.match(/console\.log\((\d+(\.\d+)?)\)/);
+																				if (matches) {
+																					return parseFloat(matches[1]) > 50;
+																				}
+																				// Also allow math results
+																				const output = getOutputText();
+																				const numMatch = output.match(/^(\d+(\.\d+)?)/);
+																				if (numMatch) return parseFloat(numMatch[1]) > 50;
+																				return false;
+																				},
+																				},
+																				10: {
+																					chapter: "challenge",
+																					chapterLabel: "Chapter 4 — Challenge",
+																					title: "Lesson 10 — Print Two Things",
+																					objective: "Print at least two separate messages or numbers.",
+																					hint: "Tip: Add two Print blocks — each one can have different content.",
+																					check: () => countValidPrints() >= 2,
+																					},
+																					11: {
+																						chapter: "challenge",
+																						chapterLabel: "Chapter 4 — Challenge",
+																						title: "Lesson 11 — Print Three Lines",
+																						objective: "Print three separate messages, numbers, or calculations.",
+																						hint: "Tip: Add three Print blocks to the workspace, each with something connected.",
+																						check: () => countValidPrints() >= 3,
+																						},
+																						12: {
+																							chapter: "challenge",
+																							chapterLabel: "Chapter 4 — Challenge",
+																							title: 'Lesson 12 — Print "I Love Coding"',
+																							objective: 'Use the print block to display "I Love Coding".',
+																							hint: "Tip: Type I Love Coding exactly into a Text block (capitalisation doesn't matter).",
+																							check: () => getCode().toLowerCase().includes("i love coding"),
+																							},
+																							};
+																							
+																							const TOTAL = Object.keys(lessons).length;
+																							
+																							const chapterClasses = {
+																								basics: "chapter-basics",
+																								numbers: "chapter-numbers",
+																								math: "chapter-logic",
+																								challenge: "chapter-challenge",
+																								};
+																								
+																								// ═══════════════ LOAD LESSON ═══════════════
+																								function loadLesson() {
+																									if (!workspace) return;
+																									workspace.clear();
+																									const l = lessons[currentLesson];
+																									document.getElementById("chapterBadgeWrap").innerHTML =
+																									`<span class="chapter-badge ${chapterClasses[l.chapter]}">${l.chapterLabel}</span>`;
+																									document.getElementById("lessonTitle").innerText = l.title;
+																									document.getElementById("lessonObjective").innerText = l.objective;
+																									document.getElementById("lessonHint").innerText = l.hint;
+																									const outputDiv = document.getElementById("output");
+																									outputDiv.innerText = "Ready — run your code to see results here.";
+																									outputDiv.className = "";
+																									localStorage.setItem("aceblocksLesson", currentLesson);
+																									const pct = Math.min(((currentLesson - 1) / TOTAL) * 100, 100);
+																									document.getElementById("progressBar").style.width = pct + "%";
+																									document.getElementById("progressText").innerText =
+																									`Lesson ${currentLesson} of ${TOTAL}`;
+																								}
+																								
+																								// ═══════════════ START ═══════════════
+																								document
+																								.getElementById("startBtn")
+																								.addEventListener("click", function () {
+																									document.getElementById("lessonIntro").style.display = "none";
+																									document.getElementById("lessonArea").style.display = "block";
+																									
+																									workspace = Blockly.inject("blocklyDiv", {
+																										toolbox: document.getElementById("toolbox"),
+																										theme: Blockly.Theme.defineTheme("aceblocks", {
+																											base: Blockly.Themes.Classic,
+																											componentStyles: {
+																												workspaceBackgroundColour: "#0d1120",
+																												toolboxBackgroundColour: "#0a0d18",
+																												toolboxForegroundColour: "#e8eaf6",
+																												flyoutBackgroundColour: "#0d1120",
+																												flyoutForegroundColour: "#e8eaf6",
+																												flyoutOpacity: 1,
+																												scrollbarColour: "#5b6bff",
+																												},
+																												}),
+																												scrollbars: true,
+																												trashcan: true,
+																												});
+																												
+																												Blockly.JavaScript["text_print"] = function (block) {
+																													const msg =
+																													Blockly.JavaScript.valueToCode(
+																													block,
+																													"TEXT",
+																													Blockly.JavaScript.ORDER_NONE,
+																													) || '""';
+																													return "console.log(" + msg + ");\n";
+																													};
+																													
+																													loadLesson();
+																													});
+																													
+																													// ═══════════════ RUN ═══════════════
+																													document.getElementById("runBtn").addEventListener("click", function () {
+																														runCode();
+																														const outputDiv = document.getElementById("output");
+																														if (lessons[currentLesson].check()) {
+																															outputDiv.className = "success";
+																															outputDiv.innerText += "\n✅ Correct! Well done.";
+																															showToast("✅ Lesson " + currentLesson + " complete!", "success");
+																															currentLesson++;
+																															if (currentLesson > TOTAL) {
+																																document.getElementById("progressBar").style.width = "100%";
+																																document.getElementById("progressText").innerText =
+																																`All ${TOTAL} lessons done!`;
+																																setTimeout(showCertificate, 900);
+																																} else {
+																																	setTimeout(loadLesson, 900);
+																																}
+																																} else {
+																																	outputDiv.className = "error";
+																																	outputDiv.innerText += "\n❌ Not quite — give it another try!";
+																																	showToast("❌ Not quite. Try again!", "error");
+																																}
+																																});
+																																
+																																// ═══════════════ RESET ═══════════════
+																																document
+																																.getElementById("resetProgress")
+																																.addEventListener("click", function () {
+																																	if (confirm("Reset all progress and start from Lesson 1?")) {
+																																		currentLesson = 1;
+																																		localStorage.removeItem("aceblocksLesson");
+																																		loadLesson();
+																																		showToast("Progress reset to Lesson 1.", "error");
+																																	}
+																																	});
+																																	
+																																	// ═══════════════ CERTIFICATE ═══════════════
+																																	function showCertificate() {
+																																		const name = prompt(
+																																		"🎉 You finished all 12 lessons!\n\nEnter your name for the certificate:",
+																																		);
+																																		document.getElementById("certName").innerText = name || "Student";
+																																		const today = new Date();
+																																		document.getElementById("certDate").innerText =
+																																		"Issued on " +
+																																		today.toLocaleDateString("en-NZ", {
+																																			day: "numeric",
+																																			month: "long",
+																																			year: "numeric",
+																																			});
+																																			document.getElementById("certificate").style.display = "block";
+																																			localStorage.removeItem("aceblocksLesson");
+																																		}
+																																		
+																																		// ═══════════════ DEV TOOLS ═══════════════
+																																		window.aceblocksSkipToCertificate = function () {
+																																			showCertificate();
+																																			};
+																																			document.addEventListener("keydown", function (e) {
+																																				if (e.ctrlKey && e.shiftKey && e.code === "KeyC") showCertificate();
+																																				});
+		</script>
+	</body>
 </html>
