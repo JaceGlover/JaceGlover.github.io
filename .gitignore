@@ -1,0 +1,3 @@
+# Ignore js artifacts
+**/*.js
+**/*.mjs
