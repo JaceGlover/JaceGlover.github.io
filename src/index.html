@@ -8,6 +8,7 @@
 		<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 		<link rel="icon" href="/images/favicon.ico.png" type="image/x-png">
 		<link href="styles/index.css" rel="stylesheet">
+		<script src="scripts/index.js" defer></script>
 	</head>
 	<body>
 		<header>
@@ -245,26 +246,5 @@
 			<p>Created by Jace Glover</p>
 			<p>Built in New Zealand</p>
 		</footer>
-
-		<script>
-			const observer = new IntersectionObserver(
-			(entries) => {
-				entries.forEach((entry) => {
-					if (entry.isIntersecting) entry.target.classList.add("visible");
-					});
-					},
-					{ threshold: 0.12 },
-					);
-
-					document
-					.querySelectorAll(".feature-card, .team-card, .stat")
-					.forEach((el) => observer.observe(el));
-
-					window.addEventListener("scroll", () => {
-						const grid = document.querySelector(".grid-lines");
-						if (grid)
-						grid.style.transform = `translateY(${window.scrollY * 0.15}px)`;
-						});
-		</script>
 	</body>
 </html>

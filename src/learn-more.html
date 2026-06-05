@@ -7,6 +7,7 @@
 		<link rel="icon" href="/images/AceBlocksLogo.png" type="image/x-png">
 		<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 		<link href="styles/learn-more.css" rel="stylesheet">
+		<script src="scripts/learn-more.js" defer></script>
 	</head>
 	<body>
 		<!-- HEADER -->
@@ -139,20 +140,5 @@
 			<p>© 2026 AceBlocks — Coding for the Future</p>
 			<p>Created by Jace Glover</p>
 		</footer>
-
-		<script>
-			const observer = new IntersectionObserver(
-			(entries) => {
-				entries.forEach((e) => {
-					if (e.isIntersecting) e.target.classList.add("visible");
-					});
-					},
-					{ threshold: 0.1 },
-					);
-
-					document
-					.querySelectorAll(".intro-card, .card, .vision-card, .cta-row")
-					.forEach((el) => observer.observe(el));
-		</script>
 	</body>
 </html>
