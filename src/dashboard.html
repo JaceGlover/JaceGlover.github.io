@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<link rel="icon" href="/images/AceBlocksLogo.png" type="image/x-png">
+		<link rel="icon" href="/src/images/favicon.ico.png" type="image/x-png">
 		<meta charset="UTF-8">
 		<title>AceBlocks | Dashboard</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 		<link href="styles/dashboard.css" rel="stylesheet">
-		<script src="scripts/dashboard.mjs"></script>
+		<script type="module" src="scripts/dashboard.mjs"></script>
 	</head>
 	<body>
 		<header>
@@ -40,7 +40,7 @@
 					<div class="stat-label">XP Earned</div>
 				</div>
 				<div class="stat-card">
-					<div class="stat-value">0 🔥</div>
+					<div class="stat-value" id="stat-streak">0 🔥</div>
 					<div class="stat-label">Day Streak</div>
 				</div>
 				<div class="stat-card">
@@ -82,30 +82,23 @@
 			</div>
 
 			<div class="section-label">My Courses</div>
-			<div class="courses-grid">
+			<div class="courses-grid" id="courses-grid">
 				<a href="lessons.html" class="course-card">
 					<div class="course-icon">🧱</div>
 					<div class="course-title">Block Coding Basics</div>
 					<div class="course-desc">
-						Build programs visually using AceBlocks drag-and-drop system. No
-						syntax needed.
+						Build programs visually using AceBlocks drag-and-drop system. No syntax needed.
 					</div>
 					<div class="progress-wrap">
-						<div class="progress-fill"
-						     id="course-progress-blocks"
-						     style="width: 0%"
-						></div>
+						<div class="progress-fill" id="course-progress-blocks" style="width: 0%"></div>
 					</div>
-					<div class="progress-label" id="course-label-blocks">
-						0% complete — Start now
-					</div>
+					<div class="progress-label" id="course-label-blocks">0% complete — Start now</div>
 				</a>
 				<a href="js_sandbox.html" class="course-card">
 					<div class="course-icon">⚡</div>
 					<div class="course-title">JavaScript Sandbox</div>
 					<div class="course-desc">
-						Write and run real JavaScript code directly in your browser. No
-						setup needed.
+						Write and run real JavaScript code directly in your browser. No setup needed.
 					</div>
 					<div class="progress-wrap">
 						<div class="progress-fill" style="width: 0%"></div>
@@ -116,8 +109,7 @@
 					<div class="course-icon">🐍</div>
 					<div class="course-title">Python for Beginners</div>
 					<div class="course-desc">
-						Learn Python from scratch with guided lessons and challenges. Coming
-						soon.
+						Learn Python from scratch with guided lessons and challenges. Coming soon.
 					</div>
 					<div class="progress-wrap">
 						<div class="progress-fill" style="width: 0%"></div>
@@ -130,14 +122,10 @@
 				<div class="section-label">Your Badges</div>
 				<div class="badges-row">
 					<span class="badge">🎉 Account Created</span>
-					<span class="badge locked"
-					      id="badge-first-lesson"
-					>🏆 First Lesson</span>
-					<span class="badge locked">🔥 7-Day Streak</span>
+					<span class="badge locked" id="badge-first-lesson">🏆 First Lesson</span>
+					<span class="badge locked" id="badge-streak">🔥 7-Day Streak</span>
 					<span class="badge locked">⚡ First Challenge</span>
-					<span class="badge locked"
-					      id="badge-course-complete"
-					>🎓 Course Complete</span>
+					<span class="badge locked" id="badge-course-complete">🎓 Course Complete</span>
 					<span class="badge locked">🌟 Top of Class</span>
 				</div>
 			</div>
