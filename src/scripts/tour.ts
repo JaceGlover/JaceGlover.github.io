@@ -4,73 +4,94 @@
  *   <script src="scripts/tour.js" defer></script>
  */
 
+class Tour {
+  selector: string;
+  title: string;
+  text: string;
+  position: string;
+  last: boolean;
+  constructor(
+    selector: string,
+    title: string,
+    text: string,
+    position: string,
+    last?: boolean,
+  ) {
+    this.selector = selector;
+    this.title = title;
+    this.text = text;
+    this.position = position;
+    if (last == undefined) this.last = false;
+    else this.last = last;
+  }
+}
 (function () {
-  const TOURS = {
+  const TOURS: Record<string, Array<Tour>> = {
     index: [
-      {
-        selector: ".logo",
-        title: "👋 Welcome to AceBlocks!",
-        text: "This is AceBlocks — a beginner-friendly visual coding platform. Let's show you around.",
-        position: "bottom",
-      },
-      {
-        selector: "nav .nav-cta",
-        title: "🚀 Start Learning",
-        text: "Click here anytime to jump straight into the coding lessons.",
-        position: "bottom",
-      },
-      {
-        selector: ".hero h1",
-        title: "🧱 Build Code Visually",
-        text: "No typing complex syntax — drag and drop blocks to write real programs.",
-        position: "bottom",
-      },
-      {
-        selector: "#features",
-        title: "⚡ Core Features",
-        text: "Scroll down to explore everything AceBlocks offers — lessons, sandboxes, and more.",
-        position: "top",
-      },
-      {
-        selector: "#team",
-        title: "🤝 Meet the Team",
-        text: "We're a small team building tools to make coding accessible for everyone.",
-        position: "top",
-      },
-      {
-        selector: ".cta-banner",
-        title: "🎉 You're all set!",
-        text: "That's the tour! Hit Start Learning whenever you're ready. Good luck!",
-        position: "top",
-        last: true,
-      },
+      new Tour(
+        ".logo",
+        "👋 Welcome to AceBlocks!",
+        "This is AceBlocks — a beginner-friendly visual coding platform. Let's show you around.",
+        "bottom",
+      ),
+      new Tour(
+        "nav .nav-cta",
+        "🚀 Start Learning",
+        "Click here anytime to jump straight into the coding lessons.",
+        "bottom",
+      ),
+      new Tour(
+        ".hero h1",
+        "🧱 Build Code Visually",
+        "No typing complex syntax — drag and drop blocks to write real programs.",
+        "bottom",
+      ),
+      new Tour(
+        "#features",
+        "⚡ Core Features",
+        "Scroll down to explore everything AceBlocks offers — lessons, sandboxes, and more.",
+        "top",
+      ),
+      new Tour(
+        "#team",
+        "🤝 Meet the Team",
+        "We're a small team building tools to make coding accessible for everyone.",
+        "top",
+      ),
+      new Tour(
+        ".cta-banner",
+        "🎉 You're all set!",
+        "That's the tour! Hit Start Learning whenever you're ready. Good luck!",
+        "top",
+        true,
+      ),
     ],
     lessons: [
-      {
-        selector: ".logo",
-        title: "📚 AceBlocks Lessons",
-        text: "Welcome to lessons! Here you'll learn to code step by step using visual blocks.",
-        position: "bottom",
-      },
-      {
-        selector: "#startBtn",
-        title: "▶ Start Here",
-        text: "Click this button to begin the lessons. You can pick up where you left off anytime.",
-        position: "top",
-      },
-      {
-        selector: ".lesson-preview",
-        title: "🗺️ What You'll Learn",
-        text: "These are all the topics covered across 12 lessons — from Hello World to real logic.",
-        position: "top",
-      },
-      {
-        selector: "#startBtn",
-        title: "🎉 Ready to code!",
-        text: "That's it — hit Start Lessons and begin your first challenge. Have fun!",
-        position: "top",
-        last: true,
-      },
+      new Tour(
+        ".logo",
+        "📚 AceBlocks Lessons",
+        "Welcome to lessons! Here you'll learn to code step by step using visual blocks.",
+        "bottom",
+      ),
+      new Tour(
+        "#startBtn",
+        "▶ Start Here",
+        "Click this button to begin the lessons. You can pick up where you left off anytime.",
+        "top",
+      ),
+      new Tour(
+        ".lesson-preview",
+        "🗺️ What You'll Learn",
+        "These are all the topics covered across 12 lessons — from Hello World to real logic.",
+        "top",
+      ),
+      new Tour(
+        "#startBtn",
+        "🎉 Ready to code!",
+        "That's it — hit Start Lessons and begin your first challenge. Have fun!",
+        "top",
+        true,
+      ),
     ],
   };
 
@@ -80,7 +101,7 @@
     return "index";
   }
 
-  function hasSeenTour(key) {
+  function hasSeenTour(key: string) {
     try {
       return localStorage.getItem("aceblocks_tour_" + key) === "done";
     } catch (e) {
@@ -88,7 +109,7 @@
     }
   }
 
-  function markTourDone(key) {
+  function markTourDone(key: string) {
     try {
       localStorage.setItem("aceblocks_tour_" + key, "done");
     } catch (e) {}
@@ -183,7 +204,11 @@
     if (el) el.remove();
   }
 
-  function positionTooltip(tooltip, target, position) {
+  function positionTooltip(
+    tooltip: HTMLDivElement,
+    target: Element,
+    position: string,
+  ) {
     const tr = target.getBoundingClientRect();
     const tw = tooltip.offsetWidth;
     const th = tooltip.offsetHeight;
@@ -209,8 +234,7 @@
     }
   }
 
-  function runTour(steps, pageKey) {
-    let current = 0;
+  function runTour(steps: Tour[], pageKey: string) {
     injectStyles();
 
     const overlay = document.createElement("div");
@@ -220,7 +244,7 @@
     // Mark as done IMMEDIATELY so even if they close the tab mid-tour it won't repeat
     markTourDone(pageKey);
 
-    function showStep(index) {
+    function showStep(index: number) {
       document
         .querySelectorAll(".ab-tour-highlight")
         .forEach((el) => el.classList.remove("ab-tour-highlight"));
@@ -232,6 +256,7 @@
       }
 
       const step = steps[index];
+      if (step === undefined) throw new ReferenceError();
       const target = document.querySelector(step.selector);
       if (!target) {
         showStep(index + 1);
@@ -263,8 +288,8 @@
 
         tooltip
           .querySelector(".ab-next")
-          .addEventListener("click", () => showStep(index + 1));
-        tooltip.querySelector(".ab-skip").addEventListener("click", endTour);
+          ?.addEventListener("click", () => showStep(index + 1));
+        tooltip.querySelector(".ab-skip")?.addEventListener("click", endTour);
       }, 400);
     }
 
@@ -280,7 +305,7 @@
     showStep(0);
   }
 
-  function addRelaunchButton(steps, pageKey) {
+  function addRelaunchButton(steps: Tour[], pageKey: string) {
     if (document.getElementById("ab-tour-relaunch")) return;
     const btn = document.createElement("button");
     btn.id = "ab-tour-relaunch";
