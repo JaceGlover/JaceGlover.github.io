@@ -24,7 +24,7 @@ function typeWriter() {
 // ── SMOOTH SCROLL DOWN ──
 function goDown() {
   const target = document.getElementById("deepSection")?.offsetTop;
-  if (target == undefined) throw new ReferenceError();
+  if (target === undefined) throw new ReferenceError();
   const start = window.scrollY;
   const distance = target - start;
   const duration = 1800;

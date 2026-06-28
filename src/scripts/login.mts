@@ -100,32 +100,21 @@ function switchTab(tab: string) {
   const isLogin = tab === "login";
   // Getting elements
   const formSignup = document.getElementById("form-signup") as HTMLElement;
-  const tabLogin = document.getElementById("tab-login") as HTMLElement;
-  const tabSignup = document.getElementById("tab-signup") as HTMLElement;
   const authMessage = document.getElementById("auth-message") as HTMLElement;
-  if (
-    [formSignup, tabLogin, tabSignup, authMessage].some((element) => {
-      return element === null;
-    })
-  )
-    throw new ReferenceError();
+  if (formSignup === null || authMessage === null) throw new ReferenceError();
   formLogin.style.display = isLogin ? "block" : "none";
   formSignup.style.display = isLogin ? "none" : "block";
-  tabLogin.classList.toggle("active", isLogin);
-  tabSignup.classList.toggle("active", !isLogin);
+  document.getElementById("tab-login")?.classList.toggle("active", isLogin);
+  document.getElementById("tab-signup")?.classList.toggle("active", !isLogin);
   authMessage.className = "message";
 }
 
-const tabLogin = document.getElementById("tab-login") as HTMLElement;
-const tabSignup = document.getElementById("tab-signup") as HTMLElement;
-if (
-  [tabLogin, tabSignup].some((element) => {
-    return element === null;
-  })
-)
-  throw new ReferenceError();
-tabLogin.addEventListener("click", () => switchTab("login"));
-tabSignup.addEventListener("click", () => switchTab("signup"));
+document
+  .getElementById("tab-login")
+  ?.addEventListener("click", () => switchTab("login"));
+document
+  .getElementById("tab-signup")
+  ?.addEventListener("click", () => switchTab("signup"));
 
 // ── Log In ────────────────────────────────────────────
 const loginEmail = document.querySelector(
@@ -163,16 +152,15 @@ async function handleLogin() {
 let selectedRole = "student";
 const roleStudent = document.getElementById("role-student");
 const roleTeacher = document.getElementById("role-teacher");
-if (roleStudent === null || roleTeacher === null) throw new ReferenceError();
-roleStudent.addEventListener("click", () => {
+roleStudent?.addEventListener("click", () => {
   selectedRole = "student";
-  roleStudent.classList.add("active");
-  roleTeacher.classList.remove("active");
+  roleStudent?.classList.add("active");
+  roleTeacher?.classList.remove("active");
 });
-roleTeacher.addEventListener("click", () => {
+roleTeacher?.addEventListener("click", () => {
   selectedRole = "teacher";
-  roleTeacher.classList.add("active");
-  roleStudent.classList.remove("active");
+  roleTeacher?.classList.add("active");
+  roleStudent?.classList.remove("active");
 });
 
 // ── Sign Up ───────────────────────────────────────────
@@ -273,8 +261,7 @@ async function handleGoogle() {
 
 // ── Forgot password ───────────────────────────────────
 const forgotLink = document.getElementById("forgot-link");
-if (forgotLink === null) throw new ReferenceError();
-forgotLink.addEventListener("click", async (e) => {
+forgotLink?.addEventListener("click", async (e) => {
   e.preventDefault();
   const email = loginEmail.value.trim();
   if (!email) return showMsg("Enter your email above first.", "error");
@@ -287,24 +274,14 @@ forgotLink.addEventListener("click", async (e) => {
 });
 
 // ── Event listeners ───────────────────────────────────
-const btnLogin = document.getElementById("btn-login") as HTMLElement;
-const btnSignup = document.getElementById("btn-signup") as HTMLElement;
-const btnGoogleLogin = document.getElementById(
-  "btn-google-login",
-) as HTMLElement;
-const btnGoogleSignup = document.getElementById(
-  "btn-google-signup",
-) as HTMLElement;
-if (
-  ![btnLogin, btnSignup, btnGoogleLogin, btnGoogleSignup].some((element) => {
-    return element === null;
-  })
-)
-  throw new ReferenceError();
-btnLogin.addEventListener("click", handleLogin);
-btnSignup.addEventListener("click", handleSignUp);
-btnGoogleLogin.addEventListener("click", handleGoogle);
-btnGoogleSignup.addEventListener("click", handleGoogle);
+const btnLogin = document.getElementById("btn-login");
+const btnSignup = document.getElementById("btn-signup");
+const btnGoogleLogin = document.getElementById("btn-google-login");
+const btnGoogleSignup = document.getElementById("btn-google-signup");
+btnLogin?.addEventListener("click", handleLogin);
+btnSignup?.addEventListener("click", handleSignUp);
+btnGoogleLogin?.addEventListener("click", handleGoogle);
+btnGoogleSignup?.addEventListener("click", handleGoogle);
 
 document.addEventListener("keydown", (e) => {
   if (e.key !== "Enter") return;

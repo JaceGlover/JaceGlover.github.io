@@ -2,7 +2,7 @@ import type * as BlocklyTypes from "blockly";
 declare const Blockly: typeof BlocklyTypes;
 // ═══════════════ GLOBALS ═══════════════
 let workspace: null | BlocklyTypes.WorkspaceSvg = null;
-let currentLesson = parseInt(localStorage.getItem("aceblocksLesson") || "1");
+let currentLessonNum = parseInt(localStorage.getItem("aceblocksLesson") || "1");
 
 // ═══════════════ HELPERS ═══════════════
 function getCode(): string {
@@ -50,10 +50,7 @@ function countValidPrints() {
 
 function getOutputText() {
   const output = document.getElementById("output");
-  if (output === null) {
-    return "";
-  }
-  return output.innerText;
+  return output === null ? "" : output.innerText;
 }
 
 // ═══════════════ TOAST ═══════════════
@@ -228,7 +225,7 @@ function loadLesson() {
   if (!workspace) return;
   workspace.clear();
   // Getting elements
-  const l = lessons[currentLesson] as Lesson;
+  const l = lessons[currentLessonNum] as Lesson;
   const chapterBadgeWrap = document.getElementById(
     "chapterBadgeWrap",
   ) as HTMLElement;
@@ -263,16 +260,15 @@ function loadLesson() {
   lessonHint.innerText = l.hint;
   outputDiv.innerText = "Ready — run your code to see results here.";
   outputDiv.className = "";
-  localStorage.setItem("aceblocksLesson", currentLesson.toString());
-  const pct = Math.min(((currentLesson - 1) / TOTAL) * 100, 100);
+  localStorage.setItem("aceblocksLesson", currentLessonNum.toString());
+  const pct = Math.min(((currentLessonNum - 1) / TOTAL) * 100, 100);
   progressBar.style.width = pct + "%";
-  progressText.innerText = `Lesson ${currentLesson} of ${TOTAL}`;
+  progressText.innerText = `Lesson ${currentLessonNum} of ${TOTAL}`;
 }
 
 // ═══════════════ START ═══════════════
-const startBtn = document.getElementById("startBtn") as HTMLElement;
-if (startBtn === null) throw new ReferenceError();
-startBtn.addEventListener("click", function () {
+const startBtn = document.getElementById("startBtn");
+startBtn?.addEventListener("click", function () {
   // Getting elements
   const lessonIntro = document.getElementById("lessonIntro") as HTMLElement;
   const lessonArea = document.getElementById("lessonArea") as HTMLElement;
@@ -322,28 +318,28 @@ startBtn.addEventListener("click", function () {
 
 // ═══════════════ RUN ═══════════════
 const runBtn = document.getElementById("runBtn");
-if (runBtn === null) throw new ReferenceError();
-runBtn.addEventListener("click", function () {
+runBtn?.addEventListener("click", function () {
   runCode();
   // Getting elements
   const outputDiv = document.getElementById("output") as HTMLElement;
   const progressBar = document.getElementById("progressBar") as HTMLElement;
   const progressText = document.getElementById("progressText") as HTMLElement;
+  const currentLesson = lessons[currentLessonNum] as Lesson;
   // Making sure elements exist
   if (
-    [outputDiv, lessons[currentLesson], progressBar, progressText].some(
+    [outputDiv, currentLesson, progressBar, progressText].some(
       (thingToCheck) => {
         return thingToCheck === null || thingToCheck === undefined;
       },
     )
   )
     throw new ReferenceError();
-  if ((lessons[currentLesson] as Lesson).check()) {
+  if (currentLesson.check()) {
     outputDiv.className = "success";
     outputDiv.innerText += "\n✅ Correct! Well done.";
-    showToast("✅ Lesson " + currentLesson + " complete!", "success");
-    currentLesson++;
-    if (currentLesson > TOTAL) {
+    showToast("✅ Lesson " + currentLessonNum + " complete!", "success");
+    currentLessonNum++;
+    if (currentLessonNum > TOTAL) {
       progressBar.style.width = "100%";
       progressText.innerText = `All ${TOTAL} lessons done!`;
       setTimeout(showCertificate, 900);
@@ -358,11 +354,9 @@ runBtn.addEventListener("click", function () {
 });
 
 // ═══════════════ RESET ═══════════════
-const resetProgress = document.getElementById("resetProgress");
-if (resetProgress === null) throw new ReferenceError();
-resetProgress.addEventListener("click", function () {
+document.getElementById("resetProgress")?.addEventListener("click", () => {
   if (confirm("Reset all progress and start from Lesson 1?")) {
-    currentLesson = 1;
+    currentLessonNum = 1;
     localStorage.removeItem("aceblocksLesson");
     loadLesson();
     showToast("Progress reset to Lesson 1.", "error");

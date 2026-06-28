@@ -21,8 +21,7 @@ class Tour {
     this.title = title;
     this.text = text;
     this.position = position;
-    if (last == undefined) this.last = false;
-    else this.last = last;
+    last === undefined ? (this.last = false) : (this.last = last);
   }
 }
 (function () {
