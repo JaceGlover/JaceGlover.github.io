@@ -46,18 +46,20 @@ function goDown() {
 
 // ── SCROLL REVEAL ──
 
-function main() {
-  typeWriter();
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) e.target.classList.add("visible");
-      });
-    },
-    { threshold: 0.1 },
-  );
-  document
-    .querySelectorAll(".info-card, .cta-block")
-    .forEach((el) => observer.observe(el));
+namespace AceBlocksForSchools {
+  export function main() {
+    typeWriter();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) e.target.classList.add("visible");
+        });
+      },
+      { threshold: 0.1 },
+    );
+    document
+      .querySelectorAll(".info-card, .cta-block")
+      .forEach((el) => observer.observe(el));
+  }
 }
-main();
+AceBlocksForSchools.main();
