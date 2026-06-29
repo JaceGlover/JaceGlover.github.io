@@ -61,27 +61,26 @@ function goDown() {
 }
 
 // ── SCROLL REVEAL + INIT ──
-function init() {
-  typeWriter();
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("visible");
-        }
-      });
-    },
-    { threshold: 0.1 },
-  );
-
-  document
-    .querySelectorAll(".info-card, .cta-block")
-    .forEach((el) => observer.observe(el));
+namespace AceBlocksForSchools {
+  export function main() {
+    typeWriter();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) entry.target.classList.add("visible");
+        });
+      },
+      { threshold: 0.1 },
+    );
+    document
+      .querySelectorAll(".info-card, .cta-block")
+      .forEach((el) => observer.observe(el));
+  }
 }
 
 // Run on load
-init();
+AceBlocksForSchools.main();
 
 // Optional: expose scroll function globally (if used in HTML buttons)
 (window as any).goDown = goDown;
