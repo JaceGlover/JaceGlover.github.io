@@ -7,11 +7,9 @@ function main() {
     },
     { threshold: 0.12 },
   );
-
   document
     .querySelectorAll(".feature-card, .team-card, .stat")
     .forEach((el) => observer.observe(el));
-
   window.addEventListener("scroll", () => {
     const grid = document.querySelector(".grid-lines");
     if (!(grid instanceof HTMLDivElement)) throw new ReferenceError();
