@@ -1,11 +1,9 @@
-import type * as BlocklyTypes from "blockly";
-declare const Blockly: typeof BlocklyTypes;
 // ═══════════════ GLOBALS ═══════════════
-let workspace: null | BlocklyTypes.WorkspaceSvg = null;
+let workspace = null;
 let currentLessonNum = parseInt(localStorage.getItem("aceblocksLesson") || "1");
 
 // ═══════════════ HELPERS ═══════════════
-function getCode(): string {
+function getCode() {
   return workspace !== null
     ? Blockly.JavaScript.workspaceToCode(workspace)
     : "";
@@ -25,7 +23,7 @@ function runCode() {
   };
   try {
     eval(getCode());
-  } catch (e: any) {
+  } catch (e) {
     outputDiv.innerText += "Error: " + e.message;
   }
   console.log = orig;
@@ -54,7 +52,7 @@ function getOutputText() {
 }
 
 // ═══════════════ TOAST ═══════════════
-function showToast(msg: string, type = "success") {
+function showToast(msg, type = "success") {
   const t = document.getElementById("toast");
   if (t === null) {
     throw new ReferenceError();
@@ -67,22 +65,8 @@ function showToast(msg: string, type = "success") {
 }
 
 // ═══════════════ LESSONS ═══════════════
-// Chapters: basics (1-3), numbers (4-6), math (7-9), challenge (10-12)
 class Lesson {
-  chapter: string;
-  chapterLabel: string;
-  title: string;
-  objective: string;
-  hint: string;
-  check: () => boolean;
-  constructor(
-    chapter: string,
-    chapterLabel: string,
-    title: string,
-    objective: string,
-    hint: string,
-    check: () => boolean,
-  ) {
+  constructor(chapter, chapterLabel, title, objective, hint, check) {
     this.chapter = chapter;
     this.chapterLabel = chapterLabel;
     this.title = title;
@@ -91,7 +75,8 @@ class Lesson {
     this.check = check;
   }
 }
-const lessons: Record<number, Lesson> = {
+
+const lessons = {
   1: new Lesson(
     "basics",
     "Chapter 1 - Basics",
@@ -116,7 +101,6 @@ const lessons: Record<number, Lesson> = {
     "Tip: Type your name into a Text block, then connect it to a Print block.",
     () => {
       const code = getCode();
-      // Must have a print with a non-empty text value, and it shouldn't be a default placeholder
       return hasPrintWithValue() && code.length > 20;
     },
   ),
@@ -176,8 +160,8 @@ const lessons: Record<number, Lesson> = {
       const code = getCode();
       const matches = code.match(/console\.log\((\d+(\.\d+)?)\)/);
       if (matches !== null && matches.length > 1) {
-        return parseFloat(matches[1] as string) > 50;
-      } // Also allow math results
+        return parseFloat(matches[1]) > 50;
+      }
       const output = getOutputText();
       const numMatch = output.match(/^(\d+(\.\d+)?)/);
       if (numMatch !== null && numMatch[1] !== undefined)
@@ -213,7 +197,7 @@ const lessons: Record<number, Lesson> = {
 
 const TOTAL = Object.keys(lessons).length;
 
-const chapterClasses: Record<string, string> = {
+const chapterClasses = {
   basics: "chapter-basics",
   numbers: "chapter-numbers",
   math: "chapter-logic",
@@ -224,20 +208,14 @@ const chapterClasses: Record<string, string> = {
 function loadLesson() {
   if (!workspace) return;
   workspace.clear();
-  // Getting elements
-  const l = lessons[currentLessonNum] as Lesson;
-  const chapterBadgeWrap = document.getElementById(
-    "chapterBadgeWrap",
-  ) as HTMLElement;
-  const lessonTitle = document.getElementById("lessonTitle") as HTMLElement;
-  const lessonObjective = document.getElementById(
-    "lessonObjective",
-  ) as HTMLElement;
-  const lessonHint = document.getElementById("lessonHint") as HTMLElement;
-  const outputDiv = document.getElementById("output") as HTMLElement;
-  const progressBar = document.getElementById("progressBar") as HTMLElement;
-  const progressText = document.getElementById("progressText") as HTMLElement;
-  // Making sure that the elements exist
+  const l = lessons[currentLessonNum];
+  const chapterBadgeWrap = document.getElementById("chapterBadgeWrap");
+  const lessonTitle = document.getElementById("lessonTitle");
+  const lessonObjective = document.getElementById("lessonObjective");
+  const lessonHint = document.getElementById("lessonHint");
+  const outputDiv = document.getElementById("output");
+  const progressBar = document.getElementById("progressBar");
+  const progressText = document.getElementById("progressText");
   if (
     [
       chapterBadgeWrap,
@@ -253,7 +231,6 @@ function loadLesson() {
     })
   )
     throw new ReferenceError();
-  // Actual stuff
   chapterBadgeWrap.innerHTML = `<span class="chapter-badge ${chapterClasses[l.chapter]}">${l.chapterLabel}</span>`;
   lessonTitle.innerText = l.title;
   lessonObjective.innerText = l.objective;
@@ -269,18 +246,15 @@ function loadLesson() {
 // ═══════════════ START ═══════════════
 const startBtn = document.getElementById("startBtn");
 startBtn?.addEventListener("click", function () {
-  // Getting elements
-  const lessonIntro = document.getElementById("lessonIntro") as HTMLElement;
-  const lessonArea = document.getElementById("lessonArea") as HTMLElement;
-  const toolbox = document.getElementById("toolbox") as HTMLElement;
-  // Making sure elements exist
+  const lessonIntro = document.getElementById("lessonIntro");
+  const lessonArea = document.getElementById("lessonArea");
+  const toolbox = document.getElementById("toolbox");
   if (
     [lessonIntro, lessonArea, toolbox].some((element) => {
       return element === null;
     })
   )
     throw new ReferenceError();
-  // The actual stuff
   lessonIntro.style.display = "none";
   lessonArea.style.display = "block";
 
@@ -303,7 +277,7 @@ startBtn?.addEventListener("click", function () {
     trashcan: true,
   });
 
-  Blockly.JavaScript["text_print"] = (block: BlocklyTypes.Block) => {
+  Blockly.JavaScript["text_print"] = (block) => {
     const msg =
       Blockly.JavaScript.valueToCode(
         block,
@@ -320,12 +294,10 @@ startBtn?.addEventListener("click", function () {
 const runBtn = document.getElementById("runBtn");
 runBtn?.addEventListener("click", function () {
   runCode();
-  // Getting elements
-  const outputDiv = document.getElementById("output") as HTMLElement;
-  const progressBar = document.getElementById("progressBar") as HTMLElement;
-  const progressText = document.getElementById("progressText") as HTMLElement;
-  const currentLesson = lessons[currentLessonNum] as Lesson;
-  // Making sure elements exist
+  const outputDiv = document.getElementById("output");
+  const progressBar = document.getElementById("progressBar");
+  const progressText = document.getElementById("progressText");
+  const currentLesson = lessons[currentLessonNum];
   if (
     [outputDiv, currentLesson, progressBar, progressText].some(
       (thingToCheck) => {
@@ -365,15 +337,13 @@ document.getElementById("resetProgress")?.addEventListener("click", () => {
 
 // ═══════════════ CERTIFICATE ═══════════════
 function showCertificate() {
-  // Getting vars
   const name = prompt(
     "🎉 You finished all 12 lessons!\n\nEnter your name for the certificate:",
   );
-  const certName = document.getElementById("certName") as HTMLElement;
-  const certDate = document.getElementById("certDate") as HTMLElement;
-  const certificate = document.getElementById("certificate") as HTMLElement;
+  const certName = document.getElementById("certName");
+  const certDate = document.getElementById("certDate");
+  const certificate = document.getElementById("certificate");
   const today = new Date();
-  // Making sure elements exist
   if (
     [certName, certDate, certificate].some((element) => {
       return element === null;
@@ -393,7 +363,7 @@ function showCertificate() {
 }
 
 // ═══════════════ DEV TOOLS ═══════════════
-(window as any).aceblocksSkipToCertificate = () => {
+window.aceblocksSkipToCertificate = () => {
   showCertificate();
 };
 document.addEventListener("keydown", function (e) {
