@@ -1,77 +1,78 @@
-enum Mode {
-  Js = "js",
-  Html = "html",
-  Css = "css",
-}
+const Mode = {
+  Js: "js",
+  Html: "html",
+  Css: "css",
+};
+
 // ── DEFAULT CODE ──────────────────────────────────────────────
 const DEFAULTS = {
   js: `// Welcome to the AceBlocks JS Sandbox!
-				// Write JavaScript below and hit Run.
+			// Write JavaScript below and hit Run.
 
-				const greeting = "Hello, AceBlocks!"
-				console.log(greeting)
+			const greeting = "Hello, AceBlocks!"
+			console.log(greeting)
 
-				// Try some maths
-				const nums = [1, 2, 3, 4, 5]
-				const total = nums.reduce((a, b) => a + b, 0)
-				console.log("Sum:", total)
+			// Try some maths
+			const nums = [1, 2, 3, 4, 5]
+			const total = nums.reduce((a, b) => a + b, 0)
+			console.log("Sum:", total)
 
-				// Or manipulate the preview
-				document.body.style.background = "#04060f"
-				document.body.innerHTML = \`
-				<div style="font-family:sans-serif;color:#e8eaf6;display:flex;align-items:center;
-				justify-content:center;height:100vh;flex-direction:column;gap:12px;">
-				<h1 style="font-size:2rem;">👋 Hello from JS!</h1>
-				<p style="color:#7b83a6;">Edit the code and hit Run</p>
-				</div>
-				\``,
+			// Or manipulate the preview
+			document.body.style.background = "#04060f"
+			document.body.innerHTML = \`
+			<div style="font-family:sans-serif;color:#e8eaf6;display:flex;align-items:center;
+			justify-content:center;height:100vh;flex-direction:column;gap:12px;">
+			<h1 style="font-size:2rem;">👋 Hello from JS!</h1>
+			<p style="color:#7b83a6;">Edit the code and hit Run</p>
+			</div>
+			\``,
 
   html: `<!DOCTYPE html>
-				<html>
-				<head>
-				<meta charset="UTF-8">
-				<title>My Page</title>
-				</head>
-				<body>
-				<h1>Hello, AceBlocks!</h1>
-				<p>Edit this HTML and hit Run.</p>
-				</body>
-				</html>`,
+			<html>
+			<head>
+			<meta charset="UTF-8">
+			<title>My Page</title>
+			</head>
+			<body>
+			<h1>Hello, AceBlocks!</h1>
+			<p>Edit this HTML and hit Run.</p>
+			</body>
+			</html>`,
 
   css: `/* Styles for your HTML */
-				body {
-					font-family: 'Segoe UI', sans-serif;
-					background: #04060f;
-					color: #e8eaf6;
-					display: flex;
-					flex-direction: column;
-					align-items: center;
-					justify-content: center;
-					min-height: 100vh;
-					margin: 0;
-					padding: 2rem;
-				}
+			body {
+				font-family: 'Segoe UI', sans-serif;
+				background: #04060f;
+				color: #e8eaf6;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				min-height: 100vh;
+				margin: 0;
+				padding: 2rem;
+			}
 
-				h1 {
-					font-size: 2.5rem;
-					background: linear-gradient(135deg, #5b6bff, #38f0c0);
-					-webkit-background-clip: text;
-					-webkit-text-fill-color: transparent;
-					background-clip: text;
-					margin-bottom: 1rem;
-				}
+			h1 {
+				font-size: 2.5rem;
+				background: linear-gradient(135deg, #5b6bff, #38f0c0);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				background-clip: text;
+				margin-bottom: 1rem;
+			}
 
-				p {
-					color: #7b83a6;
-					font-size: 1.1rem;
-					}`,
+			p {
+				color: #7b83a6;
+				font-size: 1.1rem;
+				}`,
 
   htmljs: `// JavaScript for your HTML page
-					console.log("Page loaded!")
+				console.log("Page loaded!")
 
-					document.querySelector('h1').addEventListener('click', () => {
-						console.log("Heading clicked!")
-						})`,
+				document.querySelector('h1').addEventListener('click', () => {
+					console.log("Heading clicked!")
+					})`,
 };
 
 // ── STATE ─────────────────────────────────────────────────────
@@ -84,23 +85,19 @@ let files = {
 };
 
 // ── INITIALIZING CONSTANTS ────────────────────────────────────
-const codeInput = document.getElementById("code-input") as HTMLTextAreaElement;
-const lineNumbers = document.getElementById("line-numbers") as HTMLDivElement;
-const preview = document.getElementById("preview") as HTMLIFrameElement;
-const consoleOutput = document.getElementById(
-  "console-output",
-) as HTMLDivElement;
-const fileTabs = document.getElementById("file-tabs") as HTMLDivElement;
-const modeJs = document.getElementById("mode-js") as HTMLButtonElement;
-const modeHtml = document.getElementById("mode-html") as HTMLButtonElement;
-const btnClear = document.getElementById(
-  "btn-clear-console",
-) as HTMLButtonElement;
-const btnRun = document.getElementById("btn-run") as HTMLButtonElement;
-const btnReset = document.getElementById("btn-reset") as HTMLButtonElement;
-const handle = document.getElementById("resize-handle") as HTMLDivElement;
-const editorPanel = document.getElementById("editor-panel") as HTMLDivElement;
-const domWorkspace = document.querySelector(".workspace") as HTMLDivElement;
+const codeInput = document.getElementById("code-input");
+const lineNumbers = document.getElementById("line-numbers");
+const preview = document.getElementById("preview");
+const consoleOutput = document.getElementById("console-output");
+const fileTabs = document.getElementById("file-tabs");
+const modeJs = document.getElementById("mode-js");
+const modeHtml = document.getElementById("mode-html");
+const btnClear = document.getElementById("btn-clear-console");
+const btnRun = document.getElementById("btn-run");
+const btnReset = document.getElementById("btn-reset");
+const handle = document.getElementById("resize-handle");
+const editorPanel = document.getElementById("editor-panel");
+const domWorkspace = document.querySelector(".workspace");
 
 // ── ASSERTING TYPES ───────────────────────────────────────────
 if (
@@ -137,7 +134,6 @@ codeInput.addEventListener("scroll", () => {
   lineNumbers.scrollTop = codeInput.scrollTop;
 });
 
-// Tab key inserts spaces
 codeInput.addEventListener("keydown", (e) => {
   if (e.key === "Tab") {
     e.preventDefault();
@@ -156,8 +152,7 @@ codeInput.addEventListener("keydown", (e) => {
 modeJs.addEventListener("click", () => setMode(Mode.Js));
 modeHtml.addEventListener("click", () => setMode(Mode.Html));
 
-function setMode(newMode: Mode) {
-  // Save current editor content
+function setMode(newMode) {
   if (mode === Mode.Js) {
     DEFAULTS.js = codeInput.value;
   } else {
@@ -182,9 +177,7 @@ function setMode(newMode: Mode) {
 }
 
 // ── FILE TABS (HTML mode) ─────────────────────────────────────
-const tabs = document.querySelectorAll(
-  ".file-tab",
-) as NodeListOf<HTMLButtonElement>;
+const tabs = document.querySelectorAll(".file-tab");
 tabs.forEach((tab) => {
   tab.addEventListener("click", () => {
     files[activeFile] = codeInput.value;
@@ -211,7 +204,7 @@ tabs.forEach((tab) => {
   });
 });
 
-function setActiveFileTab(file: Mode) {
+function setActiveFileTab(file) {
   tabs.forEach((t) => {
     t.classList.toggle("active", t.dataset["file"] === file);
   });
@@ -223,11 +216,11 @@ function clearConsole() {
     '<div class="console-empty">Run your code to see output here.</div>';
 }
 
-function addLog(msg: string, type = "log") {
+function addLog(msg, type = "log") {
   const empty = consoleOutput.querySelector(".console-empty");
   if (empty) empty.remove();
 
-  const labels: Record<string, string> = {
+  const labels = {
     log: "LOG",
     error: "ERR",
     warn: "WARN",
@@ -236,18 +229,17 @@ function addLog(msg: string, type = "log") {
   };
   const line = document.createElement("div");
   line.className = `log-line ${type}`;
-  line.innerHTML = `<span class="log-type">${labels["type"] || "LOG"}</span><span class="log-msg">${escapeHtml(msg)}</span>`;
+  line.innerHTML = `<span class="log-type">${labels[type] || "LOG"}</span><span class="log-msg">${escapeHtml(msg)}</span>`;
   consoleOutput.appendChild(line);
   consoleOutput.scrollTop = consoleOutput.scrollHeight;
 }
 
-function escapeHtml(str: string) {
+function escapeHtml(str) {
   return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
 btnClear.addEventListener("click", clearConsole);
 
-// Listen for messages from the iframe
 window.addEventListener("message", (e) => {
   if (!e.data || !e.data.type) return;
   const { type, args } = e.data;
@@ -260,51 +252,47 @@ window.addEventListener("message", (e) => {
 btnRun.addEventListener("click", runCode);
 
 function runCode() {
-  // Save current tab content
   if (mode === Mode.Html) files[activeFile] = codeInput.value;
 
   clearConsole();
   addLog("Running...", "system");
 
-  // Intercept console in iframe via postMessage
   const interceptor = `
-																	<script>
-																	(function() {
-																		const send = (type, args) => window.parent.postMessage({ type, args: args.map(a => {
-																			try { return typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a) } catch(e) { return String(a) }
-																			})}, '*')
-																			;['log','warn','info'].forEach(m => {
-																				const orig = console[m]
-																				console[m] = (...args) => { send(m, args); orig.apply(console, args) }
-																				})
-																				window.onerror = (msg, src, line, col) => {
-																					send('error', [msg + ' (line ' + line + ')'])
-																					return true
-																				}
-																				window.addEventListener('unhandledrejection', e => {
-																					send('error', ['Unhandled promise rejection: ' + e.reason])
-																					})
-																					})()
-																					<\/script>
-																					`;
+    <script>
+    (function() {
+      const send = (type, args) => window.parent.postMessage({ type, args: args.map(a => {
+        try { return typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a) } catch(e) { return String(a) }
+        })}, '*')
+        ;['log','warn','info'].forEach(m => {
+          const orig = console[m]
+          console[m] = (...args) => { send(m, args); orig.apply(console, args) }
+          })
+          window.onerror = (msg, src, line, col) => {
+            send('error', [msg + ' (line ' + line + ')'])
+            return true
+          }
+          window.addEventListener('unhandledrejection', e => {
+            send('error', ['Unhandled promise rejection: ' + e.reason])
+            })
+            })()
+            <\/script>
+            `;
 
   let html = "";
 
   if (mode === Mode.Js) {
     const code = codeInput.value;
     html = `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body>
-																						${interceptor}
-																						<script>
-																						try { ${code} } catch(e) { window.parent.postMessage({type:'error',args:[e.message]}, '*') }
-																						<\/script>
-																						</body></html>`;
+      ${interceptor}
+      <script>
+      try { ${code} } catch(e) { window.parent.postMessage({type:'error',args:[e.message]}, '*') }
+      <\/script>
+      </body></html>`;
   } else {
-    // Inject CSS and JS into HTML
     const htmlCode = files.html;
     const cssCode = files.css;
     const jsCode = files.js;
 
-    // Try to inject into <head> and before </body>
     let doc = htmlCode;
     const styleTag = `<style>${cssCode}</style>`;
     const scriptTag = `${interceptor}<script>try{${jsCode}}catch(e){window.parent.postMessage({type:'error',args:[e.message]},'*')}<\/script>`;
