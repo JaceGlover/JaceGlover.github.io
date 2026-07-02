@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-import { getAnalytics } from "firebase/analytics";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-analytics.js";
 import {
   getAuth,
   onAuthStateChanged,
@@ -40,7 +40,7 @@ function main() {
     const name = user.displayName || user.email?.split("@")[0] || "Anon";
     const initials = name?.slice(0, 2).toUpperCase();
     const avatarEl = document.getElementById("user-avatar");
-    if (avatarEl === null || initials === undefined) throw new ReferenceError();
+    if (!avatarEl || !initials) throw new ReferenceError();
     if (user.photoURL) {
       avatarEl.innerHTML = `<img src="${user.photoURL}" alt="${initials}">`;
     } else {
@@ -49,7 +49,7 @@ function main() {
 
     const welcome = document.getElementById("welcome-heading");
     const email = document.getElementById("user-email-display");
-    if (welcome === null || email === null) throw new ReferenceError();
+    if (!welcome || !email) throw new ReferenceError();
 
     welcome.textContent = `Welcome back, ${name}.`;
     email.textContent = user.email;
@@ -59,15 +59,12 @@ function main() {
     const userSnap = await getDoc(userRef);
     const data = userSnap.exists() ? userSnap.data() : {};
 
-    // How many lessons completed — prefer Firestore, fall back to localStorage
-    // (so progress isn't lost if they used the site before Firestore was added)
     const localLesson = parseInt(
       localStorage.getItem("aceblocksLesson") || "1",
     );
     const localComplete = Math.max(0, localLesson - 1);
     const firestoreComplete = data["lessonsComplete"] ?? null;
 
-    // Use whichever is higher so no progress is ever lost
     const completed =
       firestoreComplete !== null
         ? Math.max(firestoreComplete, localComplete)
@@ -75,7 +72,8 @@ function main() {
 
     const pct = Math.round((completed / TOTAL) * 100);
     const xp = completed * 50;
-    // ── Update Firestore with latest progress ─────────────
+
+    // ── Update Firestore ──────────────────────────────────
     await setDoc(
       userRef,
       {
@@ -90,7 +88,6 @@ function main() {
       { merge: true },
     );
 
-    // Also keep localStorage in sync so lessons/index.html still works
     if (completed > 0) {
       localStorage.setItem("aceblocksLesson", String(completed + 1));
     }
@@ -101,12 +98,7 @@ function main() {
     const progress = document.getElementById("course-progress-blocks");
     const label_blocks = document.getElementById("course-label-blocks");
 
-    if (
-      lessons === null ||
-      stat_xp === null ||
-      progress === null ||
-      label_blocks === null
-    )
+    if (!lessons || !stat_xp || !progress || !label_blocks)
       throw new ReferenceError();
 
     lessons.textContent = completed.toString();
@@ -119,6 +111,7 @@ function main() {
         : pct === 0
           ? "0% complete — Start now"
           : pct + "% complete — Keep going!";
+
     // ── Streak tracking ───────────────────────────────────
     const today = new Date().toDateString();
     const lastVisit = data["lastVisit"] || null;
@@ -126,17 +119,13 @@ function main() {
 
     let newStreak = streak;
     if (lastVisit === today) {
-      // Same day — streak stays the same
       newStreak = streak;
     } else if (lastVisit === new Date(Date.now() - 86400000).toDateString()) {
-      // Visited yesterday — increment streak
       newStreak = streak + 1;
     } else {
-      // Missed a day — reset streak
       newStreak = 1;
     }
 
-    // Save streak + last visit
     await setDoc(
       userRef,
       {
@@ -153,9 +142,7 @@ function main() {
     if (completed >= 1)
       document.getElementById("badge-first-lesson")?.classList.remove("locked");
     if (completed >= TOTAL)
-      document
-        .getElementById("badge-course-complete")
-        ?.classList.remove("locked");
+      document.getElementById("badge-course-complete")?.classList.remove("locked");
     if (newStreak >= 7)
       document.getElementById("badge-streak")?.classList.remove("locked");
   });
@@ -165,4 +152,5 @@ function main() {
     window.location.href = "/login";
   });
 }
+
 main();
