@@ -1,4 +1,3 @@
-// Import everything, in a way that TypeScript is happy with
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 import {
   getAuth,
@@ -16,13 +15,11 @@ import {
   getDoc,
   setDoc,
 } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
-// Importing types
-import type { User } from "firebase/auth";
 
-enum Redirects {
-  Dashboard = "/dashboard",
-  TeacherDashboard = "teacher-dashboard.html",
-}
+const Redirects = {
+  Dashboard: "/dashboard",
+  TeacherDashboard: "teacher-dashboard.html",
+};
 
 const firebaseConfig = {
   apiKey: "AIzaSyA3PF0jklshcBZLm4Tm_-K10RUok15Mu3U",
@@ -40,38 +37,28 @@ const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
 // ── Role helper ───────────────────────────────────────
-async function getRedirectUrl(user: User) {
+async function getRedirectUrl(user) {
   const snap = await getDoc(doc(db, "users", user.uid));
-  // Why is there a difference between teacher-dashboard, and dashboard?
-  // teacher-dashboard doesn't exist, as well
   if (snap.exists() && snap.data()["role"] === "teacher")
     return Redirects.TeacherDashboard;
-  // Also check teachers collection (for Google sign-in teachers)
   const tsnap = await getDoc(doc(db, "teachers", user.uid));
   if (tsnap.exists()) return Redirects.TeacherDashboard;
   return Redirects.Dashboard;
 }
 
-// Redirect already-logged-in users to the right dashboard
 onAuthStateChanged(auth, async (user) => {
   if (user) window.location.href = await getRedirectUrl(user);
 });
 
 // ── Helpers ──────────────────────────────────────────
-function showMsg(text: string, type: string) {
+function showMsg(text, type) {
   const authMessage = document.getElementById("auth-message");
   if (authMessage === null) throw new ReferenceError();
   authMessage.textContent = text;
   authMessage.className = "message " + type;
 }
 
-function setLoading(btnId: string, loading: true): void;
-function setLoading(btnId: string, loading: false, defaultHTML: string): void;
-function setLoading(
-  btnId: string,
-  loading: boolean,
-  defaultHTML?: string,
-): void {
+function setLoading(btnId, loading, defaultHTML) {
   const btn = document.querySelector(`button#${btnId}`);
   if (!(btn instanceof HTMLButtonElement)) throw new ReferenceError();
   btn.disabled = loading;
@@ -83,8 +70,8 @@ function setLoading(
   }
 }
 
-function friendlyError(code: string) {
-  const map: Record<string, string> = {
+function friendlyError(code) {
+  const map = {
     "auth/user-not-found": "No account found with that email.",
     "auth/wrong-password": "Incorrect password. Try again.",
     "auth/invalid-credential": "Incorrect email or password.",
@@ -101,13 +88,13 @@ function friendlyError(code: string) {
 }
 
 // ── Tab switching ─────────────────────────────────────
-const formLogin = document.getElementById("form-login") as HTMLElement;
+const formLogin = document.getElementById("form-login");
 if (formLogin === null) throw new ReferenceError();
-function switchTab(tab: string) {
+
+function switchTab(tab) {
   const isLogin = tab === "login";
-  // Getting elements
-  const formSignup = document.getElementById("form-signup") as HTMLElement;
-  const authMessage = document.getElementById("auth-message") as HTMLElement;
+  const formSignup = document.getElementById("form-signup");
+  const authMessage = document.getElementById("auth-message");
   if (formSignup === null || authMessage === null) throw new ReferenceError();
   formLogin.style.display = isLogin ? "block" : "none";
   formSignup.style.display = isLogin ? "none" : "block";
@@ -124,14 +111,11 @@ document
   ?.addEventListener("click", () => switchTab("signup"));
 
 // ── Log In ────────────────────────────────────────────
-const loginEmail = document.querySelector(
-  "input#login-email",
-) as HTMLInputElement;
+const loginEmail = document.querySelector("input#login-email");
 if (!(loginEmail instanceof HTMLInputElement)) throw new ReferenceError();
+
 async function handleLogin() {
-  const loginPassword = document.querySelector(
-    "input#login-password",
-  ) as HTMLInputElement;
+  const loginPassword = document.querySelector("input#login-password");
   if (!(loginPassword instanceof HTMLInputElement)) throw new ReferenceError();
   const email = loginEmail.value.trim();
   const password = loginPassword.value;
@@ -145,7 +129,7 @@ async function handleLogin() {
     setTimeout(async () => {
       window.location.href = await getRedirectUrl(user);
     }, 700);
-  } catch (e: any) {
+  } catch (e) {
     showMsg(friendlyError(e.code), "error");
     setLoading(
       "btn-login",
@@ -172,15 +156,9 @@ roleTeacher?.addEventListener("click", () => {
 
 // ── Sign Up ───────────────────────────────────────────
 async function handleSignUp() {
-  const signupName = document.querySelector(
-    "input#signup-name",
-  ) as HTMLInputElement;
-  const signupEmail = document.querySelector(
-    "input#signup-email",
-  ) as HTMLInputElement;
-  const signupPassword = document.querySelector(
-    "input#signup-password",
-  ) as HTMLInputElement;
+  const signupName = document.querySelector("input#signup-name");
+  const signupEmail = document.querySelector("input#signup-email");
+  const signupPassword = document.querySelector("input#signup-password");
   if (
     [signupName, signupEmail, signupPassword].some((element) => {
       return element === null;
@@ -204,7 +182,6 @@ async function handleSignUp() {
     );
     await updateProfile(user, { displayName: name });
 
-    // Save role + profile to Firestore
     await setDoc(doc(db, "users", user.uid), {
       uid: user.uid,
       name,
@@ -215,7 +192,6 @@ async function handleSignUp() {
       xp: 0,
     });
 
-    // If teacher, also create teachers doc
     if (selectedRole === "teacher") {
       await setDoc(doc(db, "teachers", user.uid), {
         uid: user.uid,
@@ -231,7 +207,7 @@ async function handleSignUp() {
           ? Redirects.TeacherDashboard
           : Redirects.Dashboard;
     }, 700);
-  } catch (e: any) {
+  } catch (e) {
     showMsg(friendlyError(e.code), "error");
     setLoading(
       "btn-signup",
@@ -245,7 +221,6 @@ async function handleSignUp() {
 async function handleGoogle() {
   try {
     const { user } = await signInWithPopup(auth, provider);
-    // Save to Firestore if first time (merge so existing role isn't overwritten)
     if (user.email === null) throw new TypeError();
     await setDoc(
       doc(db, "users", user.uid),
@@ -261,7 +236,7 @@ async function handleGoogle() {
     setTimeout(async () => {
       window.location.href = await getRedirectUrl(user);
     }, 700);
-  } catch (e: any) {
+  } catch (e) {
     showMsg(friendlyError(e.code), "error");
   }
 }
@@ -275,7 +250,7 @@ forgotLink?.addEventListener("click", async (e) => {
   try {
     await sendPasswordResetEmail(auth, email);
     showMsg("Password reset email sent! Check your inbox.", "success");
-  } catch (e: any) {
+  } catch (e) {
     showMsg(friendlyError(e.code), "error");
   }
 });
