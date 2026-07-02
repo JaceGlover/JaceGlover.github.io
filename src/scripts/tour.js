@@ -1,22 +1,5 @@
-/**
- * AceBlocks Guided Tour
- * Add to both index.html and lessons/index.html just before </body>:
- *   <script src="/scripts/tour.js" defer></script>
- */
-
 class Tour {
-  selector: string;
-  title: string;
-  text: string;
-  position: string;
-  last: boolean;
-  constructor(
-    selector: string,
-    title: string,
-    text: string,
-    position: string,
-    last?: boolean,
-  ) {
+  constructor(selector, title, text, position, last) {
     this.selector = selector;
     this.title = title;
     this.text = text;
@@ -24,8 +7,9 @@ class Tour {
     last === undefined ? (this.last = false) : (this.last = last);
   }
 }
+
 (function () {
-  const TOURS: Record<string, Array<Tour>> = {
+  const TOURS = {
     index: [
       new Tour(
         ".logo",
@@ -100,7 +84,7 @@ class Tour {
     return "index";
   }
 
-  function hasSeenTour(key: string) {
+  function hasSeenTour(key) {
     try {
       return localStorage.getItem("aceblocks_tour_" + key) === "done";
     } catch (e) {
@@ -108,7 +92,7 @@ class Tour {
     }
   }
 
-  function markTourDone(key: string) {
+  function markTourDone(key) {
     try {
       localStorage.setItem("aceblocks_tour_" + key, "done");
     } catch (e) {}
@@ -203,11 +187,7 @@ class Tour {
     if (el) el.remove();
   }
 
-  function positionTooltip(
-    tooltip: HTMLDivElement,
-    target: Element,
-    position: string,
-  ) {
+  function positionTooltip(tooltip, target, position) {
     const tr = target.getBoundingClientRect();
     const tw = tooltip.offsetWidth;
     const th = tooltip.offsetHeight;
@@ -233,17 +213,16 @@ class Tour {
     }
   }
 
-  function runTour(steps: Tour[], pageKey: string) {
+  function runTour(steps, pageKey) {
     injectStyles();
 
     const overlay = document.createElement("div");
     overlay.id = "ab-tour-overlay";
     document.body.appendChild(overlay);
 
-    // Mark as done IMMEDIATELY so even if they close the tab mid-tour it won't repeat
     markTourDone(pageKey);
 
-    function showStep(index: number) {
+    function showStep(index) {
       document
         .querySelectorAll(".ab-tour-highlight")
         .forEach((el) => el.classList.remove("ab-tour-highlight"));
@@ -304,7 +283,7 @@ class Tour {
     showStep(0);
   }
 
-  function addRelaunchButton(steps: Tour[], pageKey: string) {
+  function addRelaunchButton(steps, pageKey) {
     if (document.getElementById("ab-tour-relaunch")) return;
     const btn = document.createElement("button");
     btn.id = "ab-tour-relaunch";
